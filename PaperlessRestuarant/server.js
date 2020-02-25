@@ -1,9 +1,10 @@
 const express = require("express");
-
+const mysql = require("mysql");
 const http = require("http");
 var app = express();
 var server = http.createServer(app);
-const io = require("socket-io")(server);
+var fs = require("fs");
+const io = require("socket.io")(server);
 app.use(express.static("webapp"));
 
 /**
@@ -43,6 +44,25 @@ app.use(express.static("webapp"));
  */
 
 
+
+
+
+
+let DB = {};
+fs.readFile("credentials.json", function(err, data) {
+    if (err) throw err;
+    console.log(data);
+    DB = data;
+});
+
+
+function createConnection() {
+    let conn = mysql.connect({
+
+    });
+}
+
+
 server.listen(8080, function() {
     console.log("Server running on port 8080");
 });
@@ -54,6 +74,11 @@ const counters = io.of("/counter");
 waiters.on("connection", function(socket) {
     //waiter/waitress view
     console.log("waiter connected");
+
+    socket.on("order", function(data) {
+        let order = data.order;
+
+    });
 
 });
 

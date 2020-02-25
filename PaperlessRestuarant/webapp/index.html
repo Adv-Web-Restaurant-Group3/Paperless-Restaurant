@@ -1,37 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <title>Hello!</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
+
     <!-- import the webpage's stylesheet -->
     <link rel="stylesheet" href="assets/style.css">
-    
+
+    <!-- import the socket stuff -->
+    <script src="/socket.io/socket.io.js" defer></script>
+    <script src="assets/poll.js" defer></script>
+
     <!-- import the webpage's javascript file -->
     <script src="assets/script.js" defer></script>
-  </head>  
-  <body>
-    
+</head>
+
+<body>
+
     <div class="wrapper">
-      
-    
 
-      <section id="section-a">
-        
-        
 
-        <div class="container-a">
 
-          <span class="text-a">Starters</span>
+        <section id="section-a">
 
-          <span class="text-b">
-            Est wait time<br>
-            <span class="estWait">15:00</span>
-          </span>
-          
-          <span class="text-c">
+
+
+            <div class="container-a">
+
+                <span class="text-a">Starters</span>
+
+                <span class="text-b">
+                Est wait time<br>
+                <span class="estWait">15:00</span>
+                </span>
+
+                <span class="text-c">
             Time waiting<br>
             <span class="waitTime">14:59</span>
           </span>

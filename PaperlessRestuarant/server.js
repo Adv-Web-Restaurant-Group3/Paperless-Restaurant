@@ -22,6 +22,7 @@ app.use(express.static("webapp"));
  *    items:[
  *      {
  *          itemNum:228,
+ *          name:"CHOW CHICKEN MEIN"
  *          quantity:2,
  *          notes:"raRE MEEAT"
  * }
@@ -48,19 +49,34 @@ app.use(express.static("webapp"));
 
 
 
-let DB = {};
-fs.readFile("credentials.json", function(err, data) {
-    if (err) throw err;
-    console.log(data);
-    DB = data;
-});
-
+var DB = {
+    HOST: undefined,
+    PORT: undefined,
+    USER: undefined,
+    DATABASE: undefined,
+    PASS: undefined
+};
 
 function createConnection() {
-    let conn = mysql.connect({
-
+    return mysql.createConnection({
+        host: DB.HOST,
+        user: DB.USER,
+        password: DB.PASS,
+        port: DB.PORT,
+        database: DB.DATABASE
     });
 }
+
+
+fs.readFile("credentials.json", function(err, data) {
+    if (err) {
+        console.log("credentials.json is required for this script. Refer to the documentation for help.");
+        process.exit();
+    } else {
+        DB = JSON.parse(data);
+        console.log("using DB connection information in 'credentials.json', with DB_HOST '" + DB.HOST + "'");
+    }
+});
 
 
 server.listen(8080, function() {

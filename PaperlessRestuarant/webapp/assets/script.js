@@ -19,7 +19,7 @@ var orderDate = [{
     "price" : 50
 },
 {
-    "orderNum" : 1,
+    "orderNum" : 2,
     "orderTime" : 1300,
     "item" : [{
         "itemNum" : 1,
@@ -27,7 +27,7 @@ var orderDate = [{
         "quantity" : 1,
         "notes" : "notes"
     }],
-    "status" : "Cooking",
+    "status" : "Queued",
     "price" : 50
 }];
 
@@ -75,7 +75,7 @@ function updateOrder() {
 
 
         content += `
-        <div class='served'>Starters Served</div>
+        <div class='served'>Order ${orderNum} is Served</div>
         <div class='edit'>edit</div>
         </div>
         </div>

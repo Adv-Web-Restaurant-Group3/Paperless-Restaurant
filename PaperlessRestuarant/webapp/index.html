@@ -1,97 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <title>Hello!</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
+
     <!-- import the webpage's stylesheet -->
     <link rel="stylesheet" href="assets/style.css">
-    
+
+    <!-- import the socket stuff -->
+    <script src="/socket.io/socket.io.js" defer></script>
+    <script src="assets/poll.js" defer></script>
+
     <!-- import the webpage's javascript file -->
     <script src="assets/script.js" defer></script>
-  </head>  
-  <body>
-    
+</head>
+
+<body>
+
     <div class="wrapper">
-      
-    
 
-      <section id="section-a">
-        
-        
 
-        <div class="container-a">
 
-          <span class="text-a">Starters</span>
+        <section id="section-a">
 
-          <span class="text-b">
+
+
+            <div class="container-a">
+
+                <span class="text-a">Starters</span>
+
+                <span class="text-b">
             Est wait time<br>
             <span class="estWait">15:00</span>
-          </span>
-          
-          <span class="text-c">
+                </span>
+
+                <span class="text-c">
             Time waiting<br>
             <span class="waitTime">14:59</span>
-          </span>
+                </span>
 
-          <span class="text-d">Cooking</span>
+                <span class="text-d">Cooking</span>
 
-          <span class="text-e">6 Items</span>
-          
-          <div class="openBox">
-            
-            <div class="container-b">
-              <span class="itemName"><b>114.</b>Chicken Chow Mein</span>
-              <span class="itemQuantity">x1</span>
-              <span class="notes">Notes</span>
-            </div><!-- Container B -->
-            
-            
-            <!-- Buttons -->
-            <div class="served">Starters Served</div>
-            <div class="edit">edit</div>
-            
-            
-          </div><!-- Open Box -->
-          
-        </div><!-- Container A -->
-        
-        
-        
-      </section><!-- Section A -->
-      
-      
-      
-      <section id="section-b">
-            
-        <div id="total">
-          <div class="totalRow">
-            <span>Sub total</span><span id="subTotal">£50</span>
-          </div>
-          <div class="totalRow">
-            <span>Discount</span><span><input type="number" id="discount" name="discount" placeholder="0" /></span>%
-          </div>
-          <div class="totalRow">
-            <span>Total</span><span id="finalTotal">£45</span>
-          </div>
-        </div>
-        
-      </section><!-- Section B -->
-      
-      
-      
-      <section id="section-c">
-        
-        <div id="printBill">Print bill</div>
-        <div id="tableClear">Table clear</div>
-        
-      </section><!-- Section C -->
-      
-      
-      
-    </div><!-- Wrapper -->
-    
-  </body>
+                <span class="text-e">6 Items</span>
+
+                <div class="openBox">
+
+                    <div class="container-b">
+                        <span class="itemName"><b>114.</b>Chicken Chow Mein</span>
+                        <span class="itemQuantity">x1</span>
+                        <span class="notes">Notes</span>
+                    </div>
+                    <!-- Container B -->
+
+
+                    <!-- Buttons -->
+                    <div class="served">Starters Served</div>
+                    <div class="edit">edit</div>
+
+
+                </div>
+                <!-- Open Box -->
+
+            </div>
+            <!-- Container A -->
+
+
+
+        </section>
+        <!-- Section A -->
+
+
+
+        <section id="section-b">
+
+            <div id="total">
+                <div class="totalRow">
+                    <span>Sub total</span><span id="subTotal">£50</span>
+                </div>
+                <div class="totalRow">
+                    <span>Discount</span><span><input type="number" id="discount" name="discount" placeholder="0" /></span>%
+                </div>
+                <div class="totalRow">
+                    <span>Total</span><span id="finalTotal">£45</span>
+                </div>
+            </div>
+
+        </section>
+        <!-- Section B -->
+
+
+
+        <section id="section-c">
+
+            <div id="printBill">Print bill</div>
+            <div id="tableClear">Table clear</div>
+
+        </section>
+        <!-- Section C -->
+
+
+
+    </div>
+    <!-- Wrapper -->
+
+</body>
+
 </html>

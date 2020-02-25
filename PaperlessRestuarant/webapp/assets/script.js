@@ -56,27 +56,7 @@ function updateOrder() {
         </div>
         </div>
         `;
-        
-        // sectionA.innerHTML += "<div class='container-a'>";
-        // sectionA.innerHTML += "<span class='text-a'>Order " + orderNum + "</span>";
-        // sectionA.innerHTML += "<span class='text-b'>Est wait time<br><span class='estWait'>" + orderTime + "</span></span>";
-        // sectionA.innerHTML += "<span class='text-c'>Time waiting<br><span class='waitTime'>" + orderTime + "</span></span>";
-        // sectionA.innerHTML += "<span class='text-d'>" + status + "</span>";
-        // sectionA.innerHTML += "<span class='text-e'>" + orderDate[i].item.length + " Items</span>";
 
-        // sectionA.innerHTML += "<div class='openBox'>";
-
-        // sectionA.innerHTML += "<div class='container-b'>";
-        // sectionA.innerHTML += "<span class='itemName'><b>" + itemNum + "</b>" + itemName + "</span>";
-        // sectionA.innerHTML += "<span class='itemQuantity'>x" + quantity + "</span>";
-        // sectionA.innerHTML += "<span class='notes'>" + notes + "</span>";
-        // sectionA.innerHTML += "</div>";
-
-        // sectionA.innerHTML += "<div class='served'>Starters Served</div>";
-        // sectionA.innerHTML += "<div class='edit'>edit</div>";
-        // sectionA.innerHTML += "</div>";
-
-        // sectionA.innerHTML += "</div>";
 
     }
     

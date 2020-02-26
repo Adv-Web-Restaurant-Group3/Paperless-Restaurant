@@ -16,7 +16,7 @@ var orderDate = [{
         "notes" : "notes"
     }],
     "status" : "Cooking",
-    "price" : 50
+    "price" : 40
 },
 {
     "orderNum" : 2,
@@ -28,13 +28,14 @@ var orderDate = [{
         "notes" : "notes"
     }],
     "status" : "Queued",
-    "price" : 50
+    "price" : 20
 }];
 
 
 
-updateOrder();
+var total = 0;
 
+updateOrder();
 function updateOrder() {
 
     var sectionA = document.getElementById("section-a");
@@ -48,14 +49,18 @@ function updateOrder() {
         status = orderDate[i].status;
         price = orderDate[i].price;
 
+        total = total + price;
+
         content += `
         <div class='container-a'>
+        <div class='topBox'>
         <span class='text-a'>Order ${orderNum}</span>
         <span class='text-b'>Est wait time<br><span class='estWait'>${orderTime}</span></span>
         <span class='text-c'>Time waiting<br><span class='waitTime'>${orderTime}</span></span>
         <span class='text-d'>${status}</span>
         <span class='text-e'>${orderDate[i].item.length} Items</span>
-        <span class='dropDown' data-value='${i}'>open</span>
+        <span class='dropDown' data-value='${i}'>Open</span>
+        </div>
         <div class='openBox' style='display:none'>`;
         
         for(var x=0;x<orderDate[i].item.length;x++) {
@@ -82,26 +87,40 @@ function updateOrder() {
         `;
 
         sectionA.innerHTML = content;
-        
-
-
 
     }
+
+    finalTotal();
+
+}
+// Displays Total of all items and deals with discount
+document.getElementById("discount").addEventListener("input", finalTotal);
+function finalTotal() {
+    document.getElementById("subTotal").innerHTML = "&#163;" + parseFloat(total).toFixed(2);
+    var discount = document.getElementById("discount").value;
+    var finalTotal = 0;
+    if(discount === "") {
+        finalTotal = total;
+    } else {
+        finalTotal = total * ( (100-discount) / 100 )
+    }
     
-
-
+    document.getElementById("finalTotal").innerHTML = "&#163;" + parseFloat(finalTotal).toFixed(2);
 }
 
 
 
+// var myFunction = function() {
+//     var attribute = this.getAttribute("data-myattribute");
+//     alert(attribute);
+// };
 
-var myFunction = function() {
-    var attribute = this.getAttribute("data-myattribute");
-    alert(attribute);
-};
 
+
+// Open/Close buttons opening Order details
 var dropDown = document.getElementsByClassName("dropDown");
 var openBox = document.getElementsByClassName("openBox");
+var topBox = document.getElementsByClassName("topBox");
 for (var i = 0; i < dropDown.length; i++) {
     dropDown[i].addEventListener('click', function() {
         var num = this.getAttribute("data-value");
@@ -112,6 +131,7 @@ for (var i = 0; i < dropDown.length; i++) {
 
         for (var x = 0; x < openBox.length; x++) {
             openBox[x].style.display = "none";
+            topBox[x].style.borderBottom = "none";
         }
         for (var x = 0; x < openBox.length; x++) {
             dropDown[x].innerHTML = "Open";
@@ -119,8 +139,24 @@ for (var i = 0; i < dropDown.length; i++) {
         
         if(!show) {
             openBox[num].style.display = "block";
+            topBox[num].style.borderBottom = "1px solid #000";
             this.innerHTML = "Close";
         }
         
     });
 }
+
+
+document.getElementById("tableClear").addEventListener('click', function() {
+    document.getElementById("section-a").innerHTML = "<div class='container-a' id='addOrder'>+ Add Order</div>";
+
+    document.getElementById("addOrder").addEventListener('click', function() {
+        alert("Add order");
+    });
+
+    total = 0;
+    finalTotal();
+    document.getElementById("discount").value = 0;
+});
+
+

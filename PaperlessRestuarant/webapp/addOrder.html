@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Add Order - Waitor View</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="css/addOrder.css">
+
+    <!-- import the socket stuff -->
+    <script src="/socket.io/socket.io.js" defer></script>
+    <script src="js/poll.js" defer></script>
+
+    <!-- import the webpage's javascript file -->
+    <script src="js/addOrder.js" defer></script>
+</head>
+
+<body>
+
+    <div class="wrapper">
+
+        <nav>
+            <label for="party">Table:</label>
+            <select id="party">
+                <option value="1">Table 1</option>
+                <option value="2">Table 2</option>
+                <option value="3">Table 3</option>
+                <option value="4">Table 4</option>
+            </select>
+        </nav>
+
+        <section id="section-a"></section>
+
+        <section id="section-b">
+            <li>Item 1</li>
+            <li>Item 2</li>
+            <li>Item 3</li>
+            <li>Item 4</li>
+        </section><!-- Section B -->
+        
+
+        <section id="section-c">
+            Order Summary
+            
+            
+        </section><!-- Section C -->
+      
+      
+      
+    </div><!-- Wrapper -->
+    
+  </body>
+</html>

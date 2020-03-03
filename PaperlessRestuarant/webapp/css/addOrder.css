@@ -1,0 +1,62 @@
+/* Essentials
+-----------------------------------------------------------------------------*/
+body {
+    font-family: helvetica, arial, sans-serif;
+  
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
+  
+.wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+}
+  
+h1 {
+    font-style: italic;
+    color: #373fff;
+}
+
+li {
+    list-style: none;
+    width: 100%;
+    line-height: 60px;
+    text-align: center;
+}
+
+/* Section A
+-----------------------------------------------------------------------------*/
+#section-a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 33.3%;
+    height: 100vh;
+    background-color: #333;
+}
+
+
+/* Section B
+-----------------------------------------------------------------------------*/
+#section-b {
+    position: absolute;
+    top: 0;
+    left: 33.3%;
+    width: 33.3%;
+    height: 100vh;
+    background-color: #333FFF;
+}
+
+
+/* Section C
+-----------------------------------------------------------------------------*/
+#section-c {
+    position: absolute;
+    top: 0;
+    left: 66.6%;
+    width: 33.3%;
+    height: 100vh;
+    background-color: #333666;
+}
+

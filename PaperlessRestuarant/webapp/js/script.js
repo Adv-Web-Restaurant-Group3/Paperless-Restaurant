@@ -1,6 +1,7 @@
 
 
 var orderDate = [{
+    "table" : 1,
     "orderNum" : 1,
     "orderTime" : 1300,
     "item" : [{
@@ -19,6 +20,7 @@ var orderDate = [{
     "price" : 40
 },
 {
+    "table" : 1,
     "orderNum" : 2,
     "orderTime" : 1300,
     "item" : [{

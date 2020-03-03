@@ -17,6 +17,7 @@ app.use(express.static("webapp"));
  * {ORDER} :  
  * {
  * order:{
+ *    party,
  *    orderNum:int,
  *    orderTime:datetime,
  *    items:[
@@ -25,8 +26,8 @@ app.use(express.static("webapp"));
  *          name:"CHOW CHICKEN MEIN"
  *          quantity:2,
  *          notes:"raRE MEEAT"
- * }
- * ],
+ *      }
+ *    ],
  *    status:"queued" "cooking" "served" "waiting",
  *    price
  * },
@@ -83,6 +84,25 @@ server.listen(8080, function() {
     console.log("Server running on port 8080");
 });
 
+function validateOrder(order) {
+    if (order) {
+        if (order.party && typeof order.party === "number")
+            if (order.orderNum && order.orderNum > 0) {
+                if (order.orderTime && order.orderTime instanceof Date) {
+                    if (order.items && order.items instanceof Array) {
+                        if (order.status && ["queued", "cooking", "served", "waiting"].find(s => s === order.status)) {
+                            if (order.price && order.price >= 0) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+    }
+    return false;
+}
+
+
 const waiters = io.of("/waiter");
 const kitchens = io.of("/kitchen");
 const counters = io.of("/counter");
@@ -92,8 +112,24 @@ waiters.on("connection", function(socket) {
     console.log("waiter connected");
 
     socket.on("order", function(data) {
-        let order = data.order;
 
+        //add order to DB.
+        if (data && data.order) {
+            let order = data.order;
+
+            //validate order
+            if (validateOrder(order)) {
+                if (order.items.length > 0) {
+                    let conn = createConnection();
+                    conn.connect(function(err) {
+                        if (err) console.log(err);
+                        else {
+                            let sql = `INSERT INTO PartyOrder(party, orderNum) VALUES (${mysql.escape(order.party)}, ${mysql.escape(order.orderNum)})`
+                        }
+                    })
+                } else socket.emit("order_result", { success: false, reason: "order has zero items" })
+            } else socket.emit("order_result", { success: false, reason: "invalid order supplied" });
+        } else socket.emit("order_result", { success: false, reason: "order object was not given" });
     });
 
 });

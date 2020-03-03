@@ -1,7 +1,10 @@
-var socket = io("/waiter");
+/**
+ * WaiterClient class. for interfacing with the server as a Waiter view.
+ */
 
 class WaiterClient {
     _party = -1;
+    _socket = io("/waiter");
 
     setParty(party) {
         this._party = party;
@@ -13,10 +16,12 @@ class WaiterClient {
     update() {
         //update code
         //return orders
+
     }
 
     onUpdate(callback) {
         //code
+
     }
 
 }

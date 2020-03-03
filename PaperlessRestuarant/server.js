@@ -110,15 +110,16 @@ const kitchens = io.of("/kitchen");
 const counters = io.of("/counter");
 
 waiters.on("connection", function(socket) {
-    function getPartyNum(tableNum) {
+    function getPartyNum(tableNum, callback) {
         let conn = createConnection();
         conn.connect(function(err) {
-            if (err) throw err;
-            let sql = `SELECT partyNum FROM Party WHERE tableNum = ${mysql.escape(tableNum)} AND inHouse = TRUE;`;
+            if (err) console.log(err);
+            let sql = `SELECT partyID FROM Party WHERE tableNum = ${mysql.escape(tableNum)} AND inHouse = TRUE;`;
             let query = conn.query(sql, function(err, results) {
-                if (err) throw err;
+                if (err) console.log(err);
                 console.log(results);
-                return results;
+                callback(results.partyID);
+                conn.end();
             });
         })
     }
@@ -130,10 +131,15 @@ waiters.on("connection", function(socket) {
         let tableNum = data.tableNum;
         if (tableNum) {
             let conn = createConnection();
-            conn.connect(function(err) {
-                if (err) throw err;
-                let sql = ""
+            getPartyNum(tableNum, function(party) {
+                conn.connect(function(err) {
+                    if (err) console.log(err);
+                    let sql = `SELECT orderID, orderNum FROM PartyOrder WHERE party = ${mysql.escape(party)}`;
+                    conn.query(sql, function(err, results))
+                });
             })
+
+
         } else socket.emit("get_orders_result", { success: false, reason: "invalid tableNum" })
     });
 
@@ -148,10 +154,9 @@ waiters.on("connection", function(socket) {
                 if (order.items.length > 0) {
                     let conn = createConnection();
                     conn.connect(function(err) {
-                        if (err) throw err;
+                        if (err) console.log(err);
                         let sql = `INSERT INTO PartyOrder(party, orderNum) VALUES (${mysql.escape(order.party)}, ${mysql.escape(order.orderNum)})`
-
-                    })
+                    });
                 } else socket.emit("order_result", { success: false, reason: "order has zero items" })
             } else socket.emit("order_result", { success: false, reason: "invalid order supplied" });
         } else socket.emit("order_result", { success: false, reason: "order object was not given" });

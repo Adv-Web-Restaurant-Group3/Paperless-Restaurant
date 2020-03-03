@@ -7,20 +7,23 @@ class WaiterClient {
     _socket = io("/waiter");
 
     setParty(party) {
-        this._party = party;
+        if (typeof party === "number" && party >= 0)
+            this._party = party;
     }
     getParty() {
         return this._party;
     }
 
     update() {
-        //update code
-        //return orders
-
+        this._socket.emit("get_orders")
     }
 
     onUpdate(callback) {
         //code
+        callback(data)
+    }
+
+    sendOrder(order) {
 
     }
 
@@ -35,18 +38,10 @@ function sendOrder(order) {
 
 //receiveOrder
 
-
-
-
 let client = new WaiterClient();
-
-client.party = 1;
 
 client.update();
 
 client.onUpdate(function(orders) {
 
 })
-
-
-string += `${hello}`

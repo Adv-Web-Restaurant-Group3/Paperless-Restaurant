@@ -111,6 +111,8 @@ waiters.on("connection", function(socket) {
     //waiter/waitress view
     console.log("waiter connected");
 
+    socket.on("get_orders", { data })
+
     socket.on("order", function(data) {
 
         //add order to DB.

@@ -35,7 +35,7 @@ class WaiterClient {
 
     onUpdate(callback) {
         //code
-        callback(data)
+        callback()
     }
 
     getOrders() {

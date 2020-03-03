@@ -76,6 +76,7 @@ fs.readFile("credentials.json", function(err, data) {
     } else {
         DB = JSON.parse(data);
         console.log("using DB connection information in 'credentials.json', with DB_HOST '" + DB.HOST + "'");
+        console.log(DB)
     }
 });
 

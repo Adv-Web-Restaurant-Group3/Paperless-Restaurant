@@ -157,7 +157,8 @@ create table OrderItem(
 	orderID int references PartyOrder(orderID),
     itemNum int references MenuItem(itemNum),
     quantity int not null check (quantity>0),
-    notes text
+    notes text,
+    primary key (orderID, itemNum)
 );
 
 update MenuItem set estTime = 14 where category = 1;

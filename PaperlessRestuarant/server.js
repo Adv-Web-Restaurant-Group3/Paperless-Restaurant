@@ -220,9 +220,37 @@ waiters.on("connection", function(socket) {
                     let conn = createConnection();
                     conn.connect(function(err) {
                         if (err) console.log(err);
-                        let sql = `INSERT INTO PartyOrder(party, orderNum) VALUES (${mysql.escape(order.party)}, ${mysql.escape(order.orderNum)})`
+                        let sql = `INSERT INTO PartyOrder(party, orderNum) VALUES (${mysql.escape(order.party)}, ${mysql.escape(order.orderNum)})`;
+                        conn.query(sql, function(err, results) {
+                            if (err) console.log(err);
+                            else {
+                                let orderID = results.insertId;
+                                let orderItems = order.items;
+                                let successes = 0;
+
+                                function notifySuccess() {
+                                    successes++;
+                                    if (successes >= orderItems.length) {
+                                        //all queries success. emit response.
+                                        socket.emit("order_result", { success: true });
+                                    }
+                                }
+
+                                for (item of orderItems) {
+                                    let conn2 = createConnection();
+                                    let sql = `INSERT INTO OrderItem (orderID, itemNum, quantity, notes) 
+                                            VALUES (${orderID}, ${item.itemNum}, ${item.quantity}, ${item.notes});`;
+                                    conn2.query(sql, function(err, res) {
+                                        if (err) { console.log(err) } else {
+                                            console.log("added item for order " + orderID + " to database:", item);
+                                            notifySuccess();
+                                        }
+                                    });
+                                }
+                            }
+                        });
                     });
-                } else socket.emit("order_result", { success: false, reason: "order has zero items" })
+                } else socket.emit("order_result", { success: false, reason: "order has zero items" });
             } else socket.emit("order_result", { success: false, reason: "invalid order supplied" });
         } else socket.emit("order_result", { success: false, reason: "order object was not given" });
     });

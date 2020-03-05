@@ -25,7 +25,8 @@ CREATE TABLE MenuItem (
     isVegetarian BOOLEAN,
     isVegan BOOLEAN,
     glutenFree BOOLEAN,
-    containsNuts BOOLEAN
+    containsNuts BOOLEAN,
+    estTime INT -- minutes
 );
 
 -- MenuCategory inserts
@@ -159,9 +160,23 @@ create table OrderItem(
     notes text
 );
 
+update MenuItem set estTime = 14 where category = 1;
+update MenuItem set estTime = 22 where category = 2;
+update MenuItem set estTime = 23 where category = 5;
+update MenuItem set estTime = 27 where category = 6;
+
+update MenuItem set estTime = 20 where itemName like '%noodles%';
+update MenuItem set estTime = 28 where itemName like '%curry%';
+update MenuItem set estTime = 25 where itemName like '%stir fry%';
+update MenuItem set estTime = 15 where itemName like '%soup%';
+update MenuItem set estTime = 18 where itemName like '%fried rice%';
+update MenuItem set estTime = 25 where itemName like '%donburi%';
+update MenuItem set estTime = 17 where itemName like '%szechwan%';
+update MenuItem set estTime = 20 where itemName like '%sweet & sour%';
+update MenuItem set estTime = 13 where itemName like '%spicy garlic%';
+update MenuItem set estTime = 23 where itemName like '%stir-fried%';
+
 show tables;
-
-
 
 
 

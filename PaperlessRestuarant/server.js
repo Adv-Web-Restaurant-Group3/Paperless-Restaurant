@@ -134,8 +134,16 @@ waiters.on("connection", function(socket) {
             getPartyNum(tableNum, function(party) {
                 conn.connect(function(err) {
                     if (err) console.log(err);
-                    let sql = `SELECT orderID, orderNum FROM PartyOrder WHERE party = ${mysql.escape(party)}`;
-                    conn.query(sql, function(err, results))
+                    let sql = `SELECT orderID, orderNum FROM PartyOrder WHERE party = ${mysql.escape(party)};`;
+                    conn.query(sql, function(err, results) {
+                        if (err) console.log(err);
+                        else {
+                            console.log(results);
+                            if (results) {
+
+                            }
+                        }
+                    });
                 });
             })
 

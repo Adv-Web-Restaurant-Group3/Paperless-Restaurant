@@ -9,8 +9,6 @@ class WaiterClient {
     _update_callback = null;
 
     get socket() { return this._socket; }
-
-
     get orders() { return this._current_orders; }
 
     setTable(table) {
@@ -54,7 +52,15 @@ class WaiterClient {
     }
 
     sendOrder(order) {
-        this.socket.emit()
+        this.socket.emit("order", { order });
+        this.socket.off("order_received");
+        this.socket.on("order_received", function(response) {
+            if (response.success) {
+                console.log("order added successfully: ", order);
+            } else {
+                console.log("Server responded with an error while trying to add order: " + response.reason);
+            }
+        });
     }
     _update_orders(orders) {
         console.log("orders for table " + this._table + ":", orders);

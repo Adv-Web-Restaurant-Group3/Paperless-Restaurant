@@ -6,36 +6,47 @@ class WaiterClient {
     _current_orders = [];
     _table = -1;
     _socket = io("/waiter");
+    _update_callback = null;
 
     get socket() { return this._socket; }
 
+
+    get orders() { return this._current_orders; }
+
     setTable(table) {
-        if (typeof table === "number" && table >= 0)
+        if (typeof table === "number" && table >= 0) {
             this._table = table;
+            this.update();
+        }
+
     }
     getTable() {
         return this._table;
     }
 
     sync(timeout) {
-        setInterval(this._update(), timeout)
+        setInterval(this.update(), timeout)
     }
 
     update() {
-        this.socket.emit("get_orders", { tableNum: this._table });
-        this.socket.off("get_orders_result");
-        this.socket.on("get_orders_result", function(response) {
-            if (response.success) {
-                this._update_orders(response.orders);
-            } else {
-                alert("server responded with an error: " + response.reason);
-            }
-        });
+        if (this._table > 0) {
+            this.socket.emit("get_orders", { tableNum: this._table });
+            this.socket.off("get_orders_result");
+            let client = this;
+            this.socket.on("get_orders_result", function(response) {
+                console.log(response)
+                if (response.success) {
+                    client._update_orders(response.orders);
+                    if (client._update_callback) client._update_callback();
+                } else {
+                    alert("server responded with an error: " + response.reason);
+                }
+            });
+        } else return "set table num using setTable(tableNum) before calling update!"
     }
 
     onUpdate(callback) {
-        //code
-        callback()
+        this._update_callback = callback;
     }
 
     getOrders() {
@@ -46,22 +57,8 @@ class WaiterClient {
         this.socket.emit()
     }
     _update_orders(orders) {
+        console.log("orders for table " + this._table + ":", orders);
         this._current_orders = orders;
     }
 
 }
-//API to poll the socket server.
-
-//sendOrder
-function sendOrder(order) {
-
-}
-//receiveOrder
-
-let client = new WaiterClient();
-
-client.update();
-
-client.onUpdate(function(orders) {
-
-});

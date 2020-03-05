@@ -178,6 +178,12 @@ update MenuItem set estTime = 23 where itemName like '%stir-fried%';
 
 show tables;
 
+insert into PartyOrder(party, orderNum) values (4, 1);
+insert into OrderItem(orderID, itemNum, quantity, notes) values (1, 61, 1, '');
+insert into OrderItem(orderID, itemNum, quantity, notes) values (1, 38, 2, '');
+
+select * from OrderItem;
+select * from PartyOrder;
 
 
 

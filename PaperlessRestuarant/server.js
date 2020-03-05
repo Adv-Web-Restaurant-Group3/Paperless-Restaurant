@@ -115,10 +115,25 @@ waiters.on("connection", function(socket) {
         conn.connect(function(err) {
             if (err) console.log(err);
             let sql = `SELECT partyID FROM Party WHERE tableNum = ${mysql.escape(tableNum)} AND inHouse = TRUE;`;
-            let query = conn.query(sql, function(err, results) {
+            conn.query(sql, function(err, results) {
                 if (err) console.log(err);
-                console.log(results);
-                callback(results.partyID);
+                else {
+                    if (results.length > 0) {
+                        console.log("party found: ", results[0]);
+                        callback(results[0].partyID);
+                    } else {
+                        console.log("generating new party for table " + tableNum);
+                        let sql = `INSERT INTO Party (tableNum, inHouse) VALUES (${mysql.escape(tableNum)}, TRUE)`;
+                        let conn2 = createConnection();
+                        conn2.query(sql, function(err, results) {
+                            if (err) console.log(err);
+                            else {
+                                callback(results.insertId);
+                            }
+                            conn2.end();
+                        });
+                    }
+                }
                 conn.end();
             });
         })
@@ -132,22 +147,64 @@ waiters.on("connection", function(socket) {
         if (tableNum) {
             let conn = createConnection();
             getPartyNum(tableNum, function(party) {
+                console.log("using partyId " + party)
                 conn.connect(function(err) {
                     if (err) console.log(err);
-                    let sql = `SELECT orderID, orderNum FROM PartyOrder WHERE party = ${mysql.escape(party)};`;
+                    let sql = `
+                    SELECT orderID, orderNum, itemNum, quantity, notes, itemName, category, price, isVegetarian, isVegan, glutenFree, containsNuts, estTime
+                    FROM PartyOrder 
+                    INNER JOIN OrderItem USING (orderID)
+                    INNER JOIN MenuItem USING (itemNum)
+                    WHERE party = ${mysql.escape(party)};`;
                     conn.query(sql, function(err, results) {
                         if (err) console.log(err);
                         else {
                             console.log(results);
-                            if (results) {
-
+                            let outputArray = [];
+                            for (let result of results) {
+                                let index;
+                                if (index = outputArray.find(i => i.orderID === result.orderID) >= 0) {
+                                    //add to existing object
+                                    outputArray[index].items.push({
+                                        itemNum: result.itemNum,
+                                        quantity: result.quantity,
+                                        notes: result.notes,
+                                        itemName: result.itemName,
+                                        category: result.category,
+                                        price: result.price,
+                                        isVegetarian: result.isVegetarian == 0 ? false : true,
+                                        isVegan: result.isVegan == 0 ? false : true,
+                                        glutenFree: result.glutenFree == 0 ? false : true,
+                                        containsNuts: result.containsNuts == 0 ? false : true,
+                                        estTime: result.estTime
+                                    });
+                                } else {
+                                    //create new object
+                                    outputArray.push({
+                                        orderID: result.orderID,
+                                        orderNum: result.orderNum,
+                                        items: [{
+                                            itemNum: result.itemNum,
+                                            quantity: result.quantity,
+                                            notes: result.notes,
+                                            itemName: result.itemName,
+                                            category: result.category,
+                                            price: result.price,
+                                            isVegetarian: result.isVegetarian == 0 ? false : true,
+                                            isVegan: result.isVegan == 0 ? false : true,
+                                            glutenFree: result.glutenFree == 0 ? false : true,
+                                            containsNuts: result.containsNuts == 0 ? false : true,
+                                            estTime: result.estTime
+                                        }]
+                                    });
+                                }
                             }
+                            socket.emit("get_orders_result", { success: true, orders: outputArray });
                         }
+                        conn.end();
                     });
                 });
-            })
-
-
+            });
         } else socket.emit("get_orders_result", { success: false, reason: "invalid tableNum" })
     });
 

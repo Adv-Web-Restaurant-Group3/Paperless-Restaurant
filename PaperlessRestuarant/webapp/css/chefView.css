@@ -1,0 +1,94 @@
+body{
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-color: rgb(218, 232, 245);
+}
+#pageTitle{
+    position: fixed;
+    background-color: white;
+    width: max-content;
+    height: max-content;
+    top:0;
+    left:0;
+    padding:0.4rem;
+    border-radius: 0 0 0.5rem 0.5rem;
+    box-shadow: 1px 2px grey;
+}
+
+#content{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: max-content;
+    max-width: 75%;
+    min-width: min-content;
+    margin:0 auto;
+    margin-top:3rem;
+    height: max-content;
+    background-color: aliceblue;
+}
+.orderBox{
+    background-color: white;
+    margin:0.8rem;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0.5rem 0.5rem 0 0;
+    height: max-content;
+}
+.orderBox hr{
+    margin: 0;
+    width: 100%;
+    display: block;
+    color: black;
+    background-color: black;
+    border-style: none;
+    height: 0.1rem;
+}
+.orderTitle{
+    font-weight: 600;
+    padding: 0.8rem;
+    width: max-content;
+    text-align: center;
+}
+.orderItems{
+    
+}
+.orderItems ul{
+    margin: 0 auto;
+    padding: 0;
+    list-style-type: none;
+}
+.orderItem{
+    margin: 0.15rem;
+    padding: 0.5rem;
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: max-content;
+    min-width: 8rem;
+    background-color: blanchedalmond;
+}
+.itemIMG{
+    width: 1rem;
+   
+}
+.itemIMG img{
+    width: 100%;
+}
+.topBar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.callBtn{
+    background-color: rgba(255, 0, 0, 0.15);
+    padding: 0.6rem;
+    font-weight: 600;
+    margin:0.5rem;
+    height: min-content;
+}
+.callBtn:hover{
+    background-color: rgba(255, 0, 0, 0.6);
+}

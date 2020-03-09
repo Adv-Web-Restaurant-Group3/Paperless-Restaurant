@@ -58,6 +58,7 @@ var DB = {
     PASS: undefined
 };
 
+
 function createConnection() {
     return mysql.createConnection({
         host: DB.HOST,

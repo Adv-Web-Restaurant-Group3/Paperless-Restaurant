@@ -5,7 +5,6 @@ var app = express();
 var server = http.createServer(app);
 var fs = require("fs");
 const io = require("socket.io")(server);
-
 app.use(express.static(__dirname+"/webapp"));
 
 /**

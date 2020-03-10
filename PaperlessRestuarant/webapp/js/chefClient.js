@@ -63,7 +63,7 @@ let ordersObj = [
             {
                 itemNo:20,
                 name:"noodles",
-                quantity:1,
+                quantity:3,
                 notes:"No Sauce"
             },
             {
@@ -112,9 +112,8 @@ let ordersObj = [
             },
             {
                 itemNo:20,
-                name:"noodles",
-                quantity:1,
-                notes:"No Sauce"
+                name:"Noodles",
+                quantity:1
             },
             {
                 itemNo:22,
@@ -170,12 +169,14 @@ function buildItem(obj){
     //ITEMS
     var itemsStr="<div class='orderItems'><ul>";
     obj.items.forEach(el=>{
-        itemsStr+= "<li>";
-        itemsStr+= "<div class='orderItem'>" 
-        itemsStr+= "<span class='itemTXT'>"+el.name+"</span>";
-        itemsStr+= "<span class='itemNotes'>"+el.notes+"</span>";
-        itemsStr+= "</div>";
-        itemsStr+= "</li>";
+        for(let i=0;i<el.quantity;i++){
+            itemsStr+= "<li>";
+            itemsStr+= "<div class='orderItem'>" 
+            itemsStr+= "<span class='itemTXT'>"+el.name+"</span>";
+            if(el.notes)itemsStr+= "<span class='itemNotes'>"+el.notes+"</span>";
+            itemsStr+= "</div>";
+            itemsStr+= "</li>";
+        }
     });  
     itemsStr+="</ul></div>";
     item.append($(itemsStr));

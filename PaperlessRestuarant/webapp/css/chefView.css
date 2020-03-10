@@ -20,9 +20,9 @@ body{
     flex-wrap: wrap;
     justify-content: flex-start;
     align-content: flex-start;
-    height: 30rem;
-    min-height: min-content;
-    width: 90%;
+    height: 40rem;
+    min-height: max-content;
+    width:95%;
     margin: 0 auto;
     background-color: aliceblue;
     margin-top: 3rem;

@@ -148,7 +148,7 @@ waiters.on("connection", function (socket) {
             getPartyNum(tableNum, function (party) {
                 console.log("using partyId " + party)
                 conn.connect(function (err) {
-                    if (err) console.log(err);
+                    if (err) console.log(1, err);
                     let sql = `
                     SELECT orderID, orderNum, itemNum, quantity, notes, itemName, category, price, isVegetarian, isVegan, glutenFree, containsNuts, estTime
                     FROM PartyOrder 
@@ -156,7 +156,7 @@ waiters.on("connection", function (socket) {
                     INNER JOIN MenuItem USING (itemNum)
                     WHERE party = ${mysql.escape(party)};`;
                     conn.query(sql, function (err, results) {
-                        if (err) console.log(err);
+                        if (err) console.log(2, err);
                         else {
                             console.log(results);
                             let outputArray = [];
@@ -240,7 +240,7 @@ waiters.on("connection", function (socket) {
                         if (order.items.length > 0) {
                             let conn = createConnection();
                             conn.connect(function (err) {
-                                if (err) console.log(err);
+                                if (err) console.log(3, err);
                                 let sql = `INSERT INTO PartyOrder(party, orderNum) VALUES (${mysql.escape(party)}, ${mysql.escape(orderNum)})`;
                                 conn.query(sql, function (err, results) {
                                     if (err) console.log(err);
@@ -266,7 +266,7 @@ waiters.on("connection", function (socket) {
                                             let conn2 = createConnection();
                                             let sql = `INSERT INTO OrderItem (orderID, itemNum, quantity, notes) VALUES (${mysql.escape(orderID)}, ${mysql.escape(item.itemNum)}, ${mysql.escape(item.quantity)}, ${mysql.escape(item.notes)});`;
                                             conn2.query(sql, function (err) {
-                                                if (err) { console.log(err) } else {
+                                                if (err) { console.log(4, err) } else {
                                                     console.log("added item for order " + orderID + " to database:", item);
                                                     notifySuccess();
                                                 }

@@ -150,7 +150,8 @@ create table Party(
 create table PartyOrder(
 	orderID int primary key auto_increment,
     party int references Party(partyID),
-    orderNum int check(orderNum>0)
+    orderNum int check(orderNum>0),
+    orderTime int check(orderTime>0) -- unix time
 );
 
 create table OrderItem(

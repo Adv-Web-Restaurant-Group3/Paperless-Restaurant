@@ -1,6 +1,6 @@
 let ordersObj = [
     {
-        orderID:123,
+        orderID:19,
         tableNo:3,
         orderTime:"12:45",
         items: [
@@ -25,7 +25,7 @@ let ordersObj = [
         ]
     },
     {
-        orderID:123,
+        orderID:16,
         tableNo:3,
         orderTime:"12:45",
         items: [
@@ -50,7 +50,7 @@ let ordersObj = [
         ]
     },
     {
-        orderID:123,
+        orderID:6,
         tableNo:7,
         orderTime:"12:45",
         items: [
@@ -75,7 +75,7 @@ let ordersObj = [
         ]
     },
     {
-        orderID:123,
+        orderID:33,
         tableNo:1,
         orderTime:"12:45",
         items: [
@@ -100,7 +100,7 @@ let ordersObj = [
         ]
     },
     {
-        orderID:123,
+        orderID:12,
         tableNo:2,
         orderTime:"12:45",
         items: [
@@ -136,28 +136,34 @@ let ordersObj = [
                 notes:"Well Done"
             },
             {
-                itemNo:20,
-                name:"noodles",
+                itemNo:22,
+                name:"Chicken Chow Mein",
                 quantity:1,
-                notes:"No Sauce"
+                notes:"Well Done"
             },
             {
                 itemNo:22,
-                name:"blah blah",
+                name:"Chicken Chow Mein",
                 quantity:1,
-                notes:"blah"
-            }
+                notes:"Well Done"
+            },   
+            {
+                itemNo:22,
+                name:"Chicken Chow Mein",
+                quantity:1,
+                notes:"Well Done"
+            }   
         ]
     }
 ];
 
 
 function buildItem(obj){
-    var orderTitle = obj.tableNo;
+    var orderID = obj.orderID;
     var item = $("<div class='orderBox'></div>");
     // TOP BAR
     var topBar = $("<div class='topBar'><div class='orderTitle'></div><span class='status'></span</div>");
-    topBar.find(".orderTitle").append("Table "+orderTitle);
+    topBar.find(".orderTitle").append("Order "+orderID);
     topBar.find(".status").append("Waiting To Cook");
     item.append(topBar);
     item.append("<hr>");
@@ -176,12 +182,46 @@ function buildItem(obj){
     //console.log(itemsStr);
     $("#content").append(item);
     //console.log(item.prop('outerHTML'));    
+    
+}
+
+function divName(){
+    if($(".orderBox").length!=ordersObj.length){
+        divCount();
+    }else{
+        $(".orderBox").each((i,el)=>{
+            $(el).data("Info",ordersObj[i]);
+            $(el).data("Status","Waiting To Cook");
+            //console.log($(el).data("Status"));
+        });
+    }
+}
+
+function removeItem(orderID){
+    ordersObj = ordersObj.filter(el=>{return el.orderID != orderID}); 
+    console.log(ordersObj);
 }
 
 $(document).ready(()=>{
+    ordersObj.sort((a,b)=>a.orderID-b.orderID);
     ordersObj.forEach(el=>{
         buildItem(el);
     });
+
+    $(".status").click(event=>{
+        switch($(event.target).parent().parent().data("Status")){
+            case "Waiting To Cook":
+                $(event.target).parent().parent().data("Status","Cooking")
+                $(event.target).html("Cooking");
+                break;
+            case "Cooking":
+                removeItem($(event.target).parent().parent().data("Info").orderID);
+                $(event.target).parent().parent().remove();
+                break;
+        }
+    });
+    divName(); //check all the orderObj are added to page then ID them
+
 });
 
 /*

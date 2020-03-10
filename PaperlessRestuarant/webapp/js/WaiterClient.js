@@ -7,9 +7,35 @@ class WaiterClient {
     _table = -1;
     _socket = io("/waiter");
     _update_callback = null;
+    _menu_update_callback = null;
+    _items = [];
+    _categories = [];
 
     get socket() { return this._socket; }
     get orders() { return this._current_orders; }
+
+
+    constructor() {
+        this.updateMenu();
+    }
+    getItems() {
+        return this._items;
+    }
+    getCategories() {
+        return this._categories;
+    }
+
+    updateMenu() {
+        this.socket.off("menu");
+        let client = this;
+        this.socket.on("menu", function(results) {
+            client._items = results.items;
+            client._categories = results.categories;
+
+            if (this._menu_update_callback) this._menu_update_callback();
+        })
+        this.socket.emit("get_menu");
+    }
 
     setTable(table) {
         if (typeof table === "number" && table >= 0) {
@@ -23,7 +49,7 @@ class WaiterClient {
     }
 
     sync(timeout) {
-        setInterval(this.update(), timeout)
+        setInterval(this.update, timeout)
     }
 
     update() {
@@ -31,7 +57,7 @@ class WaiterClient {
             this.socket.emit("get_orders", { tableNum: this._table });
             this.socket.off("get_orders_result");
             let client = this;
-            this.socket.on("get_orders_result", function (response) {
+            this.socket.on("get_orders_result", function(response) {
                 console.log(response)
                 if (response.success) {
                     client._update_orders(response.orders);
@@ -45,6 +71,9 @@ class WaiterClient {
 
     onUpdate(callback) {
         this._update_callback = callback;
+    }
+    onMenuUpdate(callback) {
+        this._menu_update_callback = callback;
     }
 
     getOrders() {
@@ -66,7 +95,7 @@ class WaiterClient {
                     }
                 });
                 this.socket.off("order_result");
-                this.socket.on("order_result", function (response) {
+                this.socket.on("order_result", function(response) {
                     console.log(response);
                     if (response.success) {
                         console.log("order added successfully: ", order);
@@ -74,8 +103,7 @@ class WaiterClient {
                         console.log("Server responded with an error while trying to add order: " + response.reason);
                     }
                 });
-            }
-            else return "set table num using setTable(tableNum) before calling addOrder!"
+            } else return "set table num using setTable(tableNum) before calling addOrder!"
         } else return "invalid order object, provide items attribute."
 
     }
@@ -85,8 +113,3 @@ class WaiterClient {
     }
 
 }
-
-//DEBUG
-let client = new WaiterClient();
-client.setTable(1);
-client.addOrder({ items: [{ itemNum: 66, quantity: 2, notes: "" }] });

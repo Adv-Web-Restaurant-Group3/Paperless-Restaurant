@@ -32,7 +32,7 @@ class WaiterClient {
             client._items = results.items;
             client._categories = results.categories;
 
-            if (this._menu_update_callback) this._menu_update_callback();
+            if (client._menu_update_callback) client._menu_update_callback();
         })
         this.socket.emit("get_menu");
     }

@@ -31,7 +31,7 @@ var item = [{
 
 let client = new WaiterClient();
 
-client.setTable(1);
+
 client.onMenuUpdate(function() {
     console.log(client.getItems());
     console.log(client.getCategories());
@@ -184,3 +184,5 @@ client.onMenuUpdate(function() {
     }
 
 });
+
+client.setTable(1);

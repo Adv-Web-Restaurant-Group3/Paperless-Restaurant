@@ -136,17 +136,23 @@ let ordersObj = [
                 notes:"Well Done"
             },
             {
-                itemNo:20,
-                name:"noodles",
+                itemNo:22,
+                name:"Chicken Chow Mein",
                 quantity:1,
-                notes:"No Sauce"
+                notes:"Well Done"
             },
             {
                 itemNo:22,
-                name:"blah blah",
+                name:"Chicken Chow Mein",
                 quantity:1,
-                notes:"blah"
-            }
+                notes:"Well Done"
+            },   
+            {
+                itemNo:22,
+                name:"Chicken Chow Mein",
+                quantity:1,
+                notes:"Well Done"
+            }   
         ]
     }
 ];

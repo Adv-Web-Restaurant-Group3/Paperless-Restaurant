@@ -16,15 +16,16 @@ body{
 
 #content{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: wrap;
-    width: max-content;
-    max-width: 75%;
-    min-width: min-content;
-    margin:0 auto;
-    margin-top:3rem;
-    height: max-content;
+    justify-content: flex-start;
+    align-content: flex-start;
+    height: 30rem;
+    min-height: min-content;
+    width: 90%;
+    margin: 0 auto;
     background-color: aliceblue;
+    margin-top: 3rem;
 }
 .orderBox{
     background-color: white;
@@ -33,6 +34,7 @@ body{
     flex-direction: column;
     border-radius: 0.5rem 0.5rem 0 0;
     height: max-content;
+    width:min-content;
 }
 .orderBox hr{
     margin: 0;
@@ -57,38 +59,44 @@ body{
     padding: 0;
     list-style-type: none;
 }
-.orderItem{
+.orderItem{ 
     margin: 0.15rem;
     padding: 0.5rem;
-    
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
-    align-items: center;
-    width: max-content;
-    min-width: 8rem;
+    align-items: flex-start;
+    width: calc(100% - 1.3rem);
     background-color: blanchedalmond;
 }
-.itemIMG{
-    width: 1rem;
-   
+.itemNotes{
+    font-weight: 500;
+    font-size: 0.8rem;
+    background-color: white;
+    margin:0.15rem;
+    margin-top: 0.35rem;
+    width:calc(100% - 1.3rem);
+    padding:0.5rem;
+    border-radius: 0.3rem;
+
+
 }
-.itemIMG img{
-    width: 100%;
-}
+
 .topBar{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 }
-.callBtn{
-    background-color: rgba(255, 0, 0, 0.15);
+
+.status{
+    background-color: rgba(226, 216, 216, 0.15);
     padding: 0.6rem;
     font-weight: 600;
     margin:0.5rem;
+    width: max-content;
     height: min-content;
 }
-.callBtn:hover{
-    background-color: rgba(255, 0, 0, 0.6);
+.status:hover{
+    background-color: rgba(6, 224, 104, 0.4);
 }

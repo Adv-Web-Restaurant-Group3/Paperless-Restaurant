@@ -1,4 +1,10 @@
 
+// var socket = io();
+
+// io.on('get_orders_result', function(data){
+//     console.log(data);
+// });
+
 
 var orderDate = [{
     "table" : 1,

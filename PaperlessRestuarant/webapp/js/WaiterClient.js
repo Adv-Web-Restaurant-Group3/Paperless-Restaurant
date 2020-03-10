@@ -31,7 +31,7 @@ class WaiterClient {
             this.socket.emit("get_orders", { tableNum: this._table });
             this.socket.off("get_orders_result");
             let client = this;
-            this.socket.on("get_orders_result", function(response) {
+            this.socket.on("get_orders_result", function (response) {
                 console.log(response)
                 if (response.success) {
                     client._update_orders(response.orders);
@@ -51,16 +51,33 @@ class WaiterClient {
         return this._current_orders;
     }
 
-    sendOrder(order) {
-        this.socket.emit("order", { order });
-        this.socket.off("order_received");
-        this.socket.on("order_received", function(response) {
-            if (response.success) {
-                console.log("order added successfully: ", order);
-            } else {
-                console.log("Server responded with an error while trying to add order: " + response.reason);
+    /* client-side simplification.
+    order:{
+        items:[{itemNum, quantity, notes}, ...],
+    }
+    */
+    addOrder(order) {
+        if (order && order.items) {
+            if (this._table > 0) {
+                this.socket.emit("order", {
+                    order: {
+                        tableNum: this._table,
+                        items: order.items
+                    }
+                });
+                this.socket.off("order_result");
+                this.socket.on("order_result", function (response) {
+                    console.log(response);
+                    if (response.success) {
+                        console.log("order added successfully: ", order);
+                    } else {
+                        console.log("Server responded with an error while trying to add order: " + response.reason);
+                    }
+                });
             }
-        });
+            else return "set table num using setTable(tableNum) before calling addOrder!"
+        } else return "invalid order object, provide items attribute."
+
     }
     _update_orders(orders) {
         console.log("orders for table " + this._table + ":", orders);
@@ -68,3 +85,6 @@ class WaiterClient {
     }
 
 }
+
+//DEBUG
+let client = new WaiterClient();

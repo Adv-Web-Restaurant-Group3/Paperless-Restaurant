@@ -23,7 +23,7 @@ class WaiterClient {
     }
 
     sync(timeout) {
-        setInterval(this.update(), timeout)
+        setInterval(this.update, timeout)
     }
 
     update() {

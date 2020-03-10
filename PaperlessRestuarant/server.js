@@ -149,21 +149,17 @@ waiters.on("connection", function (socket) {
                 console.log("using partyId " + party)
                 conn.connect(function (err) {
                     if (err) console.log(1, err);
-                    let sql = `
-                    SELECT orderID, orderNum, itemNum, quantity, notes, itemName, category, price, isVegetarian, isVegan, glutenFree, containsNuts, estTime
-                    FROM PartyOrder 
-                    INNER JOIN OrderItem USING (orderID)
-                    INNER JOIN MenuItem USING (itemNum)
-                    WHERE party = ${mysql.escape(party)};`;
+                    let sql = `SELECT orderID, orderNum, itemNum, quantity, notes, itemName, (SELECT catName FROM MenuCategory WHERE catID = MenuItem.category) AS 'category', price, isVegetarian, isVegan, glutenFree, containsNuts, estTime FROM PartyOrder INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) WHERE party = ${mysql.escape(party)};`;
                     conn.query(sql, function (err, results) {
                         if (err) console.log(2, err);
                         else {
-                            console.log(results);
+                            console.log("res!", results);
                             let outputArray = [];
                             for (let result of results) {
                                 let index;
                                 if (index = outputArray.find(i => i.orderID === result.orderID) >= 0) {
                                     //add to existing object
+                                    console.log("adding to order", outputArray)
                                     outputArray[index].items.push({
                                         itemNum: result.itemNum,
                                         quantity: result.quantity,
@@ -178,6 +174,7 @@ waiters.on("connection", function (socket) {
                                         estTime: result.estTime
                                     });
                                 } else {
+                                    console.log("creating order")
                                     //create new object
                                     outputArray.push({
                                         orderID: result.orderID,

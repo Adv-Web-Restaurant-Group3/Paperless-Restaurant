@@ -141,6 +141,54 @@ waiters.on("connection", function (socket) {
     //waiter/waitress view
     console.log("waiter connected");
 
+    socket.on("get_menu", function () {
+        //get Menu from DB and send to client.
+        let conn = createConnection();
+        conn.connect(function (err) {
+            if (err) console.log(11, err)
+            else {
+                conn.query("SELECT catID, catName FROM MenuCategory", function (err, results) {
+                    if (err) console.log(12, err)
+                    else {
+
+                        let categories = [];
+                        for (category of results) {
+                            categories.push({ catID: results.catID, catName: results.catName });
+                        }
+                        let conn2 = createConnection();
+
+                        conn2.connect(function (err) {
+                            if (err) console.log(13, err)
+                            else {
+                                conn2.query("SELECT category, itemNum, itemName, estTime FROM MenuItem", function (err, results) {
+                                    if (err) console.log(13, err);
+                                    else {
+                                        let items = [];
+                                        for (item of results) {
+                                            items.push({
+                                                category: item.category,
+                                                itemNum: item.itemNum,
+                                                itemName: item.itemName,
+                                                estTime: item.estTime
+                                            });
+                                        }
+
+                                        socket.emit("menu", { items, categories });
+                                        conn2.end();
+                                    }
+
+                                });
+                            }
+                        })
+                        conn.end();
+
+                    }
+                });
+
+            }
+        })
+    });
+
     socket.on("get_orders", function (data) {
         let tableNum = data.tableNum;
         if (tableNum) {

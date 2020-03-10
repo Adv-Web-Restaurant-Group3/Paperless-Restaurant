@@ -31,13 +31,14 @@ var item = [{
 
 let client = new WaiterClient();
 
-client.setTable(1);
+
 client.onMenuUpdate(function() {
+    console.log("frank fixed it");
     console.log(client.getItems());
     console.log(client.getCategories());
 
-    category = client.getCategories();
-    item = client.getItems();
+    // category = client.getCategories();
+    // item = client.getItems();
 
 
 

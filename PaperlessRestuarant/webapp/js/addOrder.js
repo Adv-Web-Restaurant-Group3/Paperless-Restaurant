@@ -32,6 +32,14 @@ var item = [{
 let client = new WaiterClient();
 
 
+
+client.setTable(1);
+client.onUpdate(function() {
+    console.log(client.getOrders());
+    // orderDate = client.getOrders();
+});
+
+
 var order = [];
 
 

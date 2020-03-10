@@ -1,8 +1,11 @@
 body{
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     background-color: rgb(218, 232, 245);
+
 }
+html, body { height: 100%; width: 100%; margin: 0; }
 #pageTitle{
+    z-index: -1;
     position: fixed;
     background-color: white;
     width: max-content;
@@ -20,9 +23,11 @@ body{
     flex-wrap: wrap;
     justify-content: flex-start;
     align-content: flex-start;
-    height: 40rem;
-    min-height: max-content;
+    height: 97%;
+    min-height: 40rem;
+    overflow: auto;
     width:95%;
+    min-width: max-content;
     margin: 0 auto;
     background-color: aliceblue;
     margin-top: 3rem;

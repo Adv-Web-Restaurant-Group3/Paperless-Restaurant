@@ -1,7 +1,6 @@
 body{
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     background-color: rgb(218, 232, 245);
-
 }
 html, body { height: 100%; width: 100%; margin: 0; }
 #pageTitle{
@@ -10,13 +9,17 @@ html, body { height: 100%; width: 100%; margin: 0; }
     background-color: white;
     width: max-content;
     height: max-content;
+
     top:0;
     left:0;
     padding:0.4rem;
     border-radius: 0 0 0.5rem 0.5rem;
     box-shadow: 1px 2px grey;
 }
-
+.red{
+    color: red;
+    font-weight: 600;
+}
 #content{
     display: flex;
     flex-direction: column;
@@ -39,8 +42,10 @@ html, body { height: 100%; width: 100%; margin: 0; }
     flex-direction: column;
     border-radius: 0.5rem 0.5rem 0 0;
     height: max-content;
-    width:min-content;
+    width:min-content;   
+    
 }
+
 .orderBox hr{
     margin: 0;
     width: 100%;
@@ -95,11 +100,13 @@ html, body { height: 100%; width: 100%; margin: 0; }
 }
 
 .status{
-    background-color: rgba(226, 216, 216, 0.15);
+    background-color: whitesmoke;
     padding: 0.6rem;
     font-weight: 600;
+    text-align: center;
     margin:0.5rem;
     width: max-content;
+    min-width: 7.5rem;
     height: min-content;
 }
 .status:hover{

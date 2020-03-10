@@ -38,7 +38,7 @@ let ordersObj = [
             {
                 itemNo:20,
                 name:"noodles",
-                quantity:1,
+                quantity:5,
                 notes:"No Sauce"
             },
             {
@@ -82,13 +82,13 @@ let ordersObj = [
             {
                 itemNo:22,
                 name:"Chicken Chow Mein",
-                quantity:1,
+                quantity:3,
                 notes:"Well Done"
             },
             {
                 itemNo:20,
                 name:"noodles",
-                quantity:1,
+                quantity:2,
                 notes:"No Sauce"
             },
             {
@@ -169,14 +169,14 @@ function buildItem(obj){
     //ITEMS
     var itemsStr="<div class='orderItems'><ul>";
     obj.items.forEach(el=>{
-        for(let i=0;i<el.quantity;i++){
-            itemsStr+= "<li>";
-            itemsStr+= "<div class='orderItem'>" 
-            itemsStr+= "<span class='itemTXT'>"+el.name+"</span>";
-            if(el.notes)itemsStr+= "<span class='itemNotes'>"+el.notes+"</span>";
-            itemsStr+= "</div>";
-            itemsStr+= "</li>";
-        }
+        itemsStr+= "<li>";
+        itemsStr+= "<div class='orderItem'>" 
+        itemsStr+= "<span class='itemTXT'>"+el.name;
+        if(el.quantity>1)itemsStr+="  <span class='red'>x"+el.quantity+"</span></span>";
+        else itemsStr+= "</span>";
+        if(el.notes)itemsStr+= "<span class='itemNotes'>"+el.notes+"</span>";
+        itemsStr+= "</div>";
+        itemsStr+= "</li>";
     });  
     itemsStr+="</ul></div>";
     item.append($(itemsStr));
@@ -214,6 +214,12 @@ $(document).ready(()=>{
             case "Waiting To Cook":
                 $(event.target).parent().parent().data("Status","Cooking")
                 $(event.target).html("Cooking");
+                
+                $(event.target).hover(()=>{
+                    $(event.target).css("background-color","red");
+                },()=>{
+                    $(event.target).css("background-color","orange");
+                });
                 break;
             case "Cooking":
                 removeItem($(event.target).parent().parent().data("Info").orderID);

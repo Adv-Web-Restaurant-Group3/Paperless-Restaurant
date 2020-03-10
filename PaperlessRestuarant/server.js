@@ -150,11 +150,13 @@ waiters.on("connection", function (socket) {
                 conn.query("SELECT catID, catName FROM MenuCategory", function (err, results) {
                     if (err) console.log(12, err)
                     else {
+                        console.log(results);
 
                         let categories = [];
                         for (category of results) {
-                            categories.push({ catID: results.catID, catName: results.catName });
+                            categories.push({ catID: category.catID, catName: category.catName });
                         }
+                        console.log(categories)
                         let conn2 = createConnection();
 
                         conn2.connect(function (err) {

@@ -7,6 +7,7 @@ class WaiterClient {
     _table = -1;
     _socket = io("/waiter");
     _update_callback = null;
+    _menu_update_callback = null;
     _items = [];
     _categories = [];
 
@@ -31,6 +32,7 @@ class WaiterClient {
             client._items = results.items;
             client._categories = results.categories;
 
+            if (this._menu_update_callback) this._menu_update_callback();
         })
         this.socket.emit("get_menu");
     }
@@ -69,6 +71,9 @@ class WaiterClient {
 
     onUpdate(callback) {
         this._update_callback = callback;
+    }
+    onMenuUpdate(callback) {
+        this._menu_update_callback = callback;
     }
 
     getOrders() {

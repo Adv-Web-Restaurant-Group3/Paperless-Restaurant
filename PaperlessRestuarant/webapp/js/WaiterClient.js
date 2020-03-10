@@ -100,6 +100,7 @@ class WaiterClient {
                     console.log(response);
                     if (response.success) {
                         console.log("order added successfully: ", order);
+                        this.update();
                     } else {
                         console.log("Server responded with an error while trying to add order: " + response.reason);
                     }

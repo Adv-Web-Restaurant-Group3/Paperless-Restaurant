@@ -88,3 +88,5 @@ class WaiterClient {
 
 //DEBUG
 let client = new WaiterClient();
+client.setTable(1);
+client.addOrder({ items: [{ itemNum: 66, quantity: 2, notes: "" }] });

@@ -5,7 +5,7 @@ var app = express();
 var server = http.createServer(app);
 var fs = require("fs");
 const io = require("socket.io")(server);
-app.use(express.static(__dirname+"/webapp"));
+app.use(express.static(__dirname + "/webapp"));
 
 /**
  * =================================
@@ -28,7 +28,7 @@ app.use(express.static(__dirname+"/webapp"));
  *          notes:"raRE MEEAT"
  *      }
  *    ],
- *    status:"queued" "cooking" "served" "waiting",
+ *    status: "waiting" "cooking" "served" ,
  *    price
  * },
  * 
@@ -123,7 +123,19 @@ waiters.on("connection", function (socket) {
     }
 
     function getNextOrderNum(party, callback) {
-        //TODO implement getNextOrderNum
+        console.log(party)
+        let conn = createConnection();
+        conn.connect(function (err) {
+            if (err) console.log(err);
+            let sql = `SELECT COUNT(orderNum)+1 AS 'orderNum' FROM PartyOrder WHERE party = ${mysql.escape(party)};`;
+            conn.query(sql, function (err, results) {
+                if (err) console.log(err);
+                else {
+                    callback(results[0].orderNum);
+                }
+                conn.end();
+            });
+        });
     }
 
     //waiter/waitress view
@@ -229,7 +241,7 @@ waiters.on("connection", function (socket) {
                             let conn = createConnection();
                             conn.connect(function (err) {
                                 if (err) console.log(err);
-                                let sql = `INSERT INTO PartyOrder(party, orderNum) VALUES (${mysql.escape(party)}, ${mysql})`;
+                                let sql = `INSERT INTO PartyOrder(party, orderNum) VALUES (${mysql.escape(party)}, ${mysql.escape(orderNum)})`;
                                 conn.query(sql, function (err, results) {
                                     if (err) console.log(err);
                                     else {
@@ -240,6 +252,7 @@ waiters.on("connection", function (socket) {
                                         function notifySuccess() {
                                             successes++;
                                             if (successes >= orderItems.length) {
+                                                console.log("order added for table " + order.tableNum + ", party " + party + " with orderID " + orderID);
                                                 //all queries success. emit response.
                                                 socket.emit("order_result", {
                                                     success: true, order_details: {
@@ -251,16 +264,17 @@ waiters.on("connection", function (socket) {
 
                                         for (item of orderItems) {
                                             let conn2 = createConnection();
-                                            let sql = `INSERT INTO OrderItem (orderID, itemNum, quantity, notes) 
-                VALUES (${orderID}, ${item.itemNum}, ${item.quantity}, ${item.notes});`;
-                                            conn2.query(sql, function (err, res) {
+                                            let sql = `INSERT INTO OrderItem (orderID, itemNum, quantity, notes) VALUES (${mysql.escape(orderID)}, ${mysql.escape(item.itemNum)}, ${mysql.escape(item.quantity)}, ${mysql.escape(item.notes)});`;
+                                            conn2.query(sql, function (err) {
                                                 if (err) { console.log(err) } else {
                                                     console.log("added item for order " + orderID + " to database:", item);
                                                     notifySuccess();
                                                 }
+                                                conn2.end();
                                             });
                                         }
                                     }
+                                    conn.end();
                                 });
                             });
                         } else socket.emit("order_result", { success: false, reason: "order has zero items" });

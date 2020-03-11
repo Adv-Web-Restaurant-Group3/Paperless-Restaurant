@@ -207,7 +207,7 @@ waiters.on("connection", function (socket) {
                             let outputArray = [];
                             for (let result of results) {
                                 let index;
-                                if (index = outputArray.find(i => i.orderID === result.orderID) >= 0) {
+                                if ((index = outputArray.findIndex(i => i.orderID === result.orderID)) >= 0) {
                                     //add to existing object
                                     console.log("adding to order", outputArray)
                                     outputArray[index].items.push({

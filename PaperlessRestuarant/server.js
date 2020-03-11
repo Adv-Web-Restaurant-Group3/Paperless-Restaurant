@@ -28,7 +28,7 @@ app.use(express.static(__dirname + "/webapp"));
  *          notes:"raRE MEEAT"
  *      }
  *    ],
- *    status: "waiting" "cooking" "served" ,
+ *    status: "waiting" "cooking" "serving" "served" ,
  *    price
  * },
  * 
@@ -144,7 +144,7 @@ waiters.on("connection", function (socket) {
             getPartyID(tableNum, function (party) {
                 conn.connect(function (err) {
                     if (err) console.log(1, err);
-                    let sql = `SELECT orderID, orderNum, itemNum, quantity, notes, itemName, (SELECT catName FROM MenuCategory WHERE catID = MenuItem.category) AS 'category', price, isVegetarian, isVegan, glutenFree, containsNuts, estTime FROM PartyOrder INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) WHERE party = ${mysql.escape(party)};`;
+                    let sql = `SELECT orderID, orderNum, orderTime, orderStatus, itemNum, quantity, notes, itemName, (SELECT catName FROM MenuCategory WHERE catID = MenuItem.category) AS 'category', price, isVegetarian, isVegan, glutenFree, containsNuts, estTime FROM PartyOrder INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) WHERE party = ${mysql.escape(party)};`;
                     conn.query(sql, function (err, results) {
                         if (err) console.log(2, err);
                         else {
@@ -169,8 +169,10 @@ waiters.on("connection", function (socket) {
                                 } else {
                                     //create new object
                                     outputArray.push({
-                                        orderID: result.orderID,
                                         orderNum: result.orderNum,
+                                        orderID: result.orderID,
+                                        orderTime: new Date(result.orderTime * 1000),
+                                        status: result.orderStatus,
                                         items: [{
                                             itemNum: result.itemNum,
                                             quantity: result.quantity,
@@ -220,7 +222,7 @@ waiters.on("connection", function (socket) {
                             let conn = createConnection();
                             conn.connect(function (err) {
                                 if (err) console.log(3, err);
-                                let sql = `INSERT INTO PartyOrder(party, orderNum) VALUES (${mysql.escape(party)}, ${mysql.escape(orderNum)})`;
+                                let sql = `INSERT INTO PartyOrder(party, orderNum, orderTime, orderStatus) VALUES (${mysql.escape(party)}, ${mysql.escape(orderNum)}, ${Math.floor(new Date().getTime())}, 'waiting')`;
                                 conn.query(sql, function (err, results) {
                                     if (err) console.log(err);
                                     else {
@@ -275,7 +277,7 @@ kitchens.on("connection", function (socket) {
         let conn = createConnection();
         conn.connect(function (err) {
             if (err) console.log(1, err);
-            let sql = `SELECT tableNum, orderID, orderNum, itemNum, quantity, notes, itemName FROM Party INNER JOIN PartyOrder ON Party.partyID = PartyOrder.party INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum);`;
+            let sql = `SELECT tableNum, orderID, orderNum, orderTime, orderStatus, itemNum, quantity, notes, itemName FROM Party INNER JOIN PartyOrder ON Party.partyID = PartyOrder.party INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum);`;
             conn.query(sql, function (err, results) {
                 if (err) console.log(2, err);
                 else {
@@ -296,6 +298,8 @@ kitchens.on("connection", function (socket) {
                                 tableNum: result.tableNum,
                                 orderID: result.orderID,
                                 orderNum: result.orderNum,
+                                orderTime: result.orderTime,
+                                status: result.orderStatus,
                                 items: [{
                                     itemNum: result.itemNum,
                                     quantity: result.quantity,
@@ -310,6 +314,15 @@ kitchens.on("connection", function (socket) {
                 conn.end();
             });
         });
+    });
+
+    socket.on("order_status", function (data) {
+        //changes the status of a given orderID.
+        let orderID = data.orderID;
+        let new_status = data.status;
+        let conn = createConnection();
+        //TODO
+
     });
 
 });

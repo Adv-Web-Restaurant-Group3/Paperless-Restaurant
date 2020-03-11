@@ -15,6 +15,7 @@ class WaiterClient {
     get orders() { return this._current_orders; }
     get items() { return this._items; }
     get categories() { return this._categories; }
+    get table() { return this._table; }
 
     constructor() {
         this.updateMenu();
@@ -40,9 +41,7 @@ class WaiterClient {
         }
 
     }
-    getTable() {
-        return this._table;
-    }
+
 
     sync(timeout) {
         setInterval(this.update, timeout)
@@ -57,7 +56,7 @@ class WaiterClient {
                 console.log(response)
                 if (response.success) {
                     client._update_orders(response.orders);
-                    if (client._update_callback) client._update_callback();
+                    if (client._update_callback) client._update_callback(client.orders);
                 } else {
                     alert("server responded with an error: " + response.reason);
                 }
@@ -87,11 +86,12 @@ class WaiterClient {
                     }
                 });
                 this.socket.off("order_result");
+                let client = this;
                 this.socket.on("order_result", function (response) {
                     console.log(response);
                     if (response.success) {
                         console.log("order added successfully: ", order);
-                        this.update();
+                        client.update();
                     } else {
                         console.log("Server responded with an error while trying to add order: " + response.reason);
                     }

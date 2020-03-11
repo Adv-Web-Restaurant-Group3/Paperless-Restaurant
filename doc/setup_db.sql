@@ -151,7 +151,8 @@ create table PartyOrder(
 	orderID int primary key auto_increment,
     party int references Party(partyID),
     orderNum int check(orderNum>0),
-    orderTime int check(orderTime>0) -- unix time
+    orderTime int check(orderTime>0), -- unix time
+    orderStatus varchar(10)
 );
 
 create table OrderItem(
@@ -180,7 +181,9 @@ update MenuItem set estTime = 23 where itemName like '%stir-fried%';
 
 show tables;
 
-insert into PartyOrder(party, orderNum) values (4, 1);
+-- test order for table 1
+insert into Party(partyID, tableNum,inHouse) values(4,1,true);
+insert into PartyOrder(party, orderNum, orderTime, orderStatus) values (4, 1, 1583938720, 'waiting');
 insert into OrderItem(orderID, itemNum, quantity, notes) values (1, 61, 1, '');
 insert into OrderItem(orderID, itemNum, quantity, notes) values (1, 38, 2, '');
 

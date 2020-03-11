@@ -1,44 +1,44 @@
 var orderDate = [{
-        "table": 1,
-        "orderNum": 1,
-        "orderTime": 1300,
-        "item": [{
-                "itemNum": 1,
-                "itemName": "Chicken Chow Mein",
-                "quantity": 1,
-                "notes": "notes"
-            },
-            {
-                "itemNum": 2,
-                "itemName": "Chicken Chow Mein",
-                "quantity": 1,
-                "notes": "notes"
-            }
-        ],
-        "status": "Cooking",
-        "price": 40
+    "table": 1,
+    "orderNum": 1,
+    "orderTime": 1300,
+    "item": [{
+        "itemNum": 1,
+        "itemName": "Chicken Chow Mein",
+        "quantity": 1,
+        "notes": "notes"
     },
     {
-        "table": 1,
-        "orderNum": 2,
-        "orderTime": 1300,
-        "item": [{
-            "itemNum": 1,
-            "itemName": "Chicken Chow Mein",
-            "quantity": 1,
-            "notes": "notes"
-        }],
-        "status": "Queued",
-        "price": 20
+        "itemNum": 2,
+        "itemName": "Chicken Chow Mein",
+        "quantity": 1,
+        "notes": "notes"
     }
+    ],
+    "status": "Cooking",
+    "price": 40
+},
+{
+    "table": 1,
+    "orderNum": 2,
+    "orderTime": 1300,
+    "item": [{
+        "itemNum": 1,
+        "itemName": "Chicken Chow Mein",
+        "quantity": 1,
+        "notes": "notes"
+    }],
+    "status": "Queued",
+    "price": 20
+}
 ];
 
 let client = new WaiterClient();
 
 client.setTable(1);
-client.onUpdate(function() {
-    console.log(client.getOrders());
-    orderDate = client.getOrders();
+client.onUpdate(function () {
+    console.log(client.orders);
+    orderDate = client.orders;
 
 
     var total = 0;
@@ -132,7 +132,7 @@ client.onUpdate(function() {
     var openBox = document.getElementsByClassName("openBox");
     var topBox = document.getElementsByClassName("topBox");
     for (var i = 0; i < dropDown.length; i++) {
-        dropDown[i].addEventListener('click', function() {
+        dropDown[i].addEventListener('click', function () {
             var num = this.getAttribute("data-value");
             var show = true;
             if (openBox[num].style.display === "none") {
@@ -157,10 +157,10 @@ client.onUpdate(function() {
     }
 
 
-    document.getElementById("tableClear").addEventListener('click', function() {
+    document.getElementById("tableClear").addEventListener('click', function () {
         document.getElementById("section-a").innerHTML = "<div class='container-a' id='addOrder'>+ Add Order</div>";
 
-        document.getElementById("addOrder").addEventListener('click', function() {
+        document.getElementById("addOrder").addEventListener('click', function () {
             alert("Add order");
         });
 

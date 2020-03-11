@@ -10,7 +10,9 @@ class KitchenClient {
     get socket() { return this._socket; }
     get orders() { return this._current_orders; }
 
-    constructor() { }
+    constructor() {
+        this.update();
+    }
 
     sync(timeout) {
         setInterval(this.update, timeout)

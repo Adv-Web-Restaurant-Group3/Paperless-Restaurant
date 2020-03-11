@@ -85,59 +85,11 @@ server.listen(8080, function () {
     console.log("Server running on port 8080");
 });
 
-
-
-
 const waiters = io.of("/waiter");
 const kitchens = io.of("/kitchen");
 const counters = io.of("/counter");
 
 waiters.on("connection", function (socket) {
-    function getPartyNum(tableNum, callback) {
-        let conn = createConnection();
-        conn.connect(function (err) {
-            if (err) console.log(err);
-            let sql = `SELECT partyID FROM Party WHERE tableNum = ${mysql.escape(tableNum)} AND inHouse = TRUE;`;
-            conn.query(sql, function (err, results) {
-                if (err) console.log(err);
-                else {
-                    if (results.length > 0) {
-                        console.log("party found: ", results[0]);
-                        callback(results[0].partyID);
-                    } else {
-                        console.log("generating new party for table " + tableNum);
-                        let sql = `INSERT INTO Party (tableNum, inHouse) VALUES (${mysql.escape(tableNum)}, TRUE)`;
-                        let conn2 = createConnection();
-                        conn2.query(sql, function (err, results) {
-                            if (err) console.log(err);
-                            else {
-                                callback(results.insertId);
-                            }
-                            conn2.end();
-                        });
-                    }
-                }
-                conn.end();
-            });
-        })
-    }
-
-    function getNextOrderNum(party, callback) {
-        console.log(party)
-        let conn = createConnection();
-        conn.connect(function (err) {
-            if (err) console.log(err);
-            let sql = `SELECT COUNT(orderNum)+1 AS 'orderNum' FROM PartyOrder WHERE party = ${mysql.escape(party)};`;
-            conn.query(sql, function (err, results) {
-                if (err) console.log(err);
-                else {
-                    callback(results[0].orderNum);
-                }
-                conn.end();
-            });
-        });
-    }
-
     //waiter/waitress view
     console.log("waiter connected");
 
@@ -150,13 +102,10 @@ waiters.on("connection", function (socket) {
                 conn.query("SELECT catID, catName FROM MenuCategory", function (err, results) {
                     if (err) console.log(12, err)
                     else {
-                        console.log(results);
-
                         let categories = [];
                         for (category of results) {
                             categories.push({ catID: category.catID, catName: category.catName });
                         }
-                        console.log(categories)
                         let conn2 = createConnection();
 
                         conn2.connect(function (err) {
@@ -174,42 +123,36 @@ waiters.on("connection", function (socket) {
                                                 estTime: item.estTime
                                             });
                                         }
-
                                         socket.emit("menu", { items, categories });
                                         conn2.end();
                                     }
-
                                 });
                             }
                         })
                         conn.end();
-
                     }
                 });
-
             }
-        })
+        });
     });
 
     socket.on("get_orders", function (data) {
+        //get orders from DB for given tableNum and send to client.
         let tableNum = data.tableNum;
         if (tableNum) {
             let conn = createConnection();
-            getPartyNum(tableNum, function (party) {
-                console.log("using partyId " + party)
+            getPartyID(tableNum, function (party) {
                 conn.connect(function (err) {
                     if (err) console.log(1, err);
                     let sql = `SELECT orderID, orderNum, itemNum, quantity, notes, itemName, (SELECT catName FROM MenuCategory WHERE catID = MenuItem.category) AS 'category', price, isVegetarian, isVegan, glutenFree, containsNuts, estTime FROM PartyOrder INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) WHERE party = ${mysql.escape(party)};`;
                     conn.query(sql, function (err, results) {
                         if (err) console.log(2, err);
                         else {
-                            console.log("res!", results);
                             let outputArray = [];
                             for (let result of results) {
-                                let index;
+                                let index = -1;
                                 if ((index = outputArray.findIndex(i => i.orderID === result.orderID)) >= 0) {
                                     //add to existing object
-                                    console.log("adding to order", outputArray)
                                     outputArray[index].items.push({
                                         itemNum: result.itemNum,
                                         quantity: result.quantity,
@@ -224,7 +167,6 @@ waiters.on("connection", function (socket) {
                                         estTime: result.estTime
                                     });
                                 } else {
-                                    console.log("creating order")
                                     //create new object
                                     outputArray.push({
                                         orderID: result.orderID,
@@ -251,7 +193,7 @@ waiters.on("connection", function (socket) {
                     });
                 });
             });
-        } else socket.emit("get_orders_result", { success: false, reason: "invalid tableNum" })
+        } else socket.emit("get_orders_result", { success: false, reason: "invalid tableNum" });
     });
 
 
@@ -264,23 +206,13 @@ waiters.on("connection", function (socket) {
     }
     */
 
-    function validateOrder(order) {
-        if (order) {
-            if (order.tableNum && typeof order.tableNum === "number" && order.tableNum > 0) {
-                if (order.items && order.items instanceof Array) {
-                    return true;
-                }
 
-            }
-        }
-        return false;
-    }
     socket.on("order", function (data) {
         console.log("order received:", data);
         //add order to DB.
         if (data && data.order) {
             let order = data.order;
-            getPartyNum(order.tableNum, function (party) {
+            getPartyID(order.tableNum, function (party) {
                 getNextOrderNum(party, function (orderNum) {
                     //validate order
                     if (validateOrder(order)) {
@@ -326,18 +258,59 @@ waiters.on("connection", function (socket) {
                             });
                         } else socket.emit("order_result", { success: false, reason: "order has zero items" });
                     } else socket.emit("order_result", { success: false, reason: "invalid order supplied" });
-                })
-
+                });
             });
-
         } else socket.emit("order_result", { success: false, reason: "order object was not given" });
     });
+
 
 });
 
 kitchens.on("connection", function (socket) {
     //kitchen view
     console.log("kitchen connected");
+
+    socket.on("get_orders", function () {
+        //get all orders from DB and send to client.
+        let conn = createConnection();
+        conn.connect(function (err) {
+            if (err) console.log(1, err);
+            let sql = `SELECT tableNum, orderID, orderNum, itemNum, quantity, notes, itemName FROM Party INNER JOIN PartyOrder USING(partyID) INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) WHERE party = ${mysql.escape(party)};`;
+            conn.query(sql, function (err, results) {
+                if (err) console.log(2, err);
+                else {
+                    let outputArray = [];
+                    for (let result of results) {
+                        let index = -1;
+                        if ((index = outputArray.findIndex(i => i.orderID === result.orderID)) >= 0) {
+                            //add to existing object
+                            outputArray[index].items.push({
+                                itemNum: result.itemNum,
+                                quantity: result.quantity,
+                                notes: result.notes,
+                                itemName: result.itemName
+                            });
+                        } else {
+                            //create new object
+                            outputArray.push({
+                                tableNum: result.tableNum,
+                                orderID: result.orderID,
+                                orderNum: result.orderNum,
+                                items: [{
+                                    itemNum: result.itemNum,
+                                    quantity: result.quantity,
+                                    notes: result.notes,
+                                    itemName: result.itemName
+                                }]
+                            });
+                        }
+                    }
+                    socket.emit("get_orders_result", { success: true, orders: outputArray });
+                }
+                conn.end();
+            });
+        });
+    });
 
 });
 
@@ -346,3 +319,65 @@ counters.on("connection", function (socket) {
     console.log("counter connected");
 
 });
+
+
+/*
+ * GLOBAL FUNCTIONS - used in all views.
+ */
+function validateOrder(order) {
+    //returns true if the given order is a valid order (as supplied by the client; server-side orders do not need validation)
+    if (order) {
+        if (order.tableNum && typeof order.tableNum === "number" && order.tableNum > 0) {
+            if (order.items && order.items instanceof Array) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function getPartyID(tableNum, callback) {
+    //retreives the partyID for the given tableNum and passes it to the given callback.
+    let conn = createConnection();
+    conn.connect(function (err) {
+        if (err) console.log(err);
+        let sql = `SELECT partyID FROM Party WHERE tableNum = ${mysql.escape(tableNum)} AND inHouse = TRUE;`;
+        conn.query(sql, function (err, results) {
+            if (err) console.log(err);
+            else {
+                if (results.length > 0) {
+                    console.log("party found for table " + tableNum + ": ", results[0]);
+                    callback(results[0].partyID);
+                } else {
+                    let sql = `INSERT INTO Party (tableNum, inHouse) VALUES (${mysql.escape(tableNum)}, TRUE)`;
+                    let conn2 = createConnection();
+                    conn2.query(sql, function (err, results) {
+                        if (err) console.log(err);
+                        else {
+                            console.log("new party generated for table " + tableNum + ": " + results.insertId);
+                            callback(results.insertId);
+                        }
+                        conn2.end();
+                    });
+                }
+            }
+            conn.end();
+        });
+    });
+}
+
+function getNextOrderNum(party, callback) {
+    //retreives the next orderNum for the given party (1+number of orders) and passes it to the given callback.
+    let conn = createConnection();
+    conn.connect(function (err) {
+        if (err) console.log(err);
+        let sql = `SELECT COUNT(orderNum)+1 AS 'orderNum' FROM PartyOrder WHERE party = ${mysql.escape(party)};`;
+        conn.query(sql, function (err, results) {
+            if (err) console.log(err);
+            else {
+                callback(results[0].orderNum);
+            }
+            conn.end();
+        });
+    });
+}

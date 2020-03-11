@@ -13,16 +13,11 @@ class WaiterClient {
 
     get socket() { return this._socket; }
     get orders() { return this._current_orders; }
-
+    get items() { return this._items; }
+    get categories() { return this._categories; }
 
     constructor() {
         this.updateMenu();
-    }
-    getItems() {
-        return this._items;
-    }
-    getCategories() {
-        return this._categories;
     }
 
     updateMenu() {
@@ -75,10 +70,6 @@ class WaiterClient {
     }
     onMenuUpdate(callback) {
         this._menu_update_callback = callback;
-    }
-
-    getOrders() {
-        return this._current_orders;
     }
 
     /* client-side simplification.

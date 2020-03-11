@@ -24,11 +24,15 @@ class KitchenClient {
             console.log(response)
             if (response.success) {
                 client._update_orders(response.orders);
-                if (client._update_callback) client._update_callback();
+                if (client._update_callback) client._update_callback(client.orders);
             } else {
                 alert("server responded with an error: " + response.reason);
             }
         });
+    }
+
+    _update_orders(orders) {
+        this._current_orders = orders;
     }
 
     onUpdate(callback) {

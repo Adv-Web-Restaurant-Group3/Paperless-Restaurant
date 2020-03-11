@@ -275,7 +275,7 @@ kitchens.on("connection", function (socket) {
         let conn = createConnection();
         conn.connect(function (err) {
             if (err) console.log(1, err);
-            let sql = `SELECT tableNum, orderID, orderNum, itemNum, quantity, notes, itemName FROM Party INNER JOIN PartyOrder USING(partyID) INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) WHERE party = ${mysql.escape(party)};`;
+            let sql = `SELECT tableNum, orderID, orderNum, itemNum, quantity, notes, itemName FROM Party INNER JOIN PartyOrder ON Party.partyID = PartyOrder.party INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum);`;
             conn.query(sql, function (err, results) {
                 if (err) console.log(2, err);
                 else {

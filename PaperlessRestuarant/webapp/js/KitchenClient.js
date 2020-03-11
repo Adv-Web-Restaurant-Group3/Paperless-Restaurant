@@ -2,7 +2,7 @@
  * WaiterClient class. for interfacing with the server as a Waiter view.
  */
 
-class WaiterClient {
+class KitchenClient {
     _current_orders = [];
     _socket = io("/waiter");
     _update_callback = null;

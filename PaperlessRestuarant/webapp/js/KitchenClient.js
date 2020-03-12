@@ -41,7 +41,8 @@ class KitchenClient {
     }
 
     setStatus(orderID, orderStatus) {
-
+        //use with OrderStatus enum! 
+        //example: client.setStatus(2, OrderStatus.COOKING);
         if (typeof orderStatus === "string") {
             let status = parseInt(orderStatus.substr(13, 1));
             this.socket.emit("order_status", { orderID, status });

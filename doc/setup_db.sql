@@ -152,7 +152,7 @@ create table PartyOrder(
     party int references Party(partyID),
     orderNum int check(orderNum>0),
     orderTime int check(orderTime>0), -- unix time
-    orderStatus varchar(10)
+    orderStatus int(1) -- 1='waiting' 2='cooking' 3='serving' 4='served'
 );
 
 create table OrderItem(
@@ -183,7 +183,7 @@ show tables;
 
 -- test order for table 1
 insert into Party(partyID, tableNum,inHouse) values(4,1,true);
-insert into PartyOrder(party, orderNum, orderTime, orderStatus) values (4, 1, 1583938720, 'waiting');
+insert into PartyOrder(party, orderNum, orderTime, orderStatus) values (4, 1, 1583938720, 1);
 insert into OrderItem(orderID, itemNum, quantity, notes) values (1, 61, 1, '');
 insert into OrderItem(orderID, itemNum, quantity, notes) values (1, 38, 2, '');
 

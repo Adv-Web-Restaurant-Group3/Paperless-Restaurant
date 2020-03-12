@@ -2,6 +2,13 @@
  * WaiterClient class. for interfacing with the server as a Waiter view.
  */
 
+//OrderStatus enum
+const OrderStatus = {
+    get WAITING() { return "ORDER_STATUS:1" },
+    get COOKING() { return "ORDER_STATUS:2" },
+    get SERVING() { return "ORDER_STATUS:3" },
+    get SERVED() { return "ORDER_STATUS:4" },
+}
 class KitchenClient {
     _current_orders = [];
     _socket = io("/kitchen");
@@ -33,18 +40,24 @@ class KitchenClient {
         });
     }
 
-    setStatus(orderID, status) {
-        this.socket.emit("order_status", { orderID, status });
-        this.socket.off("order_status_result");
-        this.socket.on("order_status_result", function(response) {
-            if (response.success) {
-                console.log("successfully set status of order " + orderID + " to '" + status + "'");
-            } else console.log("Server responded with error while trying to update order status: " + response.reason);
-        });
+    setStatus(orderID, orderStatus) {
 
+        if (typeof orderStatus === "string") {
+            let status = parseInt(orderStatus.substr(13, 1));
+            this.socket.emit("order_status", { orderID, status });
+            this.socket.off("order_status_result");
+            this.socket.on("order_status_result", function(response) {
+                if (response.success) {
+                    console.log("successfully set status of order " + orderID + " to '" + status + "'");
+                } else console.log("Server responded with error while trying to update order status: " + response.reason);
+            });
+        }
     }
 
     _update_orders(orders) {
+        for (let order of orders) {
+            order.status = Object.keys(OrderStatus)[order.status - 1].toLowerCase();
+        }
         this._current_orders = orders;
     }
 

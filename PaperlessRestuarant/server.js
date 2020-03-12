@@ -46,10 +46,6 @@ app.use(express.static(__dirname + "/webapp"));
  */
 
 
-
-
-
-
 var DB = {
     HOST: undefined,
     PORT: undefined,
@@ -224,7 +220,7 @@ waiters.on("connection", function(socket) {
                             let conn = createConnection();
                             conn.connect(function(err) {
                                 if (err) console.log(3, err);
-                                let sql = `INSERT INTO PartyOrder(party, orderNum, orderTime, orderStatus) VALUES (${mysql.escape(party)}, ${mysql.escape(orderNum)}, ${Math.floor(new Date().getTime())}, 'waiting')`;
+                                let sql = `INSERT INTO PartyOrder(party, orderNum, orderTime, orderStatus) VALUES (${mysql.escape(party)}, ${mysql.escape(orderNum)}, ${Math.floor(new Date().getTime()/1000)}, 1)`;
                                 conn.query(sql, function(err, results) {
                                     if (err) console.log(err);
                                     else {
@@ -280,7 +276,8 @@ kitchens.on("connection", function(socket) {
         let conn = createConnection();
         conn.connect(function(err) {
             if (err) console.log(1, err);
-            let sql = `SELECT tableNum, orderID, orderNum, orderTime, orderStatus, itemNum, quantity, notes, itemName FROM Party INNER JOIN PartyOrder ON Party.partyID = PartyOrder.party INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum);`;
+            //get all orders either waiting or cooking.
+            let sql = `SELECT tableNum, orderID, orderNum, orderTime, orderStatus, itemNum, quantity, notes, itemName FROM Party INNER JOIN PartyOrder ON Party.partyID = PartyOrder.party INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) WHERE orderStatus < 3;`;
             conn.query(sql, function(err, results) {
                 if (err) console.log(2, err);
                 else {
@@ -301,7 +298,7 @@ kitchens.on("connection", function(socket) {
                                 tableNum: result.tableNum,
                                 orderID: result.orderID,
                                 orderNum: result.orderNum,
-                                orderTime: result.orderTime,
+                                orderTime: new Date(result.orderTime * 1000),
                                 status: result.orderStatus,
                                 items: [{
                                     itemNum: result.itemNum,
@@ -323,21 +320,25 @@ kitchens.on("connection", function(socket) {
         //changes the status of a given orderID.
         let orderID = data.orderID;
         let newStatus = data.status;
-        let conn = createConnection();
-        conn.connect(function(err) {
-            if (err) console.log(err);
-            else {
-                let sql = `UPDATE PartyOrder SET orderStatus = ${mysql.escape(newStatus)} WHERE orderID = ${mysql.escape(orderID)};`;
-                conn.query(sql, function(err, results) {
-                    if (err) console.log(err);
-                    else {
-                        console.log(results);
-                        socket.emit("order_status_result", { success: true });
-                    }
-                });
-            }
-        });
 
+        if (typeof newStatus === "number") {
+            let conn = createConnection();
+            conn.connect(function(err) {
+                if (err) console.log(err);
+                else {
+                    let sql = `UPDATE PartyOrder SET orderStatus = ${mysql.escape(newStatus)} WHERE orderID = ${mysql.escape(orderID)};`;
+                    conn.query(sql, function(err, results) {
+                        if (err) console.log(err);
+                        else {
+                            if (results.affectedRows === 1) {
+                                socket.emit("order_status_result", { success: true });
+                            } else socket.emit("order_status_result", { success: false, reason: "given orderID does not match an order!" });
+                        }
+                        conn.end();
+                    });
+                }
+            });
+        }
     });
 
 });

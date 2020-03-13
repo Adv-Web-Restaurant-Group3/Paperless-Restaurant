@@ -41,7 +41,7 @@ function orderStatus(status,id){
 }
 
 function buildItem(obj){
-    console.log(new Date(obj.orderTime));
+
     var status = orderStatus(obj.status,obj.orderID);
     var orderID = obj.orderID;
     var item = $("<div class='orderBox'></div>");
@@ -110,7 +110,7 @@ function alterOrderVal(orderID,attribute,newVal){
 
 function ordersReceived(){
     
-    ordersObj.sort((a,b)=>new Date(b.orderTime)-new Date(a.orderTime));
+    ordersObj.sort((a,b)=>new Date(a.orderTime)-new Date(b.orderTime));
     ordersObj.forEach(el=>{
         buildItem(el);
     });     

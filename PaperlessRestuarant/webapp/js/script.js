@@ -50,7 +50,14 @@ client.onUpdate(function () {
         var sectionA = document.getElementById("section-a");
 
         var content = "";
-
+        orderDate.sort((a,b)=>{
+            if(a.status==3&&b.status!=3){
+                return -1;
+            }
+            else if(b.status==3&&a.status!=3){
+                return 1;
+            }else return 0;
+        });
         for (var i = 0; i < orderDate.length; i++) {
             orderNum = orderDate[i].orderNum;
             orderTime = orderDate[i].orderTime;

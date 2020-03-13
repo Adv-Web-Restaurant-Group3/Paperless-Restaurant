@@ -239,7 +239,9 @@ function ordersReceived(){
     
     ordersObj.sort((a,b)=>new Date(b.orderTime)-new Date(a.orderTime));
     ordersObj.forEach(el=>{
-        buildItem(el);
+        if(el.status!=0){ /// Omits orders that are ready
+            buildItem(el);
+        }
     });     
     $(".status").click(event=>{
         switch($(event.target).parent().parent().data("Status")){

@@ -156,27 +156,30 @@ let ordersObj = [
         ]
     }
 ];
-function orderStatus(status){
+function orderStatus(status,id){
     switch(status){
-        case 2:
+        case 1:
             return "Waiting to Cook";
-        case 1: 
+        case 2: 
             return "Cooking";
-        default:
+        case 3:
             return "Order Ready!";
+        default:
+            console.error("invalid status received");
+            return "Undefined";
     }
 }
 
 function buildItem(obj){
     console.log(new Date(obj.orderTime));
-    var status = orderStatus(obj.status);
+    var status = orderStatus(obj.status,obj.orderID);
     var orderID = obj.orderID;
     var item = $("<div class='orderBox'></div>");
     // TOP BAR
     var topBar = $("<div class='topBar'><div class='orderTitle'></div><span class='status'></span</div>");
     topBar.find(".orderTitle").append("Order "+orderID);
     topBar.find(".status").append(status);
-    if(obj.status==1){
+    if(obj.status==2){
         $(topBar.find(".status")).css("background-color","orange");
         $(topBar.find(".status")).hover(()=>{
             $(topBar.find(".status")).css("background-color","red");
@@ -228,7 +231,6 @@ function alterOrderVal(orderID,attribute,newVal){
             el[attribute] = newVal;
             switch(attribute){
                 case "status":
-                    
                     socket.emit("order_status",el);
                     break;
             }
@@ -244,9 +246,9 @@ function ordersReceived(){
     });     
     $(".status").click(event=>{
         switch($(event.target).parent().parent().data("Status")){
-            case 2:
-                alterOrderVal($(event.target).parent().parent().data("Info").orderID,"status",1);
-                $(event.target).parent().parent().data("Status",1);
+            case 1:
+                alterOrderVal($(event.target).parent().parent().data("Info").orderID,"status",2);
+                $(event.target).parent().parent().data("Status",2);
                 $(event.target).html("Cooking");
                 $(event.target).hover(()=>{
                     $(event.target).css("background-color","red");
@@ -254,13 +256,13 @@ function ordersReceived(){
                     $(event.target).css("background-color","orange");
                 });
                 break;
-            case 1:
-                alterOrderVal($(event.target).parent().parent().data("Info").orderID,"status",0);
+            case 2:
+                alterOrderVal($(event.target).parent().parent().data("Info").orderID,"status",3);
                 removeItem($(event.target).parent().parent().data("Info").orderID);
                 $(event.target).parent().parent().remove();
                 break;
-            case 0:
-                alterOrderVal($(event.target).parent().parent().data("Info").orderID,"status",0);
+            case 3:
+                alterOrderVal($(event.target).parent().parent().data("Info").orderID,"status",3);
                 removeItem($(event.target).parent().parent().data("Info").orderID);
                 $(event.target).parent().parent().remove();
                 break;

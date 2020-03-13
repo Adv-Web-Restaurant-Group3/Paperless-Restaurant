@@ -1,15 +1,19 @@
 /* Essentials
 -----------------------------------------------------------------------------*/
 body {
-    font-family: helvetica, arial, sans-serif;
-  
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-color: rgb(218, 232, 245);
     margin: 0;
     border: 0;
     padding: 0;
   }
   
   .wrapper {
+    background-color: aliceblue;
     max-width: 900px;
+    min-width: min-content;
+    padding-left: 1rem;
+    padding-right: 1rem;
     margin: 0 auto;
   }
   
@@ -17,11 +21,27 @@ body {
     font-style: italic;
     color: #373fff;
   }
-  
+  #pageTitle{
+    z-index: -1;
+    position: fixed;
+    background-color: white;
+    width: max-content;
+    height: max-content;
+
+    top:0;
+    left:0;
+    padding:0.4rem;
+    border-radius: 0 0 0.5rem 0.5rem;
+    box-shadow: 1px 2px grey;
+}
+
   /* Section A
   -----------------------------------------------------------------------------*/
   #section-a .container-a {
-    border: 1px solid #000;
+    border-radius: 0.3rem;
+    background-color: white;
+    border: 1px solid whitesmoke;
+    box-shadow: inset 1px 1px 2px grey;
     line-height: 60px;
     text-align: center;
     font-size: 18px;
@@ -94,14 +114,18 @@ body {
   }
   .served,
   #printBill {
-    padding: 0 15px;
+    padding: 0 25px;
     background-color: #FFC5C5;
-    border: 1px solid #000;
-  
-    margin-right: 50px;
+    box-shadow:inset 1px 1px transparent;
+    border-radius: 0.3rem;
+    font-weight: 600;
+    margin-right: 73px;
     margin-bottom: 50px;
   }
-  
+  #printBill:hover{
+    background-color: rgb(243, 79, 79,0.6);
+    box-shadow:inset 2px 2px 5px rgb(243, 79, 79,1);
+  }
   #total {
     float: right;
   
@@ -170,4 +194,15 @@ body {
 
   #addOrder {
     cursor: pointer;
+}
+
+#party{
+  border:1px solid transparent;
+  height: 2rem;
+  width: 5rem;  
+  font-weight: 600;
+}
+#party:hover{
+  box-shadow: inset 0px 0px 2px grey;
+  
 }

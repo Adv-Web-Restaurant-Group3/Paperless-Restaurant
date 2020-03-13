@@ -1,3 +1,4 @@
+var socket = io("/kitchen");
 let ordersObj = [
     {
         orderID:19,
@@ -155,15 +156,26 @@ let ordersObj = [
         ]
     }
 ];
-
+function orderStatus(status){
+    switch(status){
+        case 2:
+            return "Waiting to Cook";
+        case 1: 
+            return "Cooking";
+        default:
+            return "Order Ready!";
+    }
+}
 
 function buildItem(obj){
+
+    var status = orderStatus(obj.status);
     var orderID = obj.orderID;
     var item = $("<div class='orderBox'></div>");
     // TOP BAR
     var topBar = $("<div class='topBar'><div class='orderTitle'></div><span class='status'></span</div>");
     topBar.find(".orderTitle").append("Order "+orderID);
-    topBar.find(".status").append("Waiting To Cook");
+    topBar.find(".status").append(status);
     item.append(topBar);
     item.append("<hr>");
     //ITEMS
@@ -171,7 +183,7 @@ function buildItem(obj){
     obj.items.forEach(el=>{
         itemsStr+= "<li>";
         itemsStr+= "<div class='orderItem'>" 
-        itemsStr+= "<span class='itemTXT'>"+el.name;
+        itemsStr+= "<span class='itemTXT'>"+el.itemName;
         if(el.quantity>1)itemsStr+="  <span class='red'>x"+el.quantity+"</span></span>";
         else itemsStr+= "</span>";
         if(el.notes)itemsStr+= "<span class='itemNotes'>"+el.notes+"</span>";
@@ -180,22 +192,15 @@ function buildItem(obj){
     });  
     itemsStr+="</ul></div>";
     item.append($(itemsStr));
-    //console.log(itemsStr);
-    $("#content").append(item);
-    //console.log(item.prop('outerHTML'));    
+    $("#content").append(item); 
     
 }
 
 function divName(){
-    if($(".orderBox").length!=ordersObj.length){
-        divCount();
-    }else{
-        $(".orderBox").each((i,el)=>{
-            $(el).data("Info",ordersObj[i]);
-            $(el).data("Status","Waiting To Cook");
-            //console.log($(el).data("Status"));
-        });
-    }
+    $(".orderBox").each((i,el)=>{
+        $(el).data("Info",ordersObj[i]);
+        $(el).data("Status",ordersObj[i].status);
+    });
 }
 
 function removeItem(orderID){
@@ -203,36 +208,68 @@ function removeItem(orderID){
     console.log(ordersObj);
 }
 
-$(document).ready(()=>{
+socket.on("order_status_result",output=>{
+    if(output.success)console.log("Order status successfully updated!");
+    else console.error(output.reason);
+    
+});
+
+function alterOrderVal(orderID,attribute,newVal){
+    ordersObj.forEach(el=>{
+        if(el.orderID==orderID){
+            el[attribute] = newVal;
+            switch(attribute){
+                case "status":
+                    socket.emit("order_status",el);
+                    break;
+            }
+        }
+    });
+}
+
+function ordersReceived(){
     ordersObj.sort((a,b)=>a.orderID-b.orderID);
     ordersObj.forEach(el=>{
         buildItem(el);
-    });
-
+    });     
     $(".status").click(event=>{
         switch($(event.target).parent().parent().data("Status")){
-            case "Waiting To Cook":
-                $(event.target).parent().parent().data("Status","Cooking")
+            case 2:
+                alterOrderVal($(event.target).parent().parent().data("Info").orderID,"status",1);
+                $(event.target).parent().parent().data("Status",1);
                 $(event.target).html("Cooking");
-                
                 $(event.target).hover(()=>{
                     $(event.target).css("background-color","red");
                 },()=>{
                     $(event.target).css("background-color","orange");
                 });
                 break;
-            case "Cooking":
+            case 1:
+                alterOrderVal($(event.target).parent().parent().data("Info").orderID,"status",0);
+                removeItem($(event.target).parent().parent().data("Info").orderID);
+                $(event.target).parent().parent().remove();
+                break;
+            case 0:
+                alterOrderVal($(event.target).parent().parent().data("Info").orderID,"status",0);
                 removeItem($(event.target).parent().parent().data("Info").orderID);
                 $(event.target).parent().parent().remove();
                 break;
         }
     });
     divName(); //check all the orderObj are added to page then ID them
+}
+
+$(document).ready(()=>{
+    socket.emit("get_orders");
+    socket.on("get_orders_result",(output)=>{
+        if(output.success) ordersObj=output.orders, ordersReceived(),console.log(ordersObj);
+        else console.log("ORDER REQUEST UNSUCCESFUL");                                                                                                                       
+    });
 
 });
 
-/*
-    <div class="orderBox">
+/*  --- DIV STRUCTURE
+    <div class="orderBox"> 
         <div class="topBar">
             <div class="orderTitle">
                 Table 1
@@ -265,19 +302,3 @@ $(document).ready(()=>{
     </div>
 
 */
-/*
-function toggleIMG(divContent){
-    if(divContent.includes("checked")){
-        return '<img src="images/box.png">';
-    }else{
-        return '<img src="images/checked-box.png">';
-    }
-}
-$(".orderItem").click(event=>{
-    let itemImage = $(event.target).parent().find(".itemIMG");
-    if(!$(event.target).find("img").length) itemImage = $(event.target).parent().parent().find(".itemIMG");
-    itemImage.html(toggleIMG(itemImage.html()));
-});
-*/
-
-

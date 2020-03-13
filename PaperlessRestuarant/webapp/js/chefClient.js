@@ -176,6 +176,14 @@ function buildItem(obj){
     var topBar = $("<div class='topBar'><div class='orderTitle'></div><span class='status'></span</div>");
     topBar.find(".orderTitle").append("Order "+orderID);
     topBar.find(".status").append(status);
+    if(obj.status==1){
+        $(topBar.find(".status")).css("background-color","orange");
+        $(topBar.find(".status")).hover(()=>{
+            $(topBar.find(".status")).css("background-color","red");
+        },()=>{
+            $(topBar.find(".status")).css("background-color","orange");
+        });
+    }
     item.append(topBar);
     item.append("<hr>");
     //ITEMS

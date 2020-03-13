@@ -23,7 +23,6 @@ class WaiterClient {
     updateMenu() {
         this.socket.off("menu");
         let client = this;
-
         this.socket.on("menu", function(results) {
             console.log(results);
             client._items = results.items;

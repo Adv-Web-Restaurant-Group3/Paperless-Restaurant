@@ -228,6 +228,7 @@ function alterOrderVal(orderID,attribute,newVal){
             el[attribute] = newVal;
             switch(attribute){
                 case "status":
+                    
                     socket.emit("order_status",el);
                     break;
             }
@@ -239,9 +240,7 @@ function ordersReceived(){
     
     ordersObj.sort((a,b)=>new Date(b.orderTime)-new Date(a.orderTime));
     ordersObj.forEach(el=>{
-        if(el.status!=0){ /// Omits orders that are ready
-            buildItem(el);
-        }
+        buildItem(el);
     });     
     $(".status").click(event=>{
         switch($(event.target).parent().parent().data("Status")){
@@ -294,18 +293,6 @@ $(document).ready(()=>{
                     <div class="orderItem">
                         <span class="itemTXT">item 1</span>
                         <span class="itemNotes">well done</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="orderItem">
-                        <span class="itemTXT">item2</span>
-                        <span class="itemNotes">medium rare</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="orderItem">
-                        <span class="itemTXT">item3</span>
-                        <span class="itemNotes">blah blah</span>
                     </div>
                 </li>
             </ul>

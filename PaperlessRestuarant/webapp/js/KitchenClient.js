@@ -1,5 +1,5 @@
 /**
- * WaiterClient class. for interfacing with the server as a Waiter view.
+ * KitchenClient class. for interfacing with the server as a Kitchen view.
  */
 
 //OrderStatus enum
@@ -29,7 +29,7 @@ class KitchenClient {
         this.socket.emit("get_orders");
         this.socket.off("get_orders_result");
         let client = this;
-        this.socket.on("get_orders_result", function(response) {
+        this.socket.on("get_orders_result", function (response) {
             console.log(response)
             if (response.success) {
                 client._update_orders(response.orders);
@@ -47,7 +47,7 @@ class KitchenClient {
             let status = parseInt(orderStatus.substr(13, 1));
             this.socket.emit("order_status", { orderID, status });
             this.socket.off("order_status_result");
-            this.socket.on("order_status_result", function(response) {
+            this.socket.on("order_status_result", function (response) {
                 if (response.success) {
                     console.log("successfully set status of order " + orderID + " to '" + status + "'");
                 } else console.log("Server responded with error while trying to update order status: " + response.reason);
@@ -58,8 +58,10 @@ class KitchenClient {
     _update_orders(orders) {
         for (let order of orders) {
             order.status = Object.keys(OrderStatus)[order.status - 1].toLowerCase();
+            order.orderTime = new Date(order.orderTime);
         }
         this._current_orders = orders;
+        console.log(orders);
     }
 
     onUpdate(callback) {

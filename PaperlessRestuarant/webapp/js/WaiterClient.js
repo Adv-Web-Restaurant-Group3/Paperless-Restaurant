@@ -23,7 +23,7 @@ class WaiterClient {
     updateMenu() {
         this.socket.off("menu");
         let client = this;
-        this.socket.on("menu", function(results) {
+        this.socket.on("menu", function (results) {
             console.log(results);
             client._items = results.items;
             client._categories = results.categories;
@@ -51,7 +51,7 @@ class WaiterClient {
             this.socket.emit("get_orders", { tableNum: this._table });
             this.socket.off("get_orders_result");
             let client = this;
-            this.socket.on("get_orders_result", function(response) {
+            this.socket.on("get_orders_result", function (response) {
                 console.log(response)
                 if (response.success) {
                     client._update_orders(response.orders);
@@ -86,7 +86,7 @@ class WaiterClient {
                 });
                 this.socket.off("order_result");
                 let client = this;
-                this.socket.on("order_result", function(response) {
+                this.socket.on("order_result", function (response) {
                     console.log(response);
                     if (response.success) {
                         console.log("order added successfully: ", order);
@@ -100,8 +100,12 @@ class WaiterClient {
 
     }
     _update_orders(orders) {
-        console.log("orders for table " + this._table + ":", orders);
+        for (let order of orders) {
+            order.status = Object.keys(OrderStatus)[order.status - 1].toLowerCase();
+            order.orderTime = new Date(order.orderTime);
+        }
         this._current_orders = orders;
+        console.log("orders for table " + this._table + ":", orders);
     }
 
 }

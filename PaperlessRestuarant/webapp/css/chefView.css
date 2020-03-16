@@ -2,7 +2,9 @@ body{
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     background-color: rgb(218, 232, 245);
     user-select: none; /*stop text selection*/
+    overflow-y: hidden;
 }
+
 html, body { height: 100%; width: 100%; margin: 0; }
 #pageTitle{
     z-index: -1;

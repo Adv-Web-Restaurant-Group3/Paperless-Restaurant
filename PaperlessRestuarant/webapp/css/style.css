@@ -216,9 +216,7 @@ body {
 
 }
 .wrapperMenu { 
-  position: relative;
-  display: flex;
-  flex-direction: column;
+ 
   width: max-content;
   min-width: 800px;
   max-width: 1400px;

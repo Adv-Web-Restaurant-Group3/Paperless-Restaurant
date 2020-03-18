@@ -32,20 +32,26 @@ var orderDate = [{
     "price": 20
 }
 ];
-
-function toggleView(view){
-    switch(view){
-        case 1:
+var currentView = 0;
+function toggleView(){
+    switch(currentView){
+        case 2:
             $(".wrapperMenu").hide();
             $(".wrapperOrders").show();
+            currentView = 1;
             break;
-        case 2:
+        case 1:
             $(".wrapperOrders").hide();
             $(".wrapperMenu").show();
+            currentView = 2;
             break;
+        case 0:
+            $(".wrapperMenu").hide();
+            $(".wrapperOrders").show();
+            currentView = 1;
     }   
 }
-toggleView(2);
+toggleView();
 
 let client = new WaiterClient();
 
@@ -183,7 +189,7 @@ client.onUpdate(function () {
         if($(".wrapperOrders").is(":visible")){
             document.getElementById("addOrder").addEventListener('click', function () {
                 //alert("Add order");
-                toggleView(2);
+                toggleView();
             });
         }
 
@@ -383,7 +389,7 @@ client.onMenuUpdate(function() {
             })
             //console.log(Oitems);
             client.addOrder({items:Oitems});
-            toggleView(1);
+            toggleView();
             order = [];
             updateSummary();
         });

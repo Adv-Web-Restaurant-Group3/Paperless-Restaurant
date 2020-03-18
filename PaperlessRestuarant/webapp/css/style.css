@@ -224,10 +224,7 @@ body {
   
   
 }
-.wrapperMenu > *{
-  margin-left: 1rem;
-  margin-right: 1rem;
-}
+
 .wrapperMenu h1 {
   font-style: italic;
   color: #373fff;

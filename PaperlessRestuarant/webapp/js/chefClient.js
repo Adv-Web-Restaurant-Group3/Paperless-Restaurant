@@ -95,7 +95,6 @@ function divName() {
 }
 function removeItem(orderID) {
     ordersObj = ordersObj.filter(el => el.orderID != orderID );
-    client.update();
 }
 
 function alterOrderVal(orderID, attribute, newVal) {
@@ -105,7 +104,6 @@ function alterOrderVal(orderID, attribute, newVal) {
             switch (attribute) {
                 case "status":
                     client.setStatus(orderID, OrderStatus[Object.keys(OrderStatus)[newVal - 1]]);
-                    client.update();
                     break;
             }
         }
@@ -154,8 +152,6 @@ client.onUpdate(function (orders) {
         $("#content").html("");
         ordersObj = orders;
         ordersReceived();
-    }
-    
+    } 
 });
-
-client.sync(1500);
+client.sync(5000);

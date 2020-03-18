@@ -22,7 +22,7 @@ class KitchenClient {
     }
 
     sync(timeout) {
-        setInterval(this.update, timeout)
+        setInterval(this.update, timeout);
     }
 
     update() {
@@ -57,7 +57,7 @@ class KitchenClient {
 
     _update_orders(orders) {
         for (let order of orders) {
-            order.status = Object.keys(OrderStatus)[order.status - 1].toLowerCase();
+            //order.status = Object.keys(OrderStatus)[order.status - 1].toLowerCase();
             order.orderTime = new Date(order.orderTime);
         }
         this._current_orders = orders;

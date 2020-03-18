@@ -1,24 +1,3 @@
-//using KitchenClient
-let client = new KitchenClient();
-
-//getting orders
-client.update();
-console.log(client.orders);
-
-//updating a order status
-client.setStatus(1/*(order ID)*/, OrderStatus.COOKING/*see KitchenClient for enum*/);
-
-//running client js after update. used to update client elements with data from server.
-client.onUpdate(function (orders) {
-    console.log("updated! ", orders);
-});
-client.update();
-
-
-
-
-
-var socket = io("/kitchen");
 let ordersObj = [
     {
         orderID: 19,
@@ -46,6 +25,28 @@ let ordersObj = [
         ]
     }
 ];
+//using KitchenClient
+let client = new KitchenClient();
+
+//getting orders
+client.update();
+console.log(client.orders);
+
+/*
+//updating a order status
+for(i=0;i<20;i++){
+    client.setStatus(i, OrderStatus.WAITING);
+}
+*/
+client.setStatus(1/*(order ID)*/, OrderStatus.COOKING/*see KitchenClient for enum*/);
+
+//running client js after update. used to update client elements with data from server.
+/*
+client.onUpdate(function (orders) {
+    console.log("updated! ", orders);
+});
+client.update();
+*/
 function orderStatus(status, id) {
     switch (status) {
         case 1:
@@ -96,24 +97,16 @@ function buildItem(obj) {
     $("#content").append(item);
 
 }
-
 function divName() {
     $(".orderBox").each((i, el) => {
         $(el).data("Info", ordersObj[i]);
         $(el).data("Status", ordersObj[i].status);
     });
 }
-
 function removeItem(orderID) {
-    ordersObj = ordersObj.filter(el => { return el.orderID != orderID });
-    console.log(ordersObj);
+    ordersObj = ordersObj.filter(el => el.orderID != orderID );
+    client.update();
 }
-
-socket.on("order_status_result", output => {
-    if (output.success) console.log("Order status successfully updated!");
-    else console.error(output.reason);
-
-});
 
 function alterOrderVal(orderID, attribute, newVal) {
     ordersObj.forEach(el => {
@@ -121,7 +114,8 @@ function alterOrderVal(orderID, attribute, newVal) {
             el[attribute] = newVal;
             switch (attribute) {
                 case "status":
-                    socket.emit("order_status", el);
+                    client.setStatus(orderID, OrderStatus[Object.keys(OrderStatus)[newVal - 1]]);
+                    client.update();
                     break;
             }
         }
@@ -130,7 +124,7 @@ function alterOrderVal(orderID, attribute, newVal) {
 
 function ordersReceived() {
 
-    ordersObj.sort((a, b) => new Date(a.orderTime) - new Date(b.orderTime));
+    ordersObj.sort((a, b) => a.orderTime - b.orderTime);
     ordersObj.forEach(el => {
         buildItem(el);
     });
@@ -158,37 +152,19 @@ function ordersReceived() {
                 break;
         }
     });
-    divName(); //check all the orderObj are added to page then ID them
+    divName(); //ID all the divs with their respective data
 }
 
-$(document).ready(() => {
-    socket.emit("get_orders");
-    socket.on("get_orders_result", (output) => {
-        if (output.success) ordersObj = output.orders, ordersReceived(), console.log(ordersObj);
-        else console.log("ORDER REQUEST UNSUCCESFUL");
-    });
 
+
+
+client.onUpdate(function (orders) {
+    if(JSON.stringify(ordersObj) !== JSON.stringify(orders)){
+        console.log(orders,ordersObj);
+        $("#content").html("");
+        ordersObj = orders;
+        ordersReceived();
+    }
+    
 });
 
-/*  --- DIV STRUCTURE
-    <div class="orderBox">
-        <div class="topBar">
-            <div class="orderTitle">
-                Table 1
-            </div>
-            <span class="status">waiting to cook</span>
-        </div>
-        <hr />
-        <div class="orderItems">
-            <ul>
-                <li>
-                    <div class="orderItem">
-                        <span class="itemTXT">item 1</span>
-                        <span class="itemNotes">well done</span>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-*/

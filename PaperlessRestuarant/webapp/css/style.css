@@ -207,11 +207,28 @@ body {
 }
 
 /*Menu Section*/
+#mContent{
+  display: flex;
+  flex-direction: row;
+  min-width: max-content;
+}
+.wrapperMenu nav{
 
+}
 .wrapperMenu { 
-  display: none;
-  max-width: 900px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  min-width: 800px;
+  max-width: 1400px;
   margin: 0 auto;
+  
+  
+}
+.wrapperMenu > *{
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 .wrapperMenu h1 {
   font-style: italic;
@@ -227,11 +244,9 @@ body {
 }
 
 #section-d {
-  position: absolute;
-  top: 0;
-  left: 0;
+
   width: 33.3%;
-  height: 100vh;
+  min-width: max-content;
 }
 
 #section-d li {
@@ -240,11 +255,9 @@ body {
 
 #section-e {
   background-color: white;
-  position: absolute;
-  top: 0;
-  left: 33.3%;
   width: 33.3%;
-  height: 100vh;
+  height: max-content;
+  min-height:100vh;
   box-shadow: inset 0px 0px 4px black;
   
 }
@@ -254,11 +267,7 @@ body {
 }
 
 #section-f {
-  position: absolute;
-  top: 0;
-  left: 66.6%;
   width: 33.3%;
-  height: 100vh;
 }
 
 .minus {

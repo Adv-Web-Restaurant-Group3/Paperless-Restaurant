@@ -45,6 +45,7 @@ function toggleView(view){
             break;
     }   
 }
+toggleView(2);
 
 let client = new WaiterClient();
 

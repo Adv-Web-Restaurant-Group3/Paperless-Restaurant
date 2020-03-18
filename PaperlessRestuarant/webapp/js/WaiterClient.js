@@ -1,6 +1,12 @@
 /**
  * WaiterClient class. for interfacing with the server as a Waiter view.
  */
+const OrderStatus = {
+    get WAITING() { return "ORDER_STATUS:1" },
+    get COOKING() { return "ORDER_STATUS:2" },
+    get SERVING() { return "ORDER_STATUS:3" },
+    get SERVED() { return "ORDER_STATUS:4" },
+}
 class WaiterClient {
     _current_orders = [];
     _table = -1;

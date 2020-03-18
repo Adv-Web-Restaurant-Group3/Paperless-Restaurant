@@ -239,13 +239,14 @@ body {
 }
 
 #section-e {
+  background-color: white;
   position: absolute;
   top: 0;
   left: 33.3%;
   width: 33.3%;
   height: 100vh;
-  border-left: 1px solid #000;
-  border-right: 1px solid #000;
+  box-shadow: inset 0px 0px 4px black;
+  
 }
 
 .plus {

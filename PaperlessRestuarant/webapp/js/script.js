@@ -33,6 +33,19 @@ var orderDate = [{
 }
 ];
 
+function toggleView(view){
+    switch(view){
+        case 1:
+            $(".wrapperMenu").hide();
+            $(".wrapperOrders").show();
+            break;
+        case 2:
+            $(".wrapperOrders").hide();
+            $(".wrapperMenu").show();
+            break;
+    }   
+}
+
 let client = new WaiterClient();
 
 client.setTable(1);
@@ -169,8 +182,7 @@ client.onUpdate(function () {
         if($(".wrapperOrders").is(":visible")){
             document.getElementById("addOrder").addEventListener('click', function () {
                 //alert("Add order");
-                $(".wrapperOrders").hide();
-                $(".wrapperMenu").show();
+                toggleView(2);
             });
         }
 
@@ -370,6 +382,9 @@ client.onMenuUpdate(function() {
             })
             //console.log(Oitems);
             client.addOrder({items:Oitems});
+            toggleView(1);
+            order = [];
+            updateSummary();
         });
 
 

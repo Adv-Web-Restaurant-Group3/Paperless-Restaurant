@@ -53,6 +53,10 @@ function toggleView(){
 }
 toggleView();
 
+document.getElementById("pageTitle").addEventListener('click',event=>{
+    toggleView();
+},false);
+
 let client = new WaiterClient();
 
 client.setTable(1);

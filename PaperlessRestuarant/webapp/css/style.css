@@ -8,7 +8,7 @@ body {
     padding: 0;
   }
   
-  .wrapper {
+  .wrapperOrders {
     background-color: aliceblue;
     max-width: 900px;
     min-width: min-content;
@@ -204,5 +204,68 @@ body {
 }
 #party:hover{
   box-shadow: inset 0px 0px 2px grey;
-  
+}
+
+/*Menu Section*/
+
+.wrapperMenu { 
+  display: none;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.wrapperMenu h1 {
+  font-style: italic;
+  color: #373fff;
+}
+
+.wrapperMenu li {
+  list-style: none;
+  width: 80%;
+  padding: 0 10%;
+  line-height: 60px;
+  user-select: none;
+}
+
+#section-d {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 33.3%;
+  height: 100vh;
+}
+
+#section-d li {
+  cursor: pointer;
+}
+
+#section-e {
+  position: absolute;
+  top: 0;
+  left: 33.3%;
+  width: 33.3%;
+  height: 100vh;
+  border-left: 1px solid #000;
+  border-right: 1px solid #000;
+}
+
+.plus {
+  cursor: pointer;
+}
+
+#section-f {
+  position: absolute;
+  top: 0;
+  left: 66.6%;
+  width: 33.3%;
+  height: 100vh;
+}
+
+.minus {
+  cursor: pointer;
+}
+
+
+
+#saveTable {
+  cursor: pointer;
 }

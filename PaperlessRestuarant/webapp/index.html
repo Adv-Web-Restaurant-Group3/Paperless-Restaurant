@@ -14,7 +14,7 @@
     <!-- import the socket stuff -->
     <script src="/socket.io/socket.io.js" defer></script>
     <script src="js/WaiterClient.js" defer></script>
-
+    <script src="js/jquery.js" defer></script>
     <!-- import the webpage's javascript file -->
     <script src="js/script.js" defer></script>
 </head>
@@ -23,7 +23,7 @@
     <div id="pageTitle">
         Waiter View
     </div>
-    <div class="wrapper">
+    <div class="wrapperOrders">
 
         <nav>
             <label for="party">Table:</label>
@@ -68,7 +68,26 @@
 
     </div>
     <!-- Wrapper -->
+    <div class="wrapperMenu">
+        <nav>
+            <label for="party">Table:</label>
+            <select id="party">
+                <option value="1">Table 1</option>
+                <option value="2">Table 2</option>
+                <option value="3">Table 3</option>
+                <option value="4">Table 4</option>
+            </select>
+        </nav>
 
+        <section id="section-d"></section>
+        <!-- Category List -->
+
+        <section id="section-e"></section>
+        <!-- Item List -->
+
+        <section id="section-f"></section>
+        <!-- Order Summary-->
+    </div>
 </body>
 
 </html>

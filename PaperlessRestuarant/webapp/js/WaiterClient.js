@@ -49,7 +49,7 @@ class WaiterClient {
 
 
     sync(timeout) {
-        setInterval(this.update, timeout);
+        setInterval(()=>this.update(), timeout);
     }
 
     update() {
@@ -82,6 +82,7 @@ class WaiterClient {
     }
     */
     addOrder(order) {
+        console.log(order);
         if (order && order.items) {
             if (this._table > 0) {
                 this.socket.emit("order", {

@@ -22,7 +22,7 @@ class KitchenClient {
     }
 
     sync(timeout) {
-        setInterval(this.update, timeout);
+        setInterval(()=>this.update(), timeout);
     }
 
     update() {

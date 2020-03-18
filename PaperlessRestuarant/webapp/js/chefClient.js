@@ -28,25 +28,15 @@ let ordersObj = [
 //using KitchenClient
 let client = new KitchenClient();
 
-//getting orders
 client.update();
-console.log(client.orders);
-
 /*
 //updating a order status
-for(i=0;i<20;i++){
+for(i=0;i<20;i++){ 
     client.setStatus(i, OrderStatus.WAITING);
 }
 */
 client.setStatus(1/*(order ID)*/, OrderStatus.COOKING/*see KitchenClient for enum*/);
 
-//running client js after update. used to update client elements with data from server.
-/*
-client.onUpdate(function (orders) {
-    console.log("updated! ", orders);
-});
-client.update();
-*/
 function orderStatus(status, id) {
     switch (status) {
         case 1:
@@ -168,3 +158,4 @@ client.onUpdate(function (orders) {
     
 });
 
+client.sync(1500);

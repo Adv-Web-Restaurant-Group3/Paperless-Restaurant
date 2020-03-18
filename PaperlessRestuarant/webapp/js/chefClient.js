@@ -35,7 +35,6 @@ for(i=0;i<20;i++){
     client.setStatus(i, OrderStatus.WAITING);
 }
 */
-client.setStatus(1/*(order ID)*/, OrderStatus.COOKING/*see KitchenClient for enum*/);
 
 function orderStatus(status, id) {
     switch (status) {

@@ -57,7 +57,7 @@ function displayTableContent(tNum){
     $("#tablesBox").hide();
     $("#tableContent").show();
     let top = `
-        <div id="titleBox">Table: ${currentTable}</div>
+        <div id="titleBox">Table ${currentTable}</div>
     `;
     $("#tableContent").html(top);
     let tableObj = getTable(tNum)[0];

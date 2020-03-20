@@ -1,5 +1,5 @@
 /**
- * CounterClient class. for interfacing with the server as a Kitchen view.
+ * CounterClient class. for interfacing with the server as a Counter view.
  */
 
 

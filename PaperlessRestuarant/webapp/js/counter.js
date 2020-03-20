@@ -55,6 +55,7 @@ function ordersAdded(tableObj, callback){
 function displayTableContent(tNum){
     currentTable = tNum;
     $("#tablesBox").hide();
+    $("#tableContent").show();
     let top = `
         <div id="titleBox">Table: ${currentTable}</div>
     `;
@@ -107,3 +108,12 @@ client.onUpdate(data=>{
         tableList();
     }
 });
+
+$(document).ready(()=>{
+    $("#return").click(event=>{
+        client.update();
+        $("#tableContent").hide();
+        $("#tablesBox").show();
+    });
+});
+

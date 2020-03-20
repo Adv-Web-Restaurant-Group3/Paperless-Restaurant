@@ -4,26 +4,37 @@ body{
 
 }
 
-html, body { height: 100%; width: 100%; margin: 0; }
+html, body { height: 100%; width: 100%; margin: 0; overflow: auto; }
 #pageTitle{
-    z-index: -1;
-    position: fixed;
-    background-color: white;
-    width: max-content;
-    height: max-content;
-
-    top:0;
-    left:0;
-    padding:0.4rem;
-    border-radius: 0 0 0.5rem 0.5rem;
-    box-shadow: 1px 2px grey;
+    margin:0;
+    padding: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-weight: 600;
 }
-
+#return{
+    user-select: none;
+    margin-right: 2rem;
+    padding: 0.5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    text-shadow: 1px 1px lightgray;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    background-color: rgb(247, 247, 247);
+}
+#return:hover{
+    background-color: rgb(242, 246, 247);
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
 #topBar{
     width: 100%;
     background-color: white;
-    padding:0.5rem;
+    
     position: fixed;
+    display: flex;
+    justify-content: space-between;
     top:0;
     box-shadow: 0px 1px 2px lightsteelblue;
 }

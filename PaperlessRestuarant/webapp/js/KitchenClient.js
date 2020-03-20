@@ -6,8 +6,7 @@
 const OrderStatus = {
     get WAITING() { return "ORDER_STATUS:1" },
     get COOKING() { return "ORDER_STATUS:2" },
-    get SERVING() { return "ORDER_STATUS:3" },
-    get SERVED() { return "ORDER_STATUS:4" },
+    get SERVED() { return "ORDER_STATUS:3" },
 }
 class KitchenClient {
     _current_orders = [];
@@ -22,7 +21,7 @@ class KitchenClient {
     }
 
     sync(timeout) {
-        setInterval(()=>this.update(), timeout);
+        setInterval(() => this.update(), timeout);
     }
 
     update() {

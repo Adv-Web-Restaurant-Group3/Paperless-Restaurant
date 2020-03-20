@@ -66,7 +66,7 @@ function createConnection() {
 }
 
 
-fs.readFile("credentials.json", function(err, data) {
+fs.readFile("credentials.json", function (err, data) {
     if (err) {
         console.log("credentials.json is required for this script. Refer to the documentation for help.");
         process.exit();
@@ -77,7 +77,7 @@ fs.readFile("credentials.json", function(err, data) {
 });
 
 
-server.listen(8080, function() {
+server.listen(8080, function () {
     console.log("Server running on port 8080");
 });
 
@@ -85,18 +85,18 @@ const waiters = io.of("/waiter");
 const kitchens = io.of("/kitchen");
 const counters = io.of("/counter");
 
-waiters.on("connection", function(socket) {
+waiters.on("connection", function (socket) {
     //waiter/waitress view
     console.log("waiter connected");
 
-    socket.on("get_menu", function() {
+    socket.on("get_menu", function () {
         //get Menu from DB and send to client.
         let conn = createConnection();
-        conn.connect(function(err) {
+        conn.connect(function (err) {
             if (err) console.log(11, err)
             else {
                 let sql = "SELECT catID, catName FROM MenuCategory";
-                conn.query(sql, function(err, results) {
+                conn.query(sql, function (err, results) {
                     if (err) console.log(12, err)
                     else {
                         let categories = [];
@@ -105,11 +105,11 @@ waiters.on("connection", function(socket) {
                         }
                         let conn2 = createConnection();
 
-                        conn2.connect(function(err) {
+                        conn2.connect(function (err) {
                             if (err) console.log(13, err)
                             else {
                                 let sql = "SELECT category, itemNum, itemName, estTime FROM MenuItem";
-                                conn2.query(sql, function(err, results) {
+                                conn2.query(sql, function (err, results) {
                                     if (err) console.log(13, err);
                                     else {
                                         let items = [];
@@ -134,16 +134,16 @@ waiters.on("connection", function(socket) {
         });
     });
 
-    socket.on("get_orders", function(data) {
+    socket.on("get_orders", function (data) {
         //get orders from DB for given tableNum and send to client.
         let tableNum = data.tableNum;
         if (tableNum) {
             let conn = createConnection();
-            getPartyID(tableNum, function(party) {
-                conn.connect(function(err) {
+            getPartyID(tableNum, function (party) {
+                conn.connect(function (err) {
                     if (err) console.log(1, err);
                     let sql = `SELECT orderID, orderNum, orderTime, orderStatus, itemNum, quantity, notes, itemName, (SELECT catName FROM MenuCategory WHERE catID = MenuItem.category) AS 'category', price, isVegetarian, isVegan, glutenFree, containsNuts, estTime FROM PartyOrder INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) WHERE party = ${mysql.escape(party)};`;
-                    conn.query(sql, function(err, results) {
+                    conn.query(sql, function (err, results) {
                         if (err) console.log(2, err);
                         else {
                             let outputArray = [];
@@ -207,21 +207,21 @@ waiters.on("connection", function(socket) {
     */
 
 
-    socket.on("order", function(data) {
+    socket.on("order", function (data) {
         console.log("order received:", data);
         //add order to DB.
         if (data && data.order) {
             let order = data.order;
-            getPartyID(order.tableNum, function(party) {
-                getNextOrderNum(party, function(orderNum) {
+            getPartyID(order.tableNum, function (party) {
+                getNextOrderNum(party, function (orderNum) {
                     //validate order
                     if (validateOrder(order)) {
                         if (order.items.length > 0) {
                             let conn = createConnection();
-                            conn.connect(function(err) {
+                            conn.connect(function (err) {
                                 if (err) console.log(3, err);
-                                let sql = `INSERT INTO PartyOrder(party, orderNum, orderTime, orderStatus) VALUES (${mysql.escape(party)}, ${mysql.escape(orderNum)}, ${Math.floor(new Date().getTime()/1000)}, 1)`;
-                                conn.query(sql, function(err, results) {
+                                let sql = `INSERT INTO PartyOrder(party, orderNum, orderTime, orderStatus) VALUES (${mysql.escape(party)}, ${mysql.escape(orderNum)}, ${Math.floor(new Date().getTime() / 1000)}, 1)`;
+                                conn.query(sql, function (err, results) {
                                     if (err) console.log(err);
                                     else {
                                         let orderID = results.insertId;
@@ -245,7 +245,7 @@ waiters.on("connection", function(socket) {
                                         for (item of orderItems) {
                                             let conn2 = createConnection();
                                             let sql = `INSERT INTO OrderItem (orderID, itemNum, quantity, notes) VALUES (${mysql.escape(orderID)}, ${mysql.escape(item.itemNum)}, ${mysql.escape(item.quantity)}, ${mysql.escape(item.notes)});`;
-                                            conn2.query(sql, function(err) {
+                                            conn2.query(sql, function (err) {
                                                 if (err) { console.log(4, err) } else {
                                                     console.log("added item for order " + orderID + " to database:", item);
                                                     notifySuccess();
@@ -267,18 +267,18 @@ waiters.on("connection", function(socket) {
 
 });
 
-kitchens.on("connection", function(socket) {
+kitchens.on("connection", function (socket) {
     //kitchen view
     console.log("kitchen connected");
 
-    socket.on("get_orders", function() {
+    socket.on("get_orders", function () {
         //get all orders from DB and send to client.
         let conn = createConnection();
-        conn.connect(function(err) {
+        conn.connect(function (err) {
             if (err) console.log(1, err);
             //get all orders either waiting or cooking.
             let sql = `SELECT tableNum, orderID, orderNum, orderTime, orderStatus, itemNum, quantity, notes, itemName FROM Party INNER JOIN PartyOrder ON Party.partyID = PartyOrder.party INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) WHERE orderStatus < 3;`;
-            conn.query(sql, function(err, results) {
+            conn.query(sql, function (err, results) {
                 if (err) console.log(2, err);
                 else {
                     let outputArray = [];
@@ -316,18 +316,18 @@ kitchens.on("connection", function(socket) {
         });
     });
 
-    socket.on("order_status", function(data) {
+    socket.on("order_status", function (data) {
         //changes the status of a given orderID.
         let orderID = data.orderID;
         let newStatus = data.status;
 
         if (typeof newStatus === "number") {
             let conn = createConnection();
-            conn.connect(function(err) {
+            conn.connect(function (err) {
                 if (err) console.log(err);
                 else {
                     let sql = `UPDATE PartyOrder SET orderStatus = ${mysql.escape(newStatus)} WHERE orderID = ${mysql.escape(orderID)};`;
-                    conn.query(sql, function(err, results) {
+                    conn.query(sql, function (err, results) {
                         if (err) console.log(err);
                         else {
                             if (results.affectedRows === 1) {
@@ -343,9 +343,114 @@ kitchens.on("connection", function(socket) {
 
 });
 
-counters.on("connection", function(socket) {
+counters.on("connection", function (socket) {
     //counter view
     console.log("counter connected");
+
+
+    /*
+    output format:
+    {
+        tables:[]
+            {
+                tableNum,
+                partyID,
+                orders:[
+                    {
+                        orderID,
+                        items: [
+                            {
+                                itemNum,
+                                itemName,
+                                quantity,
+                            }
+                        ],
+                        price,
+                        orderTime
+                    }, ...
+                ]
+            }, ...
+        ]
+    }
+    */
+    socket.on("get_tables", function () {
+        //get all orders from DB grouped by tableNum and send to client.
+        let conn = createConnection();
+        conn.connect(function (err) {
+            if (err) console.log(1, err);
+            //get all orders either waiting or cooking.
+            let sql = `SELECT tableNum, partyID, orderID, orderTime, itemNum, quantity, itemName, price FROM Party INNER JOIN PartyOrder ON Party.partyID = PartyOrder.party INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) WHERE orderStatus = 3;`;
+            conn.query(sql, function (err, results) {
+                if (err) console.log(2, err);
+                else {
+                    let outputArray = [];
+                    for (let result of results) {
+                        let partyIndex = -1;
+                        if ((partyIndex = outputArray.findIndex(i => i.partyID === result.partyID)) >= 0) {
+                            //add to existing party object
+                            let orderIndex = -1;
+                            if ((orderIndex = outputArray[partyIndex].orders.findIndex(i => i.orderID === result.orderID)) >= 0) {
+                                //add to existing order object.
+                                outputArray[partyIndex].orders[orderIndex].items.push({
+                                    itemNum: result.itemNum,
+                                    itemName: result.itemName,
+                                    quantity: result.quantity,
+                                    price: result.price
+                                })
+
+                            }
+                            else {
+                                //create new order object.
+                                outputArray[partyIndex].orders.push({
+                                    orderID: result.orderID,
+                                    orderTime: new Date(result.orderTime * 1000),
+                                    items: [{
+                                        itemNum: result.itemNum,
+                                        itemName: result.itemName,
+                                        quantity: result.quantity,
+                                        price: result.price
+                                    }]
+                                });
+                            }
+
+                        } else {
+                            //create new party object
+                            outputArray.push({
+                                tableNum: result.tableNum,
+                                partyID: result.partyID,
+                                orders: [{
+                                    orderID: result.orderID,
+                                    orderTime: new Date(result.orderTime * 1000),
+                                    items: [{
+                                        itemNum: result.itemNum,
+                                        itemName: result.itemName,
+                                        quantity: result.quantity,
+                                        price: result.price
+                                    }]
+                                }]
+                            });
+                        }
+                    }
+                    //calculate totals.
+                    for (let party of outputArray) {
+                        let grandTotal = 0.00;
+                        for (let order of party.orders) {
+                            let total = 0.00;
+                            for (let item of order.items) {
+                                total += item.price;
+                                grandTotal += item.price;
+                            }
+                            order.totalPrice = Math.round(total * 100) / 100;
+                        }
+                        party.grandTotal = Math.round(grandTotal * 100) / 100;
+                    }
+                    socket.emit("get_tables_result", { success: true, tables: outputArray });
+                }
+                conn.end();
+            });
+        });
+    });
+
 
 });
 
@@ -368,10 +473,10 @@ function validateOrder(order) {
 function getPartyID(tableNum, callback) {
     //retrieves the partyID for the given tableNum and passes it to the given callback.
     let conn = createConnection();
-    conn.connect(function(err) {
+    conn.connect(function (err) {
         if (err) console.log(err);
         let sql = `SELECT partyID FROM Party WHERE tableNum = ${mysql.escape(tableNum)} AND inHouse = TRUE;`;
-        conn.query(sql, function(err, results) {
+        conn.query(sql, function (err, results) {
             if (err) console.log(err);
             else {
                 if (results.length > 0) {
@@ -380,7 +485,7 @@ function getPartyID(tableNum, callback) {
                 } else {
                     let sql = `INSERT INTO Party (tableNum, inHouse) VALUES (${mysql.escape(tableNum)}, TRUE)`;
                     let conn2 = createConnection();
-                    conn2.query(sql, function(err, results) {
+                    conn2.query(sql, function (err, results) {
                         if (err) console.log(err);
                         else {
                             console.log("new party generated for table " + tableNum + ": " + results.insertId);
@@ -398,10 +503,10 @@ function getPartyID(tableNum, callback) {
 function getNextOrderNum(party, callback) {
     //retrieves the next orderNum for the given party (1+number of orders) and passes it to the given callback.
     let conn = createConnection();
-    conn.connect(function(err) {
+    conn.connect(function (err) {
         if (err) console.log(err);
         let sql = `SELECT COUNT(orderNum)+1 AS 'orderNum' FROM PartyOrder WHERE party = ${mysql.escape(party)};`;
-        conn.query(sql, function(err, results) {
+        conn.query(sql, function (err, results) {
             if (err) console.log(err);
             else {
                 callback(results[0].orderNum);

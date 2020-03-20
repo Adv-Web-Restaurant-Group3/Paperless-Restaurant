@@ -152,7 +152,7 @@ create table PartyOrder(
     party int references Party(partyID),
     orderNum int check(orderNum>0),
     orderTime int check(orderTime>0), -- unix time
-    orderStatus int(1) -- 1='waiting' 2='cooking' 3='serving' 4='served'
+    orderStatus int(1) -- 1='waiting' 2='cooking' 3='served'
 );
 
 create table OrderItem(

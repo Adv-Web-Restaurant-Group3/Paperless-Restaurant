@@ -11,6 +11,9 @@
     <!-- import the webpage's stylesheet -->
     <link rel="stylesheet" href="css/style.css">
 
+    <script src="js/CounterClient.js" defer></script>
+
+
     <!-- import the socket stuff -->
     <script src="/socket.io/socket.io.js" defer></script>
     <script src="js/WaiterClient.js" defer></script>
@@ -44,7 +47,8 @@
                     <span>Sub total</span><span id="subTotal"></span>
                 </div>
                 <div class="totalRow">
-                    <span>Discount</span><span><input type="number" id="discount" name="discount" placeholder="0" /></span>%
+                    <span>Discount</span><span><input type="number" id="discount" name="discount"
+                            placeholder="0" /></span>%
                 </div>
                 <div class="totalRow">
                     <span>Total</span><span id="finalTotal">£45</span>
@@ -68,7 +72,7 @@
 
     </div>
     <!-- Wrapper -->
-    
+
     <div class="wrapperMenu">
         <nav>
             <label for="party">Table:</label>

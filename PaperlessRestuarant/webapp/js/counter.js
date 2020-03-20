@@ -106,14 +106,19 @@ client.onUpdate(data=>{
     if(JSON.stringify(tables) !== JSON.stringify(data)){
         tables = data;
         tableList();
+        if($("#tableContent").is(":visible") && currentTable != 0){
+            displayTableContent(currentTable);
+        }
     }
 });
 
 $(document).ready(()=>{
     $("#return").click(event=>{
+        currentTable = 0;
         client.update();
         $("#tableContent").hide();
         $("#tablesBox").show();
     });
 });
 
+client.sync(5000);

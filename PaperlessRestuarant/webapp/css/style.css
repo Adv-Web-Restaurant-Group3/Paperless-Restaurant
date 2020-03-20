@@ -196,16 +196,24 @@ body {
     cursor: pointer;
 }
 
-#party{
+.party{
   border:1px solid transparent;
   height: 2rem;
   width: 5rem;  
   font-weight: 600;
 }
-#party:hover{
+.party:hover{
   box-shadow: inset 0px 0px 2px grey;
 }
-
+.party2{
+  border:1px solid transparent;
+  height: 2rem;
+  width: 5rem;  
+  font-weight: 600;
+}
+.party2:hover{
+  box-shadow: inset 0px 0px 2px grey;
+}
 /*Menu Section*/
 #mContent{
   display: flex;

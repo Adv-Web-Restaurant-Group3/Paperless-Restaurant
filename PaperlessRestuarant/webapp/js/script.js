@@ -32,8 +32,21 @@ var orderDate = [{
     "price": 20
 }
 ];
+
 var currentView = 0;
+var currentTable = 1;
+let client = new WaiterClient();
+client.setTable(currentTable);
+
+
+function setDropDown(){
+    console.log("pop");
+    document.getElementsByClassName("party").value = currentTable;
+   
+}
+
 function toggleView(){
+    setDropDown();
     switch(currentView){
         case 2:
             $(".wrapperMenu").hide();
@@ -57,10 +70,9 @@ document.getElementById("pageTitle").addEventListener('click',event=>{
     toggleView();
 },false);
 
-let client = new WaiterClient();
-
-client.setTable(1);
 client.onUpdate(function () {
+    setDropDown();
+    if(currentTable!=client.table)client.setTable(currentTable);
     console.log(client.orders);
     orderDate = client.orders;
 
@@ -72,7 +84,7 @@ client.onUpdate(function () {
     function updateOrder() {
 
         var sectionA = document.getElementById("section-a");
-
+        sectionA.innerHTML = "";
         var content = "";
         orderDate.sort((a,b)=>{
             if(a.status=="serving" &&b.status!="serving"){
@@ -249,6 +261,8 @@ items: [{
 */
 
 client.onMenuUpdate(function() {
+    setDropDown();
+    if(currentTable!=client.table)client.setTable(currentTable);
     console.log(client.items);
     console.log(client.categories);
 
@@ -408,4 +422,8 @@ client.onMenuUpdate(function() {
     }
 });
 
+function changeTable(tableNum){
+    currentTable = parseInt(tableNum);
+    client.update();
+}
 //client.sync(5000);

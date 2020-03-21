@@ -35,43 +35,112 @@ var orderDate = [{
 
 var currentView = 0;
 var currentTable = 1;
+var tableSet = false;
 let client = new WaiterClient();
 client.setTable(currentTable);
 
 
-function setDropDown(){
-    console.log("pop");
-    document.getElementsByClassName("party").value = currentTable;
-   
-}
 
 function toggleView(){
-    setDropDown();
+    console.log(currentView);
     switch(currentView){
         case 2:
+            $("#tablesBox").hide();
             $(".wrapperMenu").hide();
             $(".wrapperOrders").show();
             currentView = 1;
+            tableSet = true;
             break;
         case 1:
+            $("#tablesBox").hide();
             $(".wrapperOrders").hide();
             $(".wrapperMenu").show();
             currentView = 2;
+            tableSet = true;
             break;
         case 0:
+            $("#tablesBox").show();
             $(".wrapperMenu").hide();
-            $(".wrapperOrders").show();
-            currentView = 1;
+            $(".wrapperOrders").hide();
+            $("#currentTable").text("Current Table: None");
+            currentView = 0;
+            tableSet = false;
     }   
 }
 toggleView();
 
-document.getElementById("pageTitle").addEventListener('click',event=>{
-    toggleView();
-},false);
+function buildTableList(callback){
+    let items = "";
+    for(let i=1;i<5;i++){
+        let item = `
+        <div class="tableItem">
+            Table ${i}
+        </div>
+        `;
+        items = items.concat(item);
+       
+    }
+    callback(items);
+}
+
+function tableSelectEvent(el){
+    $(el).click(event=>{
+        $("#tablesBox").hide();
+        $(".wrapperMenu").hide();
+        $(".wrapperOrders").show();
+        currentTable=$(el).data("tNum");
+        $("#currentTable").text("Current Table: "+currentTable);
+        currentView=1;
+        tableSet = true;
+        client.update();
+        document.getElementById("section-a").innerHTML = "";
+    });
+}
+
+function tableList(){
+    $("#tablesBox").html("");
+    let top = `<div id="titleBox">Select a table</div>`;
+    $("#tablesBox").append(top);
+    buildTableList(data=>{
+        let string = data
+        $("#tablesBox").append(string);
+        $(".tableItem").each((i,el)=>{
+            $(el).data("tNum", i+1);
+            tableSelectEvent(el);
+        });
+    });
+}
+
+$(document).ready(()=>{
+    tableList();
+    $("#setTable").click(event=>{
+        currentView = 0;
+        toggleView();
+    });
+    $("#openMenu").click(event=>{
+        if(tableSet){
+            switch(currentView){
+                case 2:
+                    $("#openMenu").text("Open Menu");
+                    toggleView();
+                    break;
+                case 1:
+                    $("#openMenu").text("View Orders");
+                    toggleView();
+                    break;
+            }
+        }
+        else{
+            alert("Table Not Set!");
+            $("#openMenu").text("Open Menu");
+            currentView = 0;
+            toggleView();
+        }
+    });
+});
+
 
 client.onUpdate(function () {
-    setDropDown();
     if(currentTable!=client.table)client.setTable(currentTable);
     console.log(client.orders);
     orderDate = client.orders;
@@ -261,7 +330,6 @@ items: [{
 */
 
 client.onMenuUpdate(function() {
-    setDropDown();
     if(currentTable!=client.table)client.setTable(currentTable);
     console.log(client.items);
     console.log(client.categories);

@@ -9,6 +9,7 @@ const OrderStatus = {
 }
 class WaiterClient {
     _current_orders = [];
+    _current_tables = [];
     _table = -1;
     _socket = io("/waiter");
     _update_callback = null;
@@ -21,6 +22,7 @@ class WaiterClient {
     get items() { return this._items; }
     get categories() { return this._categories; }
     get table() { return this._table; }
+    get tables() { return this._current_tables; }
 
     constructor() {
         this.updateMenu();

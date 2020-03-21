@@ -136,13 +136,14 @@ waiters.on("connection", function (socket) {
                                             });
                                         }
                                         socket.emit("menu", { items, categories });
-                                        conn2.end();
+
                                     }
+                                    conn2.end();
                                 });
                             }
                         })
-                        conn.end();
                     }
+                    conn.end();
                 });
             }
         });
@@ -530,6 +531,7 @@ counters.on("connection", function (socket) {
                     conn.query(sql, function (err, results) {
                         if (err) console.log(err);
                         else { socket.emit("cancel_pending_result", { success: true, ordersCancelled: results.affectedRows }) }
+                        conn.end();
                     });
                 });
             } else socket.emit("cancel_pending_result", { success: false, reason: "given tableNum does not have a party!" });

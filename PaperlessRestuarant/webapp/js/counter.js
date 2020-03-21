@@ -52,7 +52,7 @@ function buildItem(el,callback){
         item += `<div class='item'> 
             <div class="name">${itemEl.itemName}
             ${quantity}</div> 
-            <div class="price">£${itemEl.price*itemEl.quantity}</div>
+            <div class="price">£${(itemEl.price*itemEl.quantity).toFixed(2)}</div>
         </div> `;
     });
     item += "</div>";
@@ -146,7 +146,7 @@ function displayTableContent(tNum){
                 Bill Table
             </div>
             <div id="grandTotal">
-                Grand Total: £${tableObj.grandTotal}
+                Grand Total: £${tableObj.grandTotal.toFixed(2)}
             </div>
         </div>
         `;

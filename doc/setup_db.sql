@@ -152,7 +152,7 @@ create table PartyOrder(
     party int references Party(partyID),
     orderNum int check(orderNum>0),
     orderTime int check(orderTime>0), -- unix time
-    orderStatus int(1) -- 1='waiting' 2='cooking' 3='served'
+    orderStatus int(1) -- 1='waiting' 2='cooking' 3='served' 4='billed' 0="cancelled"
 );
 
 create table OrderItem(
@@ -188,7 +188,11 @@ insert into OrderItem(orderID, itemNum, quantity, notes) values (1, 61, 1, '');
 insert into OrderItem(orderID, itemNum, quantity, notes) values (1, 38, 2, '');
 
 select * from OrderItem;
-select * from PartyOrder;
+select * from PartyOrder inner join Party on Party.partyID = PartyOrder.party;
+
+SELECT tableNum, partyID, orderID, orderTime, orderStatus itemNum, quantity, itemName, price FROM Party INNER JOIN PartyOrder ON Party.partyID = PartyOrder.party INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) order by orderStatus;
+select * from Party;
+
 
 
 

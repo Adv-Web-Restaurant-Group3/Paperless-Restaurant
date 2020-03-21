@@ -48,6 +48,7 @@ function toggleView(){
             $("#tablesBox").hide();
             $(".wrapperMenu").hide();
             $(".wrapperOrders").show();
+            $("#openMenu").text("Open Menu");
             currentView = 1;
             tableSet = true;
             break;
@@ -55,6 +56,7 @@ function toggleView(){
             $("#tablesBox").hide();
             $(".wrapperOrders").hide();
             $(".wrapperMenu").show();
+            $("#openMenu").text("View Orders");
             currentView = 2;
             tableSet = true;
             break;
@@ -121,11 +123,9 @@ $(document).ready(()=>{
         if(tableSet){
             switch(currentView){
                 case 2:
-                    $("#openMenu").text("Open Menu");
                     toggleView();
                     break;
                 case 1:
-                    $("#openMenu").text("View Orders");
                     toggleView();
                     break;
             }

@@ -190,10 +190,12 @@ insert into OrderItem(orderID, itemNum, quantity, notes) values (1, 38, 2, '');
 select * from OrderItem;
 select * from PartyOrder inner join Party on Party.partyID = PartyOrder.party;
 
-SELECT tableNum, partyID, orderID, orderTime, orderStatus itemNum, quantity, itemName, price FROM Party INNER JOIN PartyOrder ON Party.partyID = PartyOrder.party INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) order by orderStatus;
+SELECT tableNum, partyID, orderID, orderTime, orderStatus, itemNum, quantity, itemName, price FROM Party INNER JOIN PartyOrder ON Party.partyID = PartyOrder.party INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) order by orderStatus;
 select * from Party;
 
 
+
+select * from PartyOrder where party = 5;
 
 
 

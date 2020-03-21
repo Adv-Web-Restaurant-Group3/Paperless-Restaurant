@@ -34,25 +34,33 @@ class CounterClient {
             }
         });
     }
-    billTable(tableNum) {
+    billTable(tableNum,result) {
         this.socket.emit("bill_table", { table: tableNum });
         this.socket.off("bill_table_result");
         this.socket.on("bill_table_result", function (response) {
             if (response.success) {
                 console.log("Successfully billed table " + tableNum);
+                result(true);
             }
-            else console.log(response.reason);
+            else {
+                console.log(response.reason);
+                result(false);
+            }
         });
     }
-    cancelPending(tableNum) {
+    cancelPending(tableNum,result) {
         //cancels all PENDING (status = 2 or 1) orders for this table. Allows for billing. 
         this.socket.emit("cancel_pending", { table: tableNum });
         this.socket.off("cancel_pending_result");
         this.socket.on("cancel_pending_result", function (response) {
             if (response.success) {
                 console.log("Successfully cancelled " + response.ordersCancelled + " pending orders for table " + tableNum);
+                result(true);
             }
-            else console.log(response.reason);
+            else {
+                console.log(response.reason);
+                result(false);
+            }
         });
     }
 

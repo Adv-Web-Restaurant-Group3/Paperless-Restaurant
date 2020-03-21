@@ -1,11 +1,11 @@
 /**
- * CounterClient class. for interfacing with the server as a Counter view.
+ * Admin class. for interfacing with the server as an Admin view.
  */
 
 
-class CounterClient {
+class AdminClient {
     _current_tables = [];
-    _socket = io("/counter");
+    _socket = io("/admin");
     _update_callback = null;
 
     get socket() { return this._socket; }
@@ -32,27 +32,6 @@ class CounterClient {
             } else {
                 alert("server responded with an error: " + response.reason);
             }
-        });
-    }
-    billTable(tableNum) {
-        this.socket.emit("bill_table", { table: tableNum });
-        this.socket.off("bill_table_result");
-        this.socket.on("bill_table_result", function (response) {
-            if (response.success) {
-                console.log("Successfully billed table " + tableNum);
-            }
-            else console.log(response.reason);
-        });
-    }
-    cancelPending(tableNum) {
-        //cancels all PENDING (status = 2 or 1) orders for this table. Allows for billing. 
-        this.socket.emit("cancel_pending", { table: tableNum });
-        this.socket.off("cancel_pending_result");
-        this.socket.on("cancel_pending_result", function (response) {
-            if (response.success) {
-                console.log("Successfully cancelled " + response.ordersCancelled + " pending orders for table " + tableNum);
-            }
-            else console.log(response.reason);
         });
     }
 

@@ -77,6 +77,19 @@ fs.readFile("credentials.json", function (err, data) {
 });
 
 
+var ADMIN_PASS = null;
+
+fs.readFile("admin_password.txt", function (err, data) {
+    if (err) {
+        console.log("'admin_password.txt' file not found - not using password.");
+    }
+    else {
+        ADMIN_PASS = data;
+        console.log("ADMIN_PASS set to " + data)
+    }
+});
+
+
 server.listen(8080, function () {
     console.log("Server running on port 8080");
 });
@@ -84,6 +97,7 @@ server.listen(8080, function () {
 const waiters = io.of("/waiter");
 const kitchens = io.of("/kitchen");
 const counters = io.of("/counter");
+const admins = io.of("/admin");
 
 waiters.on("connection", function (socket) {
     //waiter/waitress view
@@ -346,8 +360,6 @@ kitchens.on("connection", function (socket) {
 counters.on("connection", function (socket) {
     //counter view
     console.log("counter connected");
-
-
     /*
     output format:
     {
@@ -437,8 +449,8 @@ counters.on("connection", function (socket) {
                         for (let order of party.orders) {
                             let total = 0.00;
                             for (let item of order.items) {
-                                total += item.price;
-                                grandTotal += item.price;
+                                total += item.price * item.quantity;
+                                grandTotal += item.price * item.quantity;
                             }
                             order.totalPrice = Math.round(total * 100) / 100;
                         }
@@ -451,10 +463,102 @@ counters.on("connection", function (socket) {
         });
     });
 
+    socket.on("bill_table", function (data) {
+        let tableNum = data.table;
+        getPartyID(tableNum, function (partyID) {
+            console.log("changing for " + partyID)
+            if (partyID) {
+                let conn = createConnection();
+                conn.connect(function (err) {
+                    if (err) console.log(err)
+                    else {
+                        conn.query(`SELECT COUNT(orderID)as"count" FROM PartyOrder WHERE party = ${mysql.escape(partyID)} AND orderStatus NOT IN (3, 0);`, function (err, results) {
+                            console.log(results)
+                            if (err) console.log(err);
+                            else if (results[0].count > 0) {
+                                socket.emit("bill_table_result", { success: false, reason: "This table still has orders in progress. Consider cancelling these orders." });
+                            }
+                            else {
+                                let conn1 = createConnection();
+                                conn1.connect(function (err) {
+                                    if (err) console.log(err);
+                                    else {
+                                        let sql = `UPDATE Party SET inHouse = false WHERE partyID = ${mysql.escape(partyID)} AND inHouse = true;`;
+                                        conn1.query(sql, function (err, results) {
+                                            if (err) console.log(err);
+                                            else {
+                                                console.log(results)
+                                                if (results.affectedRows === 1) {
+                                                    console.log(results);
+                                                    let conn2 = createConnection();
+                                                    conn2.connect(function (err) {
+                                                        if (err) console.log(err)
+                                                        else {
+                                                            sql = `UPDATE PartyOrder SET orderStatus = 4 WHERE party = ${mysql.escape(partyID)};`;
+                                                            conn2.query(sql, function (err, results) {
+                                                                if (err) {
+                                                                    console.log(err);
+                                                                } else socket.emit("bill_table_result", { success: true });
+                                                                conn2.end();
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                            conn1.end();
+                                        });
+                                    }
+                                });
+                            }
+                            conn.end();
+                        });
+                    }
+                });
+            } else socket.emit("bill_table_result", { success: false, reason: "given tableNum does not have a party!" });
+        }, false);//do not allow inserts
+    });
 
+    socket.on("cancel_pending", function (data) {
+        //sets status of all orders with status 1 or 2 to 0 (cancelled)
+        let tableNum = data.table;
+        getPartyID(tableNum, function (partyID) {
+            if (partyID) {
+                let conn = createConnection();
+                conn.connect(function (err) {
+                    if (err) console.log(err);
+                    let sql = `UPDATE PartyOrder SET orderStatus = 0 WHERE orderStatus < 3 AND party = ${mysql.escape(partyID)}`;
+                    conn.query(sql, function (err, results) {
+                        if (err) console.log(err);
+                        else { socket.emit("cancel_pending_result", { success: true, ordersCancelled: results.affectedRows }) }
+                    });
+                });
+            } else socket.emit("cancel_pending_result", { success: false, reason: "given tableNum does not have a party!" });
+        }, false);//do not allow inserts
+    });
 });
 
 
+admins.on("connection", function (socket) {
+    //admin view - use deferred socket handlers.
+    socket.on("login", function (data) {
+        let password = data.password;
+        if (password) {
+            if (password === ADMIN_PASS) {
+                addHandlers();
+                socket.emit("login_result", { success: true });
+            }
+            else socket.emit("login_result", { success: false, reason: "Incorrect password." });
+        }
+        else socket.emit("login_result", { success: false, reason: "No password supplied!" });
+    });
+
+    function addHandlers() {
+        //login confirmed - add handlers.
+        socket.on()
+    }
+
+
+});
 /*
  * GLOBAL FUNCTIONS - used in all views.
  */
@@ -470,8 +574,9 @@ function validateOrder(order) {
     return false;
 }
 
-function getPartyID(tableNum, callback) {
+function getPartyID(tableNum, callback, allowInsert = true) {
     //retrieves the partyID for the given tableNum and passes it to the given callback.
+    console.log("finding party for table " + tableNum)
     let conn = createConnection();
     conn.connect(function (err) {
         if (err) console.log(err);
@@ -482,7 +587,7 @@ function getPartyID(tableNum, callback) {
                 if (results.length > 0) {
                     console.log("party found for table " + tableNum + ": ", results[0]);
                     callback(results[0].partyID);
-                } else {
+                } else if (allowInsert) {
                     let sql = `INSERT INTO Party (tableNum, inHouse) VALUES (${mysql.escape(tableNum)}, TRUE)`;
                     let conn2 = createConnection();
                     conn2.query(sql, function (err, results) {
@@ -494,6 +599,7 @@ function getPartyID(tableNum, callback) {
                         conn2.end();
                     });
                 }
+                else { callback(null) }
             }
             conn.end();
         });

@@ -157,7 +157,7 @@ waiters.on("connection", function (socket) {
             getPartyID(tableNum, function (party) {
                 conn.connect(function (err) {
                     if (err) console.log(1, err);
-                    let sql = `SELECT orderID, orderNum, orderTime, orderStatus, itemNum, quantity, notes, itemName, (SELECT catName FROM MenuCategory WHERE catID = MenuItem.category) AS 'category', price, isVegetarian, isVegan, glutenFree, containsNuts, estTime FROM PartyOrder INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) WHERE party = ${mysql.escape(party)};`;
+                    let sql = `SELECT orderID, orderNum, orderTime, orderStatus, itemNum, quantity, notes, itemName, (SELECT catName FROM MenuCategory WHERE catID = MenuItem.category) AS 'category', price, isVegetarian, isVegan, glutenFree, containsNuts, estTime FROM PartyOrder INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) WHERE party = ${mysql.escape(party)} AND orderStatus NOT IN (0,3);`;
                     conn.query(sql, function (err, results) {
                         if (err) console.log(2, err);
                         else {
@@ -279,6 +279,52 @@ waiters.on("connection", function (socket) {
         } else socket.emit("order_result", { success: false, reason: "order object was not given" });
     });
 
+    //cancel order
+    socket.on("cancel_order", function (data) {
+        let orderID = data.orderID;
+        if (orderID) {
+            let conn = createConnection();
+            conn.connect(function (err) {
+                if (err) console.log(err);
+                else {
+                    let sql = `UPDATE PartyOrder SET orderStatus = 0 WHERE orderID = ${mysql.escape(orderID)}`;
+                    conn.query(sql, function (err, results) {
+                        if (err) console.log(err);
+                        else {
+                            console.log(results);
+                            if (results.affectedRows === 1) {
+                                socket.emit("cancel_order_result", { success: true });
+                            }
+                            else socket.emit("cancel_order_result", { success: false, reason: "orderID given does not exist." })
+                        }
+                        conn.end();
+                    });
+                }
+            });
+        }
+        else socket.emit("cancel_order_result", { success: false, reason: "provide orderID parameter." });
+    });
+
+    //cancel all orders for table.
+    socket.on("cancel_all", function (data) {
+        //sets status of all orders with status 1 or 2 to 0 (cancelled)
+        let tableNum = data.table;
+        getPartyID(tableNum, function (partyID) {
+            if (partyID) {
+                let conn = createConnection();
+                conn.connect(function (err) {
+                    if (err) console.log(err);
+                    let sql = `UPDATE PartyOrder SET orderStatus = 0 WHERE party = ${mysql.escape(partyID)}`;
+                    conn.query(sql, function (err, results) {
+                        if (err) console.log(err);
+                        else { socket.emit("cancel_all_result", { success: true, ordersCancelled: results.affectedRows }) }
+                        conn.end();
+                    });
+                });
+            } else socket.emit("cancel_all_result", { success: false, reason: "given tableNum does not have a party!" });
+        }, false);//do not allow inserts
+    });
+
 
 });
 
@@ -292,7 +338,7 @@ kitchens.on("connection", function (socket) {
         conn.connect(function (err) {
             if (err) console.log(1, err);
             //get all orders either waiting or cooking.
-            let sql = `SELECT tableNum, orderID, orderNum, orderTime, orderStatus, itemNum, quantity, notes, itemName FROM Party INNER JOIN PartyOrder ON Party.partyID = PartyOrder.party INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) WHERE orderStatus < 3;`;
+            let sql = `SELECT tableNum, orderID, orderNum, orderTime, orderStatus, itemNum, quantity, notes, itemName FROM Party INNER JOIN PartyOrder ON Party.partyID = PartyOrder.party INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) WHERE orderStatus IN (1,2);`;
             conn.query(sql, function (err, results) {
                 if (err) console.log(2, err);
                 else {

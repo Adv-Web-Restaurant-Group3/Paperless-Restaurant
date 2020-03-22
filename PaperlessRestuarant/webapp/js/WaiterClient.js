@@ -2,10 +2,11 @@
  * WaiterClient class. for interfacing with the server as a Waiter view.
  */
 const OrderStatus = {
+    get CANCELLED() { return "ORDER_STATUS:0" },
     get WAITING() { return "ORDER_STATUS:1" },
     get COOKING() { return "ORDER_STATUS:2" },
-    get SERVING() { return "ORDER_STATUS:3" },
-    get SERVED() { return "ORDER_STATUS:4" },
+    get SERVED() { return "ORDER_STATUS:3" },
+    get BILLED() { return "ORDER_STATUS:4" },
 }
 class WaiterClient {
     _current_orders = [];
@@ -51,7 +52,7 @@ class WaiterClient {
 
 
     sync(timeout) {
-        setInterval(()=>this.update(), timeout);
+        setInterval(() => this.update(), timeout);
     }
 
     update() {
@@ -110,11 +111,41 @@ class WaiterClient {
     }
     _update_orders(orders) {
         for (let order of orders) {
-            order.status = Object.keys(OrderStatus)[order.status - 1].toLowerCase();
+            order.status = Object.keys(OrderStatus)[order.status].toLowerCase();
             order.orderTime = new Date(order.orderTime);
         }
         this._current_orders = orders;
         console.log("orders for table " + this._table + ":", orders);
+    }
+
+    cancelAllOrders() {
+        //cancels all orders for selected table.
+        this.socket.emit("cancel_all", { table: this.table });
+        this.socket.off("cancel_all_result");
+        this.socket.on("cancel_all_result", function (response) {
+            if (response.success) {
+                console.log("Successfully cancelled " + response.ordersCancelled + " pending orders for table " + this.table)
+                result(true);
+            }
+            else {
+                console.log(response.reason);
+                result(false);
+            }
+        });
+    }
+
+    cancelOrder(orderID) {
+        //cancels the specified order. provide orderID of order to cancel.
+        this.socket.emit("cancel_order", { orderID: orderID });
+        this.socket.off("cancel_order_result");
+        this.socket.on("cancel_order_result", function (response) {
+            if (response.success) {
+                console.log("order cancelled successfully: ", orderID);
+                client.update();
+            } else {
+                console.log("Server responded with an error while trying to cancel order: " + response.reason);
+            }
+        });
     }
 
 }

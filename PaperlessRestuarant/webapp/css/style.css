@@ -10,6 +10,7 @@ body {
 
 /* Table select Box */
 #tablesBox{
+   user-select: none;
     overflow-y: auto;
     position: fixed;
     left: calc(50% - 7.5rem);
@@ -29,12 +30,10 @@ body {
   background-color: rgba(148, 148, 148, 0.233);
   border-radius: 2rem;
 }
-#tablesBox:hover::-webkit-scrollbar-thumb{
+#tablesBox:hover::-webkit-scrollbar-thumb, #tablesBox:focus::-webkit-scrollbar-thumb, #tablesBox:active::-webkit-scrollbar-thumb{
   background-color: rgb(90, 90, 90);
 }
-#tablesBox:active::-webkit-scrollbar-thumb{
-  background-color: rgb(90, 90, 90);
-}
+
 
 #tablesBox #titleBox{
     width: 100%;

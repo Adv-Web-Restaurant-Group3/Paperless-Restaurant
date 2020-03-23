@@ -116,6 +116,7 @@ function tableList(){
 $(document).ready(()=>{
     tableList();
     $("#setTable").click(event=>{
+        $("#openMenu").text("Open Menu");
         currentView = 0;
         toggleView();
     });
@@ -173,15 +174,15 @@ client.onUpdate(function () {
 
             status = orderDate[i].status;
             price = orderDate[i].price;
-
             total = total + price;
-
+            let estTimeWaiting = orderDate[i].items.reduce((a,b)=>a+b.estTime,0);
+            let timeWaiting = new Date(Math.abs(new Date()-orderTime)).getMinutes();
             content += `
         <div class='container-a'>
         <div class='topBox'>
         <span class='text-a'>Order ${orderNum}</span>
-        <span class='text-b'>Est wait time<br><span class='estWait'>${orderTime}</span></span>
-        <span class='text-c'>Time waiting<br><span class='waitTime'>${orderTime}</span></span>
+        <span class='text-b'>Est wait time<br><span class='estWait'>${estTimeWaiting}</span></span>
+        <span class='text-c'>Time waiting<br><span class='waitTime'>${timeWaiting}</span></span>
         <span class='text-d'>${status}</span>
         <span class='text-e'>${orderDate[i].items.length} Items</span>
         <span class='dropDown' data-value='${i}'>Open</span>

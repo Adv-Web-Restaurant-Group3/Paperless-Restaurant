@@ -73,7 +73,7 @@ toggleView();
 
 function buildTableList(callback){
     let items = "";
-    for(let i=1;i<5;i++){
+    for(let i=1;i<21;i++){
         let item = `
         <div class="tableItem">
             Table ${i}

@@ -21,6 +21,20 @@ body {
     display: flex;
     flex-direction:column;
 }
+#tablesBox::-webkit-scrollbar { 
+  width: 5px;
+  background-color: aliceblue;
+}
+#tablesBox::-webkit-scrollbar-thumb{
+  background-color: rgba(148, 148, 148, 0.233);
+  border-radius: 2rem;
+}
+#tablesBox:hover::-webkit-scrollbar-thumb{
+  background-color: rgb(90, 90, 90);
+}
+#tablesBox:active::-webkit-scrollbar-thumb{
+  background-color: rgb(90, 90, 90);
+}
 
 #tablesBox #titleBox{
     width: 100%;

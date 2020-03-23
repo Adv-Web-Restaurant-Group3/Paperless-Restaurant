@@ -259,7 +259,6 @@ client.onUpdate(function () {
 
             for (var x = 0; x < openBox.length; x++) {
                 openBox[x].style.display = "none";
-                topBox[x].style.borderBottom = "1px solid transparent";
             }
             for (var x = 0; x < openBox.length; x++) {
                 dropDown[x].innerHTML = "Open";
@@ -267,7 +266,6 @@ client.onUpdate(function () {
 
             if (!show) {
                 openBox[num].style.display = "flex";
-                topBox[num].style.borderBottom = "1px solid #000";
                 this.innerHTML = "Close";
             }
 

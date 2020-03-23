@@ -192,7 +192,12 @@ client.onUpdate(function () {
         <span class='text-e'>${orderDate[i].items.length} Items</span>
         <span class='dropDown' data-value='${i}'>Open</span>
         </div>
-        <div class='openBox' style='display:none'>`;
+        <div class='openBox' style='display:none'>
+        <div class='mobileTimeContainer'>
+            <span class='text-f'>Est wait time<br><span class='estWait'>${estTimeWaiting}</span></span>
+            <span class='text-g'>Time waiting<br><span class='waitTime'>${timeWaiting}</span></span>
+        </div>
+        `;
 
             for (var x = 0; x < orderDate[i].items.length; x++) {
                 itemNum = orderDate[i].items[x].itemNum;

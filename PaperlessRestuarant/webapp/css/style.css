@@ -355,7 +355,7 @@ body {
 .wrapperMenu { 
  
   width: max-content;
-  min-width: 800px;
+  width: 100vw;
   max-width: 1400px;
   margin: 0 auto;
   
@@ -457,4 +457,40 @@ body {
 }
 #section-e{
   padding-top: 0.8rem;
+}
+
+
+/* Menu - Mobile View
+-----------------------------------------------------------------------------*/
+@media only screen and (max-width: 800px) {
+  #section-d, #section-e, #section-f {
+    width: 100vw;
+  }
+  #section-e, #section-f {
+    display: none;
+  }
+}
+
+
+
+/* View Order - Mobile View
+-----------------------------------------------------------------------------*/
+.mobileTimeContainer {
+  width: 100%;
+  display: block;
+}
+.text-f, .text-g {
+  display: none;
+}
+@media only screen and (max-width: 600px) {
+  .text-b, .text-c {
+    display: none;
+  }
+  .text-f, .text-g {
+    display: inline-block;
+    width:  calc(50% - 10px);
+    border: 1px solid #000;
+    margin: 2.5px;
+    text-align: center;
+  }
 }

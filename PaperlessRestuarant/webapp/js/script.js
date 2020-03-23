@@ -37,7 +37,7 @@ var currentView = 0;
 var currentTable = 1;
 var tableSet = false;
 let client = new WaiterClient();
-client.setTable(currentTable);
+//client.setTable(currentTable);
 
 
 
@@ -94,7 +94,7 @@ function tableSelectEvent(el){
         $("#currentTable").text("Current Table: "+currentTable);
         currentView=1;
         tableSet = true;
-        client.update();
+        client.setTable(currentTable);
         document.getElementById("section-a").innerHTML = "";
     });
 }
@@ -141,7 +141,11 @@ $(document).ready(()=>{
 
 
 client.onUpdate(function () {
-    if(currentTable!=client.table)client.setTable(currentTable);
+    if(currentTable!=client.table){
+        document.getElementById("section-a").innerHTML="";
+        client.setTable(currentTable);
+        return;
+    }
     console.log(client.orders);
     orderDate = client.orders;
 
@@ -490,8 +494,5 @@ client.onMenuUpdate(function() {
     }
 });
 
-function changeTable(tableNum){
-    currentTable = parseInt(tableNum);
-    client.update();
-}
+
 //client.sync(5000);

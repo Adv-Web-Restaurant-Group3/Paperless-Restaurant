@@ -364,7 +364,7 @@ client.onMenuUpdate(function() {
             itemNum = item[i].itemNum;
             itemName = item[i].itemName;
 
-            content = `<li value="${itemNum}">${itemNum}. ${itemName} <span class="plus">&#43;</span></li>`;
+            content = `<li value="${itemNum}"><span class="txt">${itemNum}. ${itemName}</span> <span class="plus">&#43;</span></li>`;
 
             document.getElementById("category" + categoryNum).innerHTML += content;
         }
@@ -449,7 +449,7 @@ client.onMenuUpdate(function() {
                     }
 
                     // Generates order Summary
-                    content += `<li value="${order[x][0]}">${order[x][0]}. ${item[i].itemName} x${order[x][1]} <span class="minus">&#45;</span></li>`;
+                    content += `<li value="${order[x][0]}"><span class="txt">${order[x][0]}. ${item[i].itemName}</span> <span class="numOf">x${order[x][1]}</span> <span class="minus">&#45;</span></li>`;
                 }
 
 

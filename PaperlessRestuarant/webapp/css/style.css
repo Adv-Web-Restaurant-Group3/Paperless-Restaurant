@@ -376,8 +376,20 @@ body {
   
 }
 
-.plus {
+.plus, .minus {
   cursor: pointer;
+  border: 1px solid #000;
+  border-radius: 20px;
+  height: 30px;
+  width: 30px;
+  display: inline-block;
+  line-height: 30px;
+  text-align: center;
+  font-size: 26px;
+  float: right;
+}
+.plus:hover {
+  background-color: #F5F5F5;
 }
 
 #section-f {
@@ -386,10 +398,34 @@ body {
 
 .minus {
   cursor: pointer;
+  margin-top: 12.5px;
 }
 
 
 
 #saveTable {
   cursor: pointer;
+}
+
+
+
+
+#section-e li, #section-f li {
+  /* line-height: 20px; */
+  height: 60px;
+}
+#section-e li span.txt {
+  display: inline-block;
+  width: 180px;
+  line-height: 20px;
+}
+#section-f li span.txt {
+  display: inline-block;
+  width: 150px;
+  line-height: 20px;
+}
+#sectionf li span.numOf {
+  float: right;
+  height: 60px;
+  width: 20px;
 }

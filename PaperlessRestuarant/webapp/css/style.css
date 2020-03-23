@@ -320,7 +320,14 @@ body {
 
   .dropDown {
       cursor: pointer;
-
+      background-color: rgba(155, 207, 51, 0.575);
+      color: white;
+      border-radius: 1rem;
+      text-shadow: 1px 1px 1px black;
+      padding:0.5rem;
+      padding-right: 0.9rem;
+      padding-left: 0.9rem;
+      height: min-content;
   }
 
   #addOrder {

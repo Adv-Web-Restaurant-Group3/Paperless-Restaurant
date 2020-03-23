@@ -171,6 +171,11 @@ client.onUpdate(function () {
         for (var i = 0; i < orderDate.length; i++) {
             orderNum = orderDate[i].orderNum;
             orderTime = orderDate[i].orderTime;
+            var date = new Date(orderTime).toUTCString();
+            // console.log(date);
+
+
+
 
             status = orderDate[i].status;
             price = orderDate[i].price;

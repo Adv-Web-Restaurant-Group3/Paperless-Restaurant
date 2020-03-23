@@ -175,7 +175,7 @@ client.onUpdate(function () {
             status = orderDate[i].status;
             price = orderDate[i].price;
             total = total + price;
-            let estTimeWaiting = orderDate[i].items.reduce((a,b)=>a+b.estTime,0);
+            let estTimeWaiting = orderDate[i].items.reduce((a,b)=>a+b.estTime*b.quantity,0);
             let timeWaiting = new Date(Math.abs(new Date()-orderTime)).getMinutes();
             content += `
         <div class='container-a'>
@@ -197,8 +197,9 @@ client.onUpdate(function () {
 
                 content += `
             <div class='container-b'>
-            <span class='itemName'><b>${itemNum}.</b>${itemName}</span>
-            <span class='itemQuantity'>x${quantity}</span>
+            <span class='itemName'><b>${itemNum}.</b>${itemName}
+                <span class='itemQuantity'>x${quantity}</span>
+            </span>
             <span class='notes'>${notes}</span>
             </div>
             `;
@@ -258,14 +259,14 @@ client.onUpdate(function () {
 
             for (var x = 0; x < openBox.length; x++) {
                 openBox[x].style.display = "none";
-                topBox[x].style.borderBottom = "none";
+                topBox[x].style.borderBottom = "1px solid transparent";
             }
             for (var x = 0; x < openBox.length; x++) {
                 dropDown[x].innerHTML = "Open";
             }
 
             if (!show) {
-                openBox[num].style.display = "block";
+                openBox[num].style.display = "flex";
                 topBox[num].style.borderBottom = "1px solid #000";
                 this.innerHTML = "Close";
             }

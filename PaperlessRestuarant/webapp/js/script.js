@@ -223,8 +223,12 @@ client.onUpdate(function () {
     // Displays Total of all items and deals with discount
     document.getElementById("discount").addEventListener("input", finalTotal);
 
+    function calcTotal(){
+        return orderDate.reduce((a,b)=>a+b.items.reduce((a,b)=>a+(b.price*b.quantity),0),0);
+    }
     function finalTotal() {
-        document.getElementById("subTotal").innerHTML = "&#163;" + parseFloat(total).toFixed(2);
+        total = calcTotal();
+        document.getElementById("subTotal").innerHTML = "&#163;" + total;
         var discount = document.getElementById("discount").value;
         var finalTotal = 0;
         if (discount === "") {

@@ -370,8 +370,11 @@ body {
 }
 
 .wrapperMenu li {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   list-style: none;
-  padding:1rem; 
+  padding:0.8rem; 
   user-select: none;
 }
 
@@ -409,13 +412,14 @@ body {
   line-height: 30px;
   text-align: center;
   font-size: 26px;
-  float: right;
 }
 .plus:hover {
   background-color: #F5F5F5;
 }
 
 #section-f {
+  display: flex;
+  flex-direction: column;
   width: 30%;
   min-width: max-content;
   margin: 1rem;
@@ -425,24 +429,49 @@ body {
   background-color: #F5F5F5;
 }
 
+#section-f li{
+  background-color: white;
+  border-radius: 0.3rem;
+  margin-bottom: 0.3rem;
+  margin-top: 0.3rem;
+  
+}
+
 .minus {
   cursor: pointer;
-  margin-top: 12.5px;
+  
+}
+#section-f li .notes{
+  height: min-content;
+  font-weight: 600;
+  box-shadow:  1px 1px 1px rgb(216, 216, 216);
+  background-color: wheat;
+  padding:0.5rem;
+  border-radius: 0.3rem;
+}
+#section-f li .notes:hover, #section-f li .notes:active{
+  box-shadow: inset 1px 1px 1px rgb(168, 168, 168);
 }
 
-
-
-#saveTable {
+#saveTable{
+  align-self: flex-end;
   cursor: pointer;
+  width: max-content;
+  user-select: none;
+  background-color: red;
+  color: white;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  box-shadow: 1px 1px 0px grey;
+}
+#saveTable:hover{
+  box-shadow: inset 1px 1px 3px grey;
 }
 
 
 
 
-#section-e li, #section-f li {
-  /* line-height: 20px; */
-  height: 60px;
-}
 #section-e li span.txt {
   display: inline-block;
   width: 180px;
@@ -452,12 +481,11 @@ body {
 #section-f li span.txt {
   display: inline-block;
   width: 150px;
-  line-height: 20px;
+  
 }
-#sectionf li span.numOf {
-  float: right;
-  height: 60px;
-  width: 20px;
+.numOf {
+  font-weight: 600;
+  color: red;
 }
 
 #section-e li .txt{

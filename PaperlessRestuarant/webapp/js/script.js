@@ -288,13 +288,7 @@ client.onUpdate(function () {
 
 
     document.getElementById("tableClear").addEventListener('click', function () {
-        document.getElementById("section-a").innerHTML = "<div class='container-a' id='addOrder'>+ Add Order</div>";
-        if($(".wrapperOrders").is(":visible")){
-            document.getElementById("addOrder").addEventListener('click', function () {
-                //alert("Add order");
-                toggleView();
-            });
-        }
+    
 
         total = 0;
         finalTotal();
@@ -467,7 +461,10 @@ client.onMenuUpdate(function() {
                     }
 
                     // Generates order Summary
-                    content += `<li value="${order[x][0]}"><span class="txt">${order[x][0]}. ${item[i].itemName}</span> <span class="numOf">x${order[x][1]}</span> <span class="minus">&#45;</span></li>`;
+                    content += `<li value="${order[x][0]}"><span class="txt">${order[x][0]}. ${item[i].itemName} <span class="numOf">x${order[x][1]}</span> </span>
+                    <span class="notes">Notes</span>
+                    <span class="minus">&#45;</span>
+                    </li>`;
                 }
 
 

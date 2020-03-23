@@ -37,7 +37,7 @@ var currentView = 0;
 var currentTable = 1;
 var tableSet = false;
 let client = new WaiterClient();
-client.setTable(currentTable);
+//client.setTable(currentTable);
 
 
 
@@ -73,7 +73,7 @@ toggleView();
 
 function buildTableList(callback){
     let items = "";
-    for(let i=1;i<5;i++){
+    for(let i=1;i<21;i++){
         let item = `
         <div class="tableItem">
             Table ${i}
@@ -94,7 +94,7 @@ function tableSelectEvent(el){
         $("#currentTable").text("Current Table: "+currentTable);
         currentView=1;
         tableSet = true;
-        client.update();
+        client.setTable(currentTable);
         document.getElementById("section-a").innerHTML = "";
     });
 }
@@ -116,6 +116,7 @@ function tableList(){
 $(document).ready(()=>{
     tableList();
     $("#setTable").click(event=>{
+        $("#openMenu").text("Open Menu");
         currentView = 0;
         toggleView();
     });
@@ -141,7 +142,11 @@ $(document).ready(()=>{
 
 
 client.onUpdate(function () {
-    if(currentTable!=client.table)client.setTable(currentTable);
+    if(currentTable!=client.table){
+        document.getElementById("section-a").innerHTML="";
+        client.setTable(currentTable);
+        return;
+    }
     console.log(client.orders);
     orderDate = client.orders;
 
@@ -174,15 +179,15 @@ client.onUpdate(function () {
 
             status = orderDate[i].status;
             price = orderDate[i].price;
-
             total = total + price;
-
+            let estTimeWaiting = orderDate[i].items.reduce((a,b)=>a+b.estTime*b.quantity,0);
+            let timeWaiting = new Date(Math.abs(new Date()-orderTime)).getMinutes();
             content += `
         <div class='container-a'>
         <div class='topBox'>
         <span class='text-a'>Order ${orderNum}</span>
-        <span class='text-b'>Est wait time<br><span class='estWait'>${orderTime}</span></span>
-        <span class='text-c'>Time waiting<br><span class='waitTime'>${orderTime}</span></span>
+        <span class='text-b'>Est wait time<br><span class='estWait'>${estTimeWaiting}</span></span>
+        <span class='text-c'>Time waiting<br><span class='waitTime'>${timeWaiting}</span></span>
         <span class='text-d'>${status}</span>
         <span class='text-e'>${orderDate[i].items.length} Items</span>
         <span class='dropDown' data-value='${i}'>Open</span>
@@ -197,8 +202,9 @@ client.onUpdate(function () {
 
                 content += `
             <div class='container-b'>
-            <span class='itemName'><b>${itemNum}.</b>${itemName}</span>
-            <span class='itemQuantity'>x${quantity}</span>
+            <span class='itemName'><b>${itemNum}.</b>${itemName}
+                <span class='itemQuantity'>x${quantity}</span>
+            </span>
             <span class='notes'>${notes}</span>
             </div>
             `;
@@ -258,15 +264,13 @@ client.onUpdate(function () {
 
             for (var x = 0; x < openBox.length; x++) {
                 openBox[x].style.display = "none";
-                topBox[x].style.borderBottom = "none";
             }
             for (var x = 0; x < openBox.length; x++) {
                 dropDown[x].innerHTML = "Open";
             }
 
             if (!show) {
-                openBox[num].style.display = "block";
-                topBox[num].style.borderBottom = "1px solid #000";
+                openBox[num].style.display = "flex";
                 this.innerHTML = "Close";
             }
 
@@ -495,8 +499,5 @@ client.onMenuUpdate(function() {
     }
 });
 
-function changeTable(tableNum){
-    currentTable = parseInt(tableNum);
-    client.update();
-}
+
 //client.sync(5000);

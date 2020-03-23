@@ -10,6 +10,7 @@ body {
 
 /* Table select Box */
 #tablesBox{
+   user-select: none;
     overflow-y: auto;
     position: fixed;
     left: calc(50% - 7.5rem);
@@ -21,6 +22,18 @@ body {
     display: flex;
     flex-direction:column;
 }
+#tablesBox::-webkit-scrollbar { 
+  width: 5px;
+  background-color: aliceblue;
+}
+#tablesBox::-webkit-scrollbar-thumb{
+  background-color: rgba(148, 148, 148, 0.233);
+  border-radius: 2rem;
+}
+#tablesBox:hover::-webkit-scrollbar-thumb, #tablesBox:focus::-webkit-scrollbar-thumb, #tablesBox:active::-webkit-scrollbar-thumb{
+  background-color: rgb(90, 90, 90);
+}
+
 
 #tablesBox #titleBox{
     width: 100%;
@@ -153,77 +166,83 @@ body {
     background-color: white;
     border: 1px solid whitesmoke;
     box-shadow: inset 1px 1px 2px grey;
-    line-height: 60px;
-    text-align: center;
+    overflow: hidden;
     font-size: 18px;
-	margin-top: 30px;
-	float: left;
-	width: 100%;
+    margin-top: 30px;
+    width: 100%;
+    height: max-content;
+    
   }
   .topBox {
-	height: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding:0.7rem;
+    padding-left: 1rem;
+    padding-right: 1rem; 
   }
-  #section-a .container-a span {
-    float: left;
+
+  .topBox > *{
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+    text-align: center;
+    width: max-content;
   }
   
-  .container-a .text-a {
-    text-align: left;
-    margin-left: 50px;
-    width: 110px;
-  }
-  .container-a .text-b,
-  .container-a .text-c {
-    line-height: 20px;
-    margin: 10px 0;
-    width: 160px;
+  .container-b{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    padding: 1rem;
   }
   .container-a .text-d {
     font-weight: 600;
-    width: 80px;
-    margin-left: 30px;
-  }
-  .container-a .text-e,
-  .container-a .estWait,
-  .container-a .waitTime {
-    width: 160px;
   }
   
   .openBox {
+    box-shadow: inset 1px 1px 2px grey;
     width: 100%;
-    float: left;
     border-top: none;
-    margin-left: -1px; /* Fix's big where its slightly out of line */
+    display: flex;
+    flex-direction: column;
+    background-color: whitesmoke;
   }
   
-  .itemName {
-    text-align: left;
-    margin-left: 50px;
-    width: 328px;
+.served{
+    cursor: pointer;
+    width: max-content;
+    align-self: flex-end;
+    user-select: none;
+    margin-right: 3rem;
+    background-color: red;
+    color: white;
+    font-weight: 600;
+   
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    box-shadow: 1px 1px 0px grey;
+}
+.served:hover{
+    box-shadow: inset 1px 1px 3px grey;
+}
+.served:active{
+    box-shadow: inset 1px 1px 3px black;
+}
+
+  .itemQuantity{
+    color: red;
   }
-  .itemQuantity {
-    width: 50px;
-  }
-  .notes {
-    margin-left: 95px;
-    width: 375px;
-    text-align: left;
-  }
-  
-  .edit,
-  .served {
-    float: right;
-    text-align: center;
-    line-height: 40px;
-    margin-top: 50px;
+  .edit {
     cursor: pointer;
   }
-  .edit,
+  
   #tableClear {
     width: 90px;
     text-decoration: underline;
   }
-  .served,
+  
   #printBill {
     padding: 0 25px;
     background-color: #FFC5C5;
@@ -299,8 +318,7 @@ body {
 
   .dropDown {
       cursor: pointer;
-      width: 82px;
-      text-align: right;
+
   }
 
   #addOrder {
@@ -428,4 +446,15 @@ body {
   float: right;
   height: 60px;
   width: 20px;
+}
+
+#section-e li .txt{
+  height: 100%;
+}
+#section-e li{
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+}
+#section-e{
+  padding-top: 0.8rem;
 }

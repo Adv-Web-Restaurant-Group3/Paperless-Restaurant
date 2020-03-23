@@ -85,6 +85,7 @@ body {
     background-color: aliceblue;
     max-width: 900px;
     min-width: min-content;
+    padding-top: 1rem;
     padding-left: 1rem;
     padding-right: 1rem;
     margin: 0 auto;
@@ -95,11 +96,12 @@ body {
     color: #373fff;
   }
   #topBar{
+    overflow-x: auto;
     width: 100%;
    background-color: white;
     position: fixed;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 
     justify-content: space-between;
     top:0;
@@ -345,6 +347,7 @@ body {
 }
 /*Menu Section*/
 #mContent{
+  padding-top: 2rem;
   display: flex;
   flex-direction: row;
   min-width: max-content;
@@ -353,8 +356,7 @@ body {
 
 }
 .wrapperMenu { 
- 
-  width: max-content;
+  
   width: 100vw;
   max-width: 1400px;
   margin: 0 auto;
@@ -369,25 +371,28 @@ body {
 
 .wrapperMenu li {
   list-style: none;
-  width: 80%;
-  padding: 0 10%;
-  line-height: 60px;
+  padding:1rem; 
   user-select: none;
 }
 
-#section-d {
 
-  width: 33.3%;
+#section-d {
+  width: 30%;
   min-width: max-content;
+  height: max-content;
 }
 
 #section-d li {
   cursor: pointer;
 }
+#section-d li:hover {
+  background-color: #F5F5F5;
+}
 
 #section-e {
   background-color: white;
-  width: 33.3%;
+  width: 30%;
+  min-width: max-content;
   height: max-content;
   min-height:100vh;
   box-shadow: inset 0px 0px 4px black;
@@ -411,7 +416,13 @@ body {
 }
 
 #section-f {
-  width: 33.3%;
+  width: 30%;
+  min-width: max-content;
+  margin: 1rem;
+  padding:0.5rem;
+  height: max-content;
+  border-radius: 0.3rem;
+  background-color: #F5F5F5;
 }
 
 .minus {
@@ -437,6 +448,7 @@ body {
   width: 180px;
   line-height: 20px;
 }
+
 #section-f li span.txt {
   display: inline-block;
   width: 150px;
@@ -462,12 +474,29 @@ body {
 
 /* Menu - Mobile View
 -----------------------------------------------------------------------------*/
-@media only screen and (max-width: 800px) {
-  #section-d, #section-e, #section-f {
-    width: 100vw;
+@media only screen and (max-width: 700px) {
+  #topBar{
+    font-size: 0.5em;
   }
-  #section-e, #section-f {
-    display: none;
+  #mContent{
+    font-size: 0.8em;
+  }
+  #topBar > *{
+    padding: 0.1rem;
+    padding-right: 0.2rem;
+    padding-left: 0.2rem;
+  }
+  #section-d, #section-e, #section-f {
+    width: 90vw;
+  }
+  #section-f{
+    margin:0;
+    padding: 0;;
+  }
+  
+  #mContent{
+    margin: 0 auto;
+    flex-direction: column;
   }
 }
 

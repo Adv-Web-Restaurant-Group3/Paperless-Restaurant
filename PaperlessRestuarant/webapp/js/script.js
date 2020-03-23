@@ -233,7 +233,7 @@ client.onUpdate(function () {
     document.getElementById("discount").addEventListener("input", finalTotal);
 
     function calcTotal(){
-        return orderDate.reduce((a,b)=>a+b.items.reduce((a,b)=>a+(b.price*b.quantity),0),0);
+        return orderDate.reduce((a,b)=>a+b.items.reduce((a,b)=>a+(b.price*b.quantity),0),0).toFixed(2);
     }
     function finalTotal() {
         if(parseInt(document.getElementById("discount").value)>100)document.getElementById("discount").value="100";

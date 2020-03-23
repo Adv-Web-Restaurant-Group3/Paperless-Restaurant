@@ -602,7 +602,60 @@ admins.on("connection", function (socket) {
 
     function addHandlers() {
         //login confirmed - add handlers.
-        socket.on()
+        console.log("admin login confirmed. Adding handlers...");
+        socket.on("get_menu", function () {
+            //get Menu from DB and send to client.
+            let conn = createConnection();
+            conn.connect(function (err) {
+                if (err) console.log(11, err)
+                else {
+                    let sql = "SELECT catID, catName FROM MenuCategory";
+                    conn.query(sql, function (err, results) {
+                        if (err) console.log(12, err)
+                        else {
+                            let categories = [];
+                            for (category of results) {
+                                categories.push({ catID: category.catID, catName: category.catName });
+                            }
+                            let conn2 = createConnection();
+
+                            conn2.connect(function (err) {
+                                if (err) console.log(13, err)
+                                else {
+                                    let sql = "SELECT category, itemNum, itemName, estTime FROM MenuItem";
+                                    conn2.query(sql, function (err, results) {
+                                        if (err) console.log(13, err);
+                                        else {
+                                            let items = [];
+                                            for (item of results) {
+                                                items.push({
+                                                    category: item.category,
+                                                    itemNum: item.itemNum,
+                                                    itemName: item.itemName,
+                                                    estTime: item.estTime
+                                                });
+                                            }
+                                            socket.emit("menu", { items, categories });
+
+                                        }
+                                        conn2.end();
+                                    });
+                                }
+                            })
+                        }
+                        conn.end();
+                    });
+                }
+            });
+        });
+
+        socket.on("get_menu", function () {
+            console.log("get menu!")
+        })
+
+
+
+
     }
 
 

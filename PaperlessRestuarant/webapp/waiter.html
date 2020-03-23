@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Hello!</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <!-- import the webpage's stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- import the socket stuff -->
+    <script src="/socket.io/socket.io.js" defer></script>
+    <script src="js/WaiterClient.js" defer></script>
+    <script src="js/jquery.js" defer></script>
+    <!-- import the webpage's javascript file -->
+    <script src="js/script.js" defer></script>
+</head>
+
+<body>
+    <div id="topBar">
+        <div id="pageTitle">Waiter View</div>
+        <div id="openMenu">Open Menu</div>
+        <div id="currentTable">Current Table: None</div>
+        <div id="setTable">Set Table</div>
+    </div>
+
+    <div id="tablesBox">
+        <div id="titleBox">Select a table</div>
+    </div>
+
+    <div class="wrapperOrders">
+
+        <nav>
+            <label for="party">Table:</label>
+            <select class="party" onchange="changeTable(this.value);">
+                <option value="1">Table 1</option>
+                <option value="2">Table 2</option>
+                <option value="3">Table 3</option>
+                <option value="4">Table 4</option>
+            </select>
+        </nav>
+
+        <section id="section-a"></section>
+
+        <section id="section-b">
+
+            <div id="total">
+                <div class="totalRow">
+                    <span>Sub total</span><span id="subTotal"></span>
+                </div>
+                <div class="totalRow">
+                    <span>Discount</span><span><input type="number" id="discount" name="discount"
+                            placeholder="0" /></span>%
+                </div>
+                <div class="totalRow">
+                    <span>Total</span><span id="finalTotal">£45</span>
+                </div>
+            </div>
+
+        </section>
+        <!-- Section B -->
+
+
+
+        <section id="section-c">
+
+            <div id="printBill">Print bill</div>
+            <div id="tableClear">Table clear</div>
+
+        </section>
+        <!-- Section C -->
+
+
+
+    </div>
+    <!-- Wrapper -->
+
+    <div class="wrapperMenu">
+        <nav>
+            <label for="party">Table:</label>
+            <select class="party" onchange="changeTable(this.value);">
+                <option value="1">Table 1</option>
+                <option value="2">Table 2</option>
+                <option value="3">Table 3</option>
+                <option value="4">Table 4</option>
+            </select>
+        </nav>
+        <div id="mContent">
+            <section id="section-d"></section>
+            <!-- Category List -->
+
+            <section id="section-e"></section>
+            <!-- Item List -->
+
+            <section id="section-f"></section>
+            <!-- Order Summary-->
+        </div>
+    </div>
+</body>
+
+</html>

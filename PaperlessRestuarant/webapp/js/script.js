@@ -147,6 +147,7 @@ client.onUpdate(function () {
         client.setTable(currentTable);
         return;
     }
+    $("#discount").val("");
     console.log(client.orders);
     orderDate = client.orders;
 
@@ -173,8 +174,6 @@ client.onUpdate(function () {
             orderTime = orderDate[i].orderTime;
             var date = new Date(orderTime).toUTCString();
             // console.log(date);
-
-
 
 
             status = orderDate[i].status;
@@ -232,6 +231,7 @@ client.onUpdate(function () {
         return orderDate.reduce((a,b)=>a+b.items.reduce((a,b)=>a+(b.price*b.quantity),0),0);
     }
     function finalTotal() {
+        if(parseInt(document.getElementById("discount").value)>100)document.getElementById("discount").value="100";
         total = calcTotal();
         document.getElementById("subTotal").innerHTML = "&#163;" + total;
         var discount = document.getElementById("discount").value;

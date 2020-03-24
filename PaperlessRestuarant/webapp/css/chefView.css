@@ -6,6 +6,20 @@ body{
 }
 
 html, body { height: 100%; width: 100%; margin: 0; }
+
+#content::-webkit-scrollbar { 
+    width: 5px;
+    height: 15px;
+    background-color: aliceblue;
+  }
+#content::-webkit-scrollbar-thumb{
+    background-color: rgba(148, 148, 148, 0.233);
+    border-radius: 2rem;
+  }
+#content:hover::-webkit-scrollbar-thumb, #content:focus::-webkit-scrollbar-thumb, #content:active::-webkit-scrollbar-thumb{
+    background-color: rgb(90, 90, 90);
+}
+  
 #topBar{
     width: 100%;
     background-color: white;
@@ -35,11 +49,12 @@ html, body { height: 100%; width: 100%; margin: 0; }
     justify-content: flex-start;
     align-content: flex-start;
     height: 93%;
-    min-height: 10rem;
+    min-height: 13rem;
     overflow: auto;
     width:95%;
     min-width: max-content;
     margin: 0 auto;
+
     background-color: aliceblue;
     margin-top: 2.5rem;
     

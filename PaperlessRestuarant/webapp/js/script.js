@@ -288,7 +288,13 @@ client.onUpdate(function () {
 
 
     document.getElementById("tableClear").addEventListener('click', function () {
-    
+        document.getElementById("section-a").innerHTML = "<div class='container-a' id='addOrder'>+ Add Order</div>";
+        if($(".wrapperOrders").is(":visible")){
+            document.getElementById("addOrder").addEventListener('click', function () {
+                //alert("Add order");
+                toggleView();
+            });
+        }
 
         total = 0;
         finalTotal();
@@ -359,11 +365,13 @@ client.onMenuUpdate(function() {
             catID = category[i].catID;
             catName = category[i].catName;
 
-            sectionD += `<li value="category${catID}" class="categoryList">${catName}</li>`;
+            sectionD += `<li value="category${catID}" class="categoryList pageJumpMiddle">${catName}</li>`;
 
             sectionE += `<div id="category${catID}" style="display:none;"></div>`;
 
         }
+        sectionD += `<div class="arrowRight pageJumpMiddle">&#62;</div>`;
+        sectionE += `<div class="arrowLeft pageJumpLeft">&#60;</div><div class="arrowRight pageJumpRight">&#62;</div>`;
         document.getElementById("section-d").innerHTML = sectionD;
         document.getElementById("section-e").innerHTML = sectionE;
 
@@ -399,6 +407,8 @@ client.onMenuUpdate(function() {
         for (var i = 0; i < plus.length; i++) {
             plus[i].addEventListener('click', function() {
                 addOrder(this.parentNode.getAttribute("value"));
+                //Fixs bug with last button not working
+                document.getElementById("pageJumpMiddle").addEventListener("click", function(){ pageJump("section-e"); });
             });
         }
 
@@ -461,18 +471,17 @@ client.onMenuUpdate(function() {
                     }
 
                     // Generates order Summary
-                    content += `<li value="${order[x][0]}"><span class="txt">${order[x][0]}. ${item[i].itemName} <span class="numOf">x${order[x][1]}</span> </span>
-                    <span class="notes">Notes</span>
-                    <span class="minus">&#45;</span>
-                    </li>`;
+                    content += `<li value="${order[x][0]}"><span class="txt">${order[x][0]}. ${item[i].itemName}</span> <span class="numOf">x${order[x][1]}</span> <span class="minus">&#45;</span></li>`;
                 }
 
 
             }
         }
         content += `<div id="estTime">Est Time<br>${max}</div>
-    <div id="saveTable">Save To Table</div>`;
+    <div id="saveTable">Save To Table</div>
+    <div class="arrowLeft pageJumpMiddle" id="pageJumpMiddle">&#60;</div>`;
 
+        
         document.getElementById("section-f").innerHTML = content;
 
 
@@ -500,10 +509,43 @@ client.onMenuUpdate(function() {
         for (var i = 0; i < minus.length; i++) {
             minus[i].addEventListener('click', function() {
                 minusOrder(this.parentNode.getAttribute("value"));
+                //Fixs bug with last button not working
+                document.getElementById("pageJumpMiddle").addEventListener("click", function(){ pageJump("section-e"); });
             });
         }
     }
+
+
+
+
+    // Page jumps - Mobile view
+    function pageJump(el) {
+        console.log("jump to: " + el);
+        document.getElementById("section-d").style.display = "none";
+        document.getElementById("section-e").style.display = "none";
+        document.getElementById("section-f").style.display = "none";
+        document.getElementById(el).style.display = "block";
+    }
+
+    var pageJumpLeft = document.getElementsByClassName("pageJumpLeft");
+    for (var i = 0; i < pageJumpLeft.length; i++) {
+        pageJumpLeft[i].addEventListener("click", function(){ pageJump("section-d"); });
+    }
+    var pageJumpMiddle = document.getElementsByClassName("pageJumpMiddle");
+    for (var i = 0; i < pageJumpMiddle.length; i++) {
+        pageJumpMiddle[i].addEventListener("click", function(){ pageJump("section-e"); });
+    }
+    var pageJumpRight = document.getElementsByClassName("pageJumpRight");
+    for (var i = 0; i < pageJumpRight.length; i++) {
+        pageJumpRight[i].addEventListener("click", function(){ pageJump("section-f"); });
+    }
+
+    // When opens menu again starts at Catagrees
+    document.getElementById("openMenu").addEventListener("click", function(){ pageJump("section-d"); });
+
+
 });
 
 
 //client.sync(5000);
+

@@ -450,7 +450,6 @@ body {
 }
 #section-f li .notes{
   height: min-content;
-  font-weight: 600;
   box-shadow:  1px 1px 1px rgb(216, 216, 216);
   background-color: wheat;
   padding:0.5rem;
@@ -600,3 +599,122 @@ body {
     text-align: center;
   }
 }
+
+/** notes popup **/
+
+#popUp{
+  overflow: hidden;
+  user-select: none;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  z-index: 3;
+  position: fixed;
+  width: 22rem;
+  min-width: min-content;
+  height: fit-content;
+  min-height: min-content;
+  background-color: white;
+  box-shadow: 1px 1px 4px grey;
+  top: calc(50% - 5rem);
+  left: calc(50% - 11rem);
+  display: none;
+  
+}
+#popUp #toppopbar{
+  width: 100%;
+  background-color: gainsboro;
+  padding:0.3rem;
+  color:white;
+}
+#popUp #inputField{
+  width: 100%;
+  text-align: center;
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+#popUp #inputField textarea{
+  width: 80%;
+  resize: none;
+  font-size: 1.3rem;
+  border-radius: 0.3rem;
+  border: 0;
+  box-shadow: inset 1px 1px 1px grey;
+}
+
+#popUp #inputField textarea::-webkit-scrollbar { 
+  width: 5px;
+  background-color: aliceblue;
+}
+#popUp #inputField textarea::-webkit-scrollbar-thumb{
+  background-color: rgb(90, 90, 90);
+  border-radius: 2rem;
+}
+
+
+#popUp #text{
+  margin-top:0.4rem;
+  margin-bottom:0.2rem;
+  font-size: 1em;
+  width: 100%;
+  text-align: center;
+
+}
+#popUp #options{
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width:70%;
+  align-self: center;
+  margin-bottom:1rem;
+  
+}
+#popUp #options #exit{
+  padding: 0.4rem;
+  background-color: red;
+  color: white;
+  font-weight: 900;
+  text-align: center;
+  border-radius: 0.2rem;
+  width:40%;
+  box-shadow: 1px 1px 0px grey;
+
+}
+#popUp #options #exit:hover{
+  box-shadow: inset 1px 1px 3px grey;
+}
+#popUp #options #exit:active{
+  box-shadow: inset 1px 1px 3px black;
+}
+#popUp #options #saveNote{
+  background-color: lightgreen;
+  color: white;
+  font-weight: 900;
+  text-align: center;
+  border-radius: 0.2rem;
+  padding: 0.4rem;
+  width:40%;
+  box-shadow: 1px 1px 0px grey;
+}
+#popUp #options #saveNote:hover{
+  box-shadow: inset 1px 1px 3px grey;
+}
+#popUp #options #saveNote:active{
+  box-shadow: inset 1px 1px 3px black;
+}
+
+#overlay{
+  display: none;
+  z-index: 2;
+  position: fixed;
+  width: 100vw;
+  height: 100vw;
+  top:0;
+  left:0;
+  margin:0;
+  background-color: rgba(211, 211, 211, 0.5);
+}
+
+
+/*---*/

@@ -138,6 +138,11 @@ $(document).ready(()=>{
             toggleView();
         }
     });
+
+    $("#exit").click(event=>{
+        $("#popUp").hide();
+        $("#overlay").hide();
+    });
 });
 
 
@@ -216,8 +221,6 @@ client.onUpdate(function () {
 
 
             content += `
-        <div class='served'>Order ${orderNum} is Served</div>
-        <div class='edit'>edit</div>
         </div>
         </div>
         `;
@@ -479,8 +482,9 @@ client.onMenuUpdate(function() {
                     }
 
                     // Generates order Summary
-                    content += `<li value="${order[x][0]}"><span class="txt">${order[x][0]}. ${item[i].itemName}</span> <span class="numOf">x${order[x][1]}</span> <span class="minus">&#45;</span></li>`;
-
+                    content += `<li value="${order[x][0]}"><span class="txt">${order[x][0]}. ${item[i].itemName}<span class="numOf"> x${order[x][1]}</span></span>
+                    <div class="notes" id="${order[x][0]}">Notes</div>
+                    <span class="minus">&#45;</span></li>`;
 
                     // displays number of items on middle menu page again
                     if(order[x][1] !== 0) {
@@ -494,14 +498,17 @@ client.onMenuUpdate(function() {
         content += `<div id="estTime">Est Time<br>${max}</div>
     <div id="saveTable">Save To Table</div>
     <div class="arrowLeft pageJumpMiddle" id="pageJumpMiddle">&#60;</div>`;
-
-        
         document.getElementById("section-f").innerHTML = content;
-
-
+        //add event listerners for notes
+        $("#section-f").children().find(".notes").each((i,el)=>{
+            $(el).click(event=>{
+                $("#popUp").show();
+                $("#popUp").css("display","flex");
+                $("#overlay").show();
+            });
+        });
 
         document.getElementById("saveTable").addEventListener('click', function() {
-            console.log("save Order Order Num, Array and Max");
             //console.log(items[order])
             let Oitems = [];
             order.forEach(el=>{

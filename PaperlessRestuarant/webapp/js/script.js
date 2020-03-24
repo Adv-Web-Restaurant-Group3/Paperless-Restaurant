@@ -384,7 +384,7 @@ client.onMenuUpdate(function() {
             itemNum = item[i].itemNum;
             itemName = item[i].itemName;
 
-            content = `<li value="${itemNum}"><span class="txt">${itemNum}. ${itemName}</span> <span class="plus">&#43;</span></li>`;
+            content = `<li value="${itemNum}"><span class="txt">${itemNum}. ${itemName}</span><span class="numOf" id="itemNum${itemNum}"></span><span class="plus">&#43;</span></li>`;
 
             document.getElementById("category" + categoryNum).innerHTML += content;
         }
@@ -459,6 +459,14 @@ client.onMenuUpdate(function() {
 
     function updateSummary() {
 
+
+        // Removes all number of items
+        var numOf = document.getElementsByClassName("numOf");
+        for (var i = 0; i < numOf.length; i++) {
+            numOf[i].innerHTML = "";
+        }
+
+        // Sets data for all items
         var content = "Order Summary";
         var max = 0;
         for (var i = 0; i < item.length; i++) {
@@ -472,6 +480,12 @@ client.onMenuUpdate(function() {
 
                     // Generates order Summary
                     content += `<li value="${order[x][0]}"><span class="txt">${order[x][0]}. ${item[i].itemName}</span> <span class="numOf">x${order[x][1]}</span> <span class="minus">&#45;</span></li>`;
+
+
+                    // displays number of items on middle menu page again
+                    if(order[x][1] !== 0) {
+                        document.getElementById("itemNum" + order[x][0]).innerHTML = "x" + order[x][1];
+                    }
                 }
 
 
@@ -517,14 +531,13 @@ client.onMenuUpdate(function() {
 
 
 
-
+    pageJump("section-d");
     // Page jumps - Mobile view
     function pageJump(el) {
-        console.log("jump to: " + el);
-        document.getElementById("section-d").style.display = "none";
-        document.getElementById("section-e").style.display = "none";
-        document.getElementById("section-f").style.display = "none";
-        document.getElementById(el).style.display = "block";
+        document.getElementById("section-d").classList.add("hideMenuColumn");
+        document.getElementById("section-e").classList.add("hideMenuColumn");
+        document.getElementById("section-f").classList.add("hideMenuColumn");
+        document.getElementById(el).classList.remove("hideMenuColumn");
     }
 
     var pageJumpLeft = document.getElementsByClassName("pageJumpLeft");

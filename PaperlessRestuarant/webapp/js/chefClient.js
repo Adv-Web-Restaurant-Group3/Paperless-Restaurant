@@ -125,7 +125,7 @@ function alterOrderVal(orderID, attribute, newVal) {
 }
 
 function ordersReceived() {
-    ordersObj.sort((a, b) => new Date(Math.abs(new Date()-a.orderTime)).getMinutes() - new Date(Math.abs(new Date()-b.orderTime)).getMinutes());
+    ordersObj.sort((a, b) => new Date(Math.abs(new Date()-b.orderTime)).getMinutes() - new Date(Math.abs(new Date()-a.orderTime)).getMinutes());
     ordersObj.forEach(el => {
         buildItem(el);
     });

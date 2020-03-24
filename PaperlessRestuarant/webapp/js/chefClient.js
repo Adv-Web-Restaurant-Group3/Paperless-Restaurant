@@ -56,10 +56,13 @@ function buildItem(obj) {
 
     var status = orderStatus(obj.status, obj.orderID);
     var orderID = obj.orderID;
+    var table = obj.tableNum;
+    let orderTime = obj.orderTime;
+    let timeWaiting = new Date(Math.abs(new Date()-orderTime)).getMinutes();
     var item = $("<div class='orderBox'></div>");
     // TOP BAR
     var topBar = $("<div class='topBar'><div class='orderTitle'></div><span class='status'></span</div>");
-    topBar.find(".orderTitle").append("Order " + orderID);
+    topBar.find(".orderTitle").append("Table " + table);
     topBar.find(".status").append(status);
     if (obj.status == 2) {
         $(topBar.find(".status")).css("background-color", "orange");
@@ -86,13 +89,16 @@ function buildItem(obj) {
     itemsStr += "</ul></div>";
     item.append($(itemsStr));
     let additionalInfo = `
-        <div id="moreInfo">
-            <div id="tbl"><div class="txt">Table:</div><div class="data"> ${obj.tableNum}</div></div>
-            <div id="timeWait"><div class="txt">Waiting:</div><div class="data"> 1</div></div>
+        <div class="moreInfo">
+            <div class="ordr"><div class="txt">Order:</div><div class="data"> ${orderID}</div></div>
+            <div class="timeWait"><div class="txt">Waiting:</div><div class="data"> ${timeWaiting} Min</div></div>
         </div>
     `;
     item.append($(additionalInfo));
     $("#content").append(item);
+    if(!expandedOrders){
+        $(".moreInfo").hide();
+    }
 
 }
 function divName() {
@@ -167,12 +173,14 @@ $(document).ready(()=>{
     $("#toggleOrders").click(event=>{
         switch(expandedOrders){
             case true:
-                $("#toggleOrders").html("Expand Orders");
+                $("#toggleOrders").html("Additional Info");
                 expandedOrders=false;
+                $(".moreInfo").hide();
                 break;
             case false:
-                $("#toggleOrders").html("Minimise Orders");
+                $("#toggleOrders").html("Minimal Info");
                 expandedOrders=true;
+                $(".moreInfo").show();
                 break;
         }
     });

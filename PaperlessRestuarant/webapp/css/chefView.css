@@ -34,19 +34,19 @@ html, body { height: 100%; width: 100%; margin: 0; }
     flex-wrap: wrap;
     justify-content: flex-start;
     align-content: flex-start;
-    height: 97%;
-    min-height: 40rem;
+    height: 93%;
+    min-height: 10rem;
     overflow: auto;
     width:95%;
     min-width: max-content;
     margin: 0 auto;
     background-color: aliceblue;
-    margin-top: 3rem;
+    margin-top: 2.5rem;
     
 }
 .orderBox{
     background-color: white;
-    margin:0.8rem;
+    margin:0.5rem;
     display: flex;
     flex-direction: column;
     border-radius: 0.5rem 0.5rem 0 0;
@@ -100,13 +100,34 @@ html, body { height: 100%; width: 100%; margin: 0; }
 
 
 }
-#tbl .txt, #timeWait .txt, #tbl .data, #timeWait .data{
-    display: inline;
+.moreInfo{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
-#tbl, #timeWait{
-    background-color: whitesmoke;
-    margin: 0.15rem;
+.ordr .txt, .timeWait .txt, .ordr .data, .timeWait .data{
+    display: inline;
+    color: white;
+}
+
+.ordr .data, .timeWait .data{
+    font-weight: 600;
+    
+}
+.ordr, .timeWait{
+    flex-grow: 1;
+    border-radius: 0.15rem;
+    background-color: rgb(168, 168, 168);
+    margin-bottom: 0.3rem;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    margin-top: 0.1rem;
     padding: 0.2rem;
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .topBar{

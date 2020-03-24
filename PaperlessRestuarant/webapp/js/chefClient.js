@@ -26,7 +26,9 @@ let ordersObj = [
     }
 ];
 //using KitchenClient
-let client = new KitchenClient();
+var client = new KitchenClient();
+var expandedOrders = false;
+
 
 client.update();
 /*
@@ -83,6 +85,13 @@ function buildItem(obj) {
     });
     itemsStr += "</ul></div>";
     item.append($(itemsStr));
+    let additionalInfo = `
+        <div id="moreInfo">
+            <div id="tbl"><div class="txt">Table:</div><div class="data"> ${obj.tableNum}</div></div>
+            <div id="timeWait"><div class="txt">Waiting:</div><div class="data"> 1</div></div>
+        </div>
+    `;
+    item.append($(additionalInfo));
     $("#content").append(item);
 
 }
@@ -153,4 +162,21 @@ client.onUpdate(function (orders) {
         ordersReceived();
     } 
 });
+
+$(document).ready(()=>{
+    $("#toggleOrders").click(event=>{
+        switch(expandedOrders){
+            case true:
+                $("#toggleOrders").html("Expand Orders");
+                expandedOrders=false;
+                break;
+            case false:
+                $("#toggleOrders").html("Minimise Orders");
+                expandedOrders=true;
+                break;
+        }
+    });
+});
+
+
 client.sync(5000);

@@ -100,6 +100,14 @@ html, body { height: 100%; width: 100%; margin: 0; }
 
 
 }
+#tbl .txt, #timeWait .txt, #tbl .data, #timeWait .data{
+    display: inline;
+}
+#tbl, #timeWait{
+    background-color: whitesmoke;
+    margin: 0.15rem;
+    padding: 0.2rem;
+}
 
 .topBar{
     display: flex;
@@ -121,3 +129,20 @@ html, body { height: 100%; width: 100%; margin: 0; }
 .status:hover{
     background-color: rgba(6, 224, 104, 0.4);
 }
+#toggleOrders{
+    user-select: none;
+    padding: 0.5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  
+    text-align: center;
+    text-shadow: 1px 1px lightgray;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    background-color: rgb(247, 247, 247);
+  }
+  #toggleOrders:hover{
+    background-color: rgb(242, 246, 247);
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+  }

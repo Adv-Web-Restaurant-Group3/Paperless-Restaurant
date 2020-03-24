@@ -531,13 +531,13 @@ client.onMenuUpdate(function() {
 
 
 
-
+    pageJump("section-d");
     // Page jumps - Mobile view
     function pageJump(el) {
-        document.getElementById("section-d").style.display = "none";
-        document.getElementById("section-e").style.display = "none";
-        document.getElementById("section-f").style.display = "none";
-        document.getElementById(el).style.display = "block";
+        document.getElementById("section-d").classList.add("hideMenuColumn");
+        document.getElementById("section-e").classList.add("hideMenuColumn");
+        document.getElementById("section-f").classList.add("hideMenuColumn");
+        document.getElementById(el).classList.remove("hideMenuColumn");
     }
 
     var pageJumpLeft = document.getElementsByClassName("pageJumpLeft");

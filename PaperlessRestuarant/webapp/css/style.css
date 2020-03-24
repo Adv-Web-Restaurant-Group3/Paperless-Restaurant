@@ -536,32 +536,44 @@ body {
 
 /* Menu - Mobile View
 -----------------------------------------------------------------------------*/
-#section-d, #section-e, #section-f {
-  width: 100vw;
-}
-#section-e, #section-f {
+.arrowRight, .arrowLeft {
   display: none;
 }
+.hideMenuColumn {
+  display: block;
+}
+@media only screen and (max-width: 800px) {
+  #section-d, #section-e, #section-f {
+    width: 100vw;
+  }
+  /* #section-e, #section-f {
+    display: none;
+  } */
 
-.arrowRight, .arrowLeft {
-  position: fixed;
-  bottom: 40px;
-  width: 50px;
-  height: 50px;
-  text-align: center;
-  line-height: 50px;
-  font-size: 28px;
-  border: 1px solid #000;
-  background-color: #FFF;
-  border-radius: 4px;
-  cursor: pointer;
-  user-select: none;
-}
-.arrowRight {
-  right: 10px;
-}
-.arrowLeft {
-  left: 10px;
+  .arrowRight, .arrowLeft {
+    display: block;
+    position: fixed;
+    bottom: 40px;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    font-size: 28px;
+    border: 1px solid #000;
+    background-color: #FFF;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .arrowRight {
+    right: 10px;
+  }
+  .arrowLeft {
+    left: 10px;
+  }
+  .hideMenuColumn {
+    display: none !important;
+  }
 }
 
 

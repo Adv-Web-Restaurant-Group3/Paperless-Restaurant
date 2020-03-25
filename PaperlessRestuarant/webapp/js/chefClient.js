@@ -58,7 +58,7 @@ function buildItem(obj) {
     var orderID = obj.orderID;
     var table = obj.tableNum;
     let orderTime = obj.orderTime;
-    let timeWaiting = new Date(Math.abs(new Date()-orderTime)).getMinutes();
+    let timeWaiting = Math.round((new Date() - orderTime)/60000);
     var item = $("<div class='orderBox'></div>");
     // TOP BAR
     var topBar = $("<div class='topBar'><div class='orderTitle'></div><span class='status'></span</div>");
@@ -125,7 +125,7 @@ function alterOrderVal(orderID, attribute, newVal) {
 }
 
 function ordersReceived() {
-    ordersObj.sort((a, b) => new Date(Math.abs(new Date()-b.orderTime)).getMinutes() - new Date(Math.abs(new Date()-a.orderTime)).getMinutes());
+    ordersObj.sort((a, b) => (new Date() - b.orderTime) - (new Date() - a.orderTime));
     ordersObj.forEach(el => {
         buildItem(el);
     });

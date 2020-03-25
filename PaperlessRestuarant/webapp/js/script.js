@@ -184,8 +184,8 @@ client.onUpdate(function () {
             status = orderDate[i].status;
             price = orderDate[i].price;
             total = total + price;
-            let estTimeWaiting = orderDate[i].items.reduce((a,b)=>a+b.estTime*b.quantity,0);
-            let timeWaiting = new Date(Math.abs(new Date()-orderTime)).getMinutes();
+            let estTimeWaiting = orderDate[i].items.map(el=>el.estTime).reduce((a,b)=>Math.max(a,b));
+            let timeWaiting = Math.round((new Date() - orderTime)/60000);
             content += `
         <div class='container-a'>
         <div class='topBox'>

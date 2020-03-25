@@ -113,15 +113,6 @@ function tableList(){
     });
 }
 
-function returnId(array,val){
-    if(array.length!=0){
-        array.forEach((i,el)=>{
-            if(el.id==val && el.tbl==currentTable)return i;
-        });
-    }
-    return false;
-}
-
 $(document).ready(()=>{
     tableList();
     $("#setTable").click(event=>{

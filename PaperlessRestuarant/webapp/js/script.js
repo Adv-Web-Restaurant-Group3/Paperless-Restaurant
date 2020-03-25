@@ -113,6 +113,15 @@ function tableList(){
     });
 }
 
+function returnId(array,val){
+    if(array.length!=0){
+        array.forEach((i,el)=>{
+            if(el.id==val && el.tbl==currentTable)return i;
+        });
+    }
+    return false;
+}
+
 $(document).ready(()=>{
     tableList();
     $("#setTable").click(event=>{
@@ -142,6 +151,8 @@ $(document).ready(()=>{
     $("#exit").click(event=>{
         $("#popUp").hide();
         $("#overlay").hide();
+        $("#popUp").removeData("ordNum");
+        $("#noteInput").val("");
     });
 });
 
@@ -502,9 +513,30 @@ client.onMenuUpdate(function() {
         //add event listerners for notes
         $("#section-f").children().find(".notes").each((i,el)=>{
             $(el).click(event=>{
+                let ordNumber = $(el).attr("id");
                 $("#popUp").show();
                 $("#popUp").css("display","flex");
                 $("#overlay").show();
+                $("#toppopbar").text("Item: "+ordNumber);
+                $("#popUp").data("ordNum",ordNumber);
+                order.forEach(el=>{
+                    if(el[0]==ordNumber&&el[2]){
+                        $("#noteInput").val(el[2]);
+                    }
+                });
+                $("#saveNote").click(event=>{
+                    if($("#popUp").data("ordNum")){
+                        let onum = $("#popUp").data("ordNum");
+                        order.forEach(el=>{
+                            if(el[0]==onum)el[2]=$("#noteInput").val();
+                        });
+                    }
+                    $("#noteInput").val("");
+                    $("#saveNote").off();
+                    $("#popUp").removeData("ordNum");
+                    $("#popUp").hide();
+                    $("#overlay").hide();
+                });
             });
         });
 
@@ -512,10 +544,12 @@ client.onMenuUpdate(function() {
             //console.log(items[order])
             let Oitems = [];
             order.forEach(el=>{
+                let notes="";
+                if(el[2])notes=el[2];
                 Oitems.push({
                     itemNum:el[0],
                     quantity:el[1],
-                    notes:"notes here"
+                    notes:notes
                 });
             })
             //console.log(Oitems);

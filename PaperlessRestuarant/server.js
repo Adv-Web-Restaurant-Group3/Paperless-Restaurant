@@ -84,7 +84,7 @@ fs.readFile("admin_password.txt", function (err, data) {
         console.log("'admin_password.txt' file not found - not using password.");
     }
     else {
-        ADMIN_PASS = data;
+        ADMIN_PASS = "" + data;
         console.log("ADMIN_PASS set to " + data)
     }
 });
@@ -604,7 +604,7 @@ admins.on("connection", function (socket) {
         //login confirmed - add handlers.
         console.log("admin login confirmed. Adding handlers...");
         socket.on("get_menu", function () {
-            //get Menu from DB and send to client.
+            //get Menu from DB and send to client. includes sales data.
             let conn = createConnection();
             conn.connect(function (err) {
                 if (err) console.log(11, err)
@@ -622,7 +622,8 @@ admins.on("connection", function (socket) {
                             conn2.connect(function (err) {
                                 if (err) console.log(13, err)
                                 else {
-                                    let sql = "SELECT category, itemNum, itemName, estTime FROM MenuItem";
+                                    let now = Math.floor(new Date().getTime() / 1000);
+                                    let sql = `SELECT category, itemNum, itemName, estTime, (SELECT SUM(quantity) FROM OrderItem INNER JOIN PartyOrder USING (orderID) WHERE   ${now} - orderTime < (604800) GROUP BY itemNum HAVING itemNum = m1.itemNum ) AS units_sold_week, (SELECT SUM(quantity)  FROM OrderItem INNER JOIN PartyOrder USING (orderID) WHERE   ${now} - orderTime < (2419200) GROUP BY itemNum HAVING itemNum = m1.itemNum ) AS units_sold_month, (SELECT SUM(quantity)  FROM OrderItem INNER JOIN PartyOrder USING (orderID) WHERE   ${now} - orderTime < (31536000) GROUP BY itemNum HAVING itemNum = m1.itemNum ) AS units_sold_year, price AS unit_price FROM MenuItem m1;`;
                                     conn2.query(sql, function (err, results) {
                                         if (err) console.log(13, err);
                                         else {
@@ -632,7 +633,21 @@ admins.on("connection", function (socket) {
                                                     category: item.category,
                                                     itemNum: item.itemNum,
                                                     itemName: item.itemName,
-                                                    estTime: item.estTime
+                                                    estTime: item.estTime,
+                                                    sales: {
+                                                        week: {
+                                                            units_sold: item.units_sold_week ? item.units_sold_week : 0,
+                                                            income: (item.units_sold_week ? item.units_sold_week : 0) * item.unit_price
+                                                        },
+                                                        month: {
+                                                            units_sold: item.units_sold_month ? item.units_sold_month : 0,
+                                                            income: (item.units_sold_month ? item.units_sold_month : 0) * item.unit_price
+                                                        },
+                                                        year: {
+                                                            units_sold: item.units_sold_year ? item.units_sold_year : 0,
+                                                            income: (item.units_sold_year ? item.units_sold_year : 0) * item.unit_price
+                                                        }
+                                                    }
                                                 });
                                             }
                                             socket.emit("menu", { items, categories });
@@ -649,12 +664,78 @@ admins.on("connection", function (socket) {
             });
         });
 
-        socket.on("get_menu", function () {
-            console.log("get menu!")
-        })
+        socket.on("add_item", function (data) {
+            let item = data.item;
+            console.log("add item ", item);
+            if (item) {
+                if (validateMenuItem(item)) {
+                    let conn = createConnection();
+                    conn.connect(function (err) {
+                        if (err) console.log(err);
+                        else {
+                            let sql;
+                            if (item.itemNum) sql = `INSERT INTO MenuItem(itemNum, itemName, category, price, estTime, isVegetarian, isVegan, glutenFree, containsNuts) VALUES (${mysql.escape(item.itemNum)},${mysql.escape(item.itemName)},${mysql.escape(item.category)},${mysql.escape(item.price)},${mysql.escape(item.estTime)},${mysql.escape(item.isVegetarian)},${mysql.escape(item.isVegan)},${mysql.escape(item.glutenFree)},${mysql.escape(item.containsNuts)});`;
+                            else sql = `INSERT INTO MenuItem(itemName, category, price, estTime, isVegetarian, isVegan, glutenFree, containsNuts) VALUES (${mysql.escape(item.itemName)},${mysql.escape(item.category)},${mysql.escape(item.price)},${mysql.escape(item.estTime)},${mysql.escape(item.isVegetarian)},${mysql.escape(item.isVegan)},${mysql.escape(item.glutenFree)},${mysql.escape(item.containsNuts)});`;
+
+                            conn.query(sql, function (err, results) {
+                                if (err) console.log(err);
+                                else {
+                                    console.log(results);
+                                    socket.emit("add_item_result", { success: true })
+                                }
+                                conn.end();
+                            });
+                        }
+                    });
+                } else socket.emit("add_item_result", { success: false, reason: "Invalid item supplied." });
+            } else socket.emit("add_item_result", { success: false, reason: "No item supplied!" });
+        });
+
+        socket.on("remove_item", function (data) {
+            let itemNum = data.item;
+            console.log("remove item ", itemNum);
+            if (itemNum) {
+                if (typeof itemNum === "number" && itemNum >= 0) {
+                    let conn = createConnection();
+                    conn.connect(function (err) {
+                        if (err) console.log(err);
+                        else {
+                            let sql = `DELETE FROM MenuItem WHERE itemNum = ${mysql.escape(itemNum)}`;
+                            conn.query(sql, function (err, results) {
+                                if (err) console.log(err);
+                                else {
+                                    console.log(results);
+                                    socket.emit("remove_item_result", { success: true });
+                                }
+                                conn.end();
+                            });
+                        }
+                    });
+                } else socket.emit("remove_item_result", { success: false, reason: "Invalid itemNum supplied." });
+            } else socket.emit("remove_item_result", { success: false, reason: "No itemNum supplied!" });
+
+        });
 
 
 
+        //update password
+        socket.on("update_password", function (data) {
+            let password = data.password;
+            if (password) {
+                if (typeof password === "string") {
+                    if (password.length > 2) {
+                        fs.writeFile("admin_password.txt", password, function (err) {
+                            if (err) console.log("error while writing file: ", err);
+                            else {
+                                ADMIN_PASS = password;
+                                socket.emit("update_password_result", { success: true });
+                                console.log("password changed to \"" + password + "\"");
+                            }
+                        });
+                    } else socket.emit("update_password_result", { success: false, reason: "password must be at least 3 characters long." });
+                } else socket.emit("update_password_result", { success: false, reason: "invalid password." });
+            } else socket.emit("update_password_result", { success: false, reason: "no password given." });
+        });
 
     }
 
@@ -673,6 +754,25 @@ function validateOrder(order) {
         }
     }
     return false;
+}
+
+//validate menu item
+function validateMenuItem(item) {
+    if (item.itemName && item.category && item.price && item.estTime) {
+        if (typeof item.itemName === "string" && item.itemName.length > 0) {
+            if (typeof item.category === "number" && item.category < 10) {
+                if (typeof item.price === "number" && item.price >= 0) {
+                    if (typeof item.estTime === "number" && item.estTime > 0) {
+                        if (!(item.isVegetarian === true)) item.isVegetarian = false;
+                        if (!(item.isVegan === true)) item.isVegetarian = false;
+                        if (!(item.glutenFree === true)) item.glutenFree = false;
+                        if (!(item.containsNuts === true)) item.containsNuts = false;
+                        return true;
+                    } else return false;
+                } else return false;
+            } else return false;
+        } else return false;
+    } else return false;
 }
 
 function getPartyID(tableNum, callback, allowInsert = true) {

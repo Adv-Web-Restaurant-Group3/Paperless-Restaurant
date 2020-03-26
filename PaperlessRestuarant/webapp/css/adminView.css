@@ -1,0 +1,40 @@
+/* Essentials
+-----------------------------------------------------------------------------*/
+body {
+  	font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  	background-color: rgb(218, 232, 245);
+  	margin: 0;
+  	border: 0;
+  	padding: 0;
+  	text-align:center;
+}
+
+
+table.form_section{
+	margin:auto;
+}
+table.form_section th{
+	text-align:right;
+	font-weight: normal;
+}
+table.form_section td{
+	text-align: left;
+	padding-left:15px;
+}
+input[type="submit"]{
+	width:100px;
+	margin-top:5px;
+	padding:5px;
+}
+input[type="text"], input[type="password"], select{
+	padding:5px;
+}
+select{
+	width:213px;
+}
+input{
+	width:200px;
+}
+
+
+

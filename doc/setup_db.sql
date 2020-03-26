@@ -18,7 +18,7 @@ create table MenuCategory(
 	catName varchar(255) not null
 );
 CREATE TABLE MenuItem (
-    itemNum INT PRIMARY KEY,
+    itemNum INT PRIMARY KEY auto_increment,
     itemName VARCHAR(255) NOT NULL UNIQUE,
     category INT REFERENCES MenuCategory (catID),
     price DECIMAL(5 , 2 ),
@@ -187,15 +187,8 @@ insert into PartyOrder(party, orderNum, orderTime, orderStatus) values (4, 1, 15
 insert into OrderItem(orderID, itemNum, quantity, notes) values (1, 61, 1, '');
 insert into OrderItem(orderID, itemNum, quantity, notes) values (1, 38, 2, '');
 
+-- example queries
 select * from OrderItem;
 select * from PartyOrder inner join Party on Party.partyID = PartyOrder.party;
-
 SELECT tableNum, partyID, orderID, orderTime, orderStatus, itemNum, quantity, itemName, price FROM Party INNER JOIN PartyOrder ON Party.partyID = PartyOrder.party INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) order by orderStatus;
 select * from Party;
-
-
-
-select * from PartyOrder where party = 5;
-
-
-

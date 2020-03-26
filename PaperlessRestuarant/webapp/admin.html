@@ -9,7 +9,7 @@
 
 
     <!-- import the webpage's stylesheet -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/adminView.css">
 
     <!-- import the socket stuff -->
     <script src="/socket.io/socket.io.js" defer></script>
@@ -20,7 +20,69 @@
 </head>
 
 <body>
-    <!-- ADMIN PAGE TODO -->
+    <!-- ADMIN PAGE  -->
+    <h1>Admin View</h1>
+
+    <div id="login">
+        <h2>Login Form</h2>
+        <form id="login_form">
+            Password <input type="password">
+            <input type="submit" value="Login">
+        </form>
+    </div>
+    <div id="add_item">
+        <h3>Add Menu Item</h3>
+        <form id="add_item_form">
+            <table class="form_section">
+                <tr>
+                    <th>Item Num</th>
+                    <td><input type="text" id="itemNum"></td>
+                </tr>
+                <tr>
+                    <th>Item Name</th>
+                    <td><input type="text" id="itemName" placeholder="required" required></td>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <td><select id="category" required>
+                            <option value="">Select one...</option>
+                            <!--added via script-->
+                        </select></td>
+                </tr>
+                <tr>
+                    <th>Price</th>
+                    <td><input type="text" id="price" placeholder="required" required></td>
+                </tr>
+            </table>
+            <input type="submit" value="Add Item">
+        </form>
+    </div>
+    <div id="remove_item">
+        <h3>Remove Menu Item</h3>
+        <form id="remove_item_form">
+            <table class="form_section">
+                <tr>
+                    <th>Item Num</th>
+                    <td><input type="number" id="itemNum" placeholder="required" required></td>
+                </tr>
+                <tr>
+                    <th>Confirm</th>
+                    <td><input type="checkbox" id="itemNum" required></td>
+                </tr>
+            </table>
+
+            <input type="submit" value="Remove Item">
+        </form>
+    </div>
+
+
+    <main>
+        <!--admin control panel-->
+        <table id="menu_table">
+
+        </table>
+        <div id="control_panel">
+    </main>
 </body>
 
 </html>

@@ -6,13 +6,20 @@
 class AdminClient {
     _socket = io("/admin");
     _update_callback = null;
+    _login_callback = null;
     _loggedIn = false;
     _items = []; //includes sales data.
     _categories = [];
     _current_sales = null;
 
     get socket() { return this._socket; }
-    get items() { return this._items; }
+    get items() {
+        let items = this._items;
+        for (let item of items) {
+            item.category = this.categories.find(c => c.catID === item.category).catName;
+        }
+        return this._items;
+    }
     get categories() { return this._categories; }
 
     constructor() {
@@ -32,6 +39,9 @@ class AdminClient {
     onUpdate(callback) {
         this._update_callback = callback;
     }
+    onLogin(callback) {
+        this._login_callback = callback;
+    }
 
     login(password) {
         if (!this._loggedIn) {
@@ -43,6 +53,7 @@ class AdminClient {
                     console.log("logged in successfully.");
                     client._loggedIn = true;
                     client.update();
+                    if (client._login_callback) client._login_callback();
                 }
                 else {
                     console.log(response.reason)
@@ -57,7 +68,9 @@ class AdminClient {
             let client = this;
             this.socket.on("menu", function (results) {
                 console.log(results);
-                client._items = results.items;
+                let items = results.items;
+
+                client._items = items;
                 client._categories = results.categories;
 
                 if (client._update_callback) client._update_callback();

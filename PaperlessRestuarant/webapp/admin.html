@@ -8,15 +8,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
+
     <!-- import the webpage's stylesheet -->
     <link rel="stylesheet" href="css/adminView.css">
 
     <!-- import the socket stuff -->
     <script src="/socket.io/socket.io.js" defer></script>
     <script src="js/AdminClient.js" defer></script>
-    <script src="js/jquery.js" defer></script>
+    <script src="js/jquery.js"></script>
     <!-- import the webpage's javascript file -->
     <script src="js/admin.js" defer></script>
+
+    <!--DataTables plugin-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 </head>
 
 <body>
@@ -26,57 +32,81 @@
     <div id="login">
         <h2>Login Form</h2>
         <form id="login_form">
-            Password <input type="password">
+            Password <input class="input" type="password">
             <input type="submit" value="Login">
         </form>
     </div>
-    <div id="add_item">
-        <h3>Add Menu Item</h3>
-        <form id="add_item_form">
-            <table class="form_section">
-                <tr>
-                    <th>Item Num</th>
-                    <td><input type="text" id="itemNum"></td>
-                </tr>
-                <tr>
-                    <th>Item Name</th>
-                    <td><input type="text" id="itemName" placeholder="required" required></td>
-                </tr>
-                <tr>
-                    <th>Category</th>
-                    <td><select id="category" required>
-                            <option value="">Select one...</option>
-                            <!--added via script-->
-                        </select></td>
-                </tr>
-                <tr>
-                    <th>Price</th>
-                    <td><input type="text" id="price" placeholder="required" required></td>
-                </tr>
-            </table>
-            <input type="submit" value="Add Item">
-        </form>
-    </div>
-    <div id="remove_item">
-        <h3>Remove Menu Item</h3>
-        <form id="remove_item_form">
-            <table class="form_section">
-                <tr>
-                    <th>Item Num</th>
-                    <td><input type="number" id="itemNum" placeholder="required" required></td>
-                </tr>
-                <tr>
-                    <th>Confirm</th>
-                    <td><input type="checkbox" id="itemNum" required></td>
-                </tr>
-            </table>
+    <table class="display" id="menu_table">
+        <thead>
+            <tr>
+                <th>Item Num</th>
+                <th>Item Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Cooking Time (m)</th>
+                <th>Unit Sold (Week)</th>
+                <th>Unit Sold (Month)</th>
+                <th>Unit Sold (Year)</th>
+                <th>Income (Week)</th>
+                <th>Income (Month)</th>
+                <th>Income (Year)</th>
+            </tr>
+        </thead>
+        <tbody>
 
-            <input type="submit" value="Remove Item">
-        </form>
-    </div>
-
-
+        </tbody>
+    </table>
     <main>
+        <!--hidden by default.-->
+
+
+        <div id="add_item">
+            <h3>Add Menu Item</h3>
+            <form id="add_item_form">
+                <table class="form_section">
+                    <tr>
+                        <th>Item Num</th>
+                        <td><input type="text" id="itemNum"></td>
+                    </tr>
+                    <tr>
+                        <th>Item Name</th>
+                        <td><input type="text" id="itemName" placeholder="required" required></td>
+                    </tr>
+                    <tr>
+                        <th>Category</th>
+                        <td><select id="category" required>
+                                <option value="">Select one...</option>
+                                <!--added via script-->
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <th>Price</th>
+                        <td><input type="text" id="price" placeholder="required" required></td>
+                    </tr>
+                </table>
+                <input type="submit" value="Add Item">
+            </form>
+        </div>
+        <div id="remove_item">
+            <h3>Remove Menu Item</h3>
+            <form id="remove_item_form">
+                <table class="form_section">
+                    <tr>
+                        <th>Item Num</th>
+                        <td><input type="number" id="itemNum" placeholder="required" required></td>
+                    </tr>
+                    <tr>
+                        <th>Confirm</th>
+                        <td><input type="checkbox" id="itemNum" required></td>
+                    </tr>
+                </table>
+
+                <input type="submit" value="Remove Item">
+            </form>
+        </div>
+
+
+
         <!--admin control panel-->
         <table id="menu_table">
 

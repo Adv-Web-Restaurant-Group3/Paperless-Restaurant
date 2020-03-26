@@ -634,18 +634,19 @@ admins.on("connection", function (socket) {
                                                     itemNum: item.itemNum,
                                                     itemName: item.itemName,
                                                     estTime: item.estTime,
+                                                    price: "£" + item.unit_price.toFixed(2),
                                                     sales: {
                                                         week: {
                                                             units_sold: item.units_sold_week ? item.units_sold_week : 0,
-                                                            income: (item.units_sold_week ? item.units_sold_week : 0) * item.unit_price
+                                                            income: "£" + ((item.units_sold_week ? item.units_sold_week : 0) * item.unit_price).toFixed(2)
                                                         },
                                                         month: {
                                                             units_sold: item.units_sold_month ? item.units_sold_month : 0,
-                                                            income: (item.units_sold_month ? item.units_sold_month : 0) * item.unit_price
+                                                            income: "£" + ((item.units_sold_month ? item.units_sold_month : 0) * item.unit_price).toFixed(2)
                                                         },
                                                         year: {
                                                             units_sold: item.units_sold_year ? item.units_sold_year : 0,
-                                                            income: (item.units_sold_year ? item.units_sold_year : 0) * item.unit_price
+                                                            income: "£" + ((item.units_sold_year ? item.units_sold_year : 0) * item.unit_price).toFixed(2)
                                                         }
                                                     }
                                                 });

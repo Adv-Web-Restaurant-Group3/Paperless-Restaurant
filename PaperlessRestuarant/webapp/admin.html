@@ -36,29 +36,29 @@
             <input type="submit" value="Login">
         </form>
     </div>
-    <table class="display" id="menu_table">
-        <thead>
-            <tr>
-                <th>Item Num</th>
-                <th>Item Name</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th>Cooking Time (m)</th>
-                <th>Unit Sold (Week)</th>
-                <th>Unit Sold (Month)</th>
-                <th>Unit Sold (Year)</th>
-                <th>Income (Week)</th>
-                <th>Income (Month)</th>
-                <th>Income (Year)</th>
-            </tr>
-        </thead>
-        <tbody>
 
-        </tbody>
-    </table>
-    <main>
+    <main class="hidden">
         <!--hidden by default.-->
+        <table class="display" id="menu_table">
+            <thead>
+                <tr>
+                    <th>Item Num</th>
+                    <th>Item Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Cooking Time (m)</th>
+                    <th>Unit Sold (Week)</th>
+                    <th>Unit Sold (Month)</th>
+                    <th>Unit Sold (Year)</th>
+                    <th>Income (Week)</th>
+                    <th>Income (Month)</th>
+                    <th>Income (Year)</th>
+                </tr>
+            </thead>
+            <tbody>
 
+            </tbody>
+        </table>
 
         <div id="add_item">
             <h3>Add Menu Item</h3>
@@ -66,7 +66,7 @@
                 <table class="form_section">
                     <tr>
                         <th>Item Num</th>
-                        <td><input type="text" id="itemNum"></td>
+                        <td><input type="number" id="itemNum"></td>
                     </tr>
                     <tr>
                         <th>Item Name</th>
@@ -83,8 +83,30 @@
                         <th>Price</th>
                         <td><input type="text" id="price" placeholder="required" required></td>
                     </tr>
+                    <tr>
+                        <th>Cooking Time</th>
+                        <td><input type="number" id="estTime" placeholder="required" required></td>
+                    </tr>
+                    <tr>
+                        <th>Vegetarian</th>
+                        <td><input type="checkbox" id="vegetarian"></td>
+                    </tr>
+                    <tr>
+                        <th>Vegan</th>
+                        <td><input type="checkbox" id="vegan"></td>
+                    </tr>
+                    <tr>
+                        <th>Contains Nuts</th>
+                        <td><input type="checkbox" id="nuts"></td>
+                    </tr>
+                    <tr>
+                        <th>Gluten Free</th>
+                        <td><input type="checkbox" id="gluten_free"></td>
+                    </tr>
+
                 </table>
                 <input type="submit" value="Add Item">
+                <p class="message"></p>
             </form>
         </div>
         <div id="remove_item">
@@ -97,11 +119,12 @@
                     </tr>
                     <tr>
                         <th>Confirm</th>
-                        <td><input type="checkbox" id="itemNum" required></td>
+                        <td><input type="checkbox" id="confirm" required></td>
                     </tr>
                 </table>
 
                 <input type="submit" value="Remove Item">
+                <p class="message"></p>
             </form>
         </div>
 

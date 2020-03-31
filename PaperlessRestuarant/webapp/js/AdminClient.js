@@ -6,7 +6,6 @@
 class AdminClient {
     _socket = io("/admin");
     _update_callback = null;
-    _login_callback = null;
     _loggedIn = false;
     _items = []; //includes sales data.
     _categories = [];
@@ -39,11 +38,8 @@ class AdminClient {
     onUpdate(callback) {
         this._update_callback = callback;
     }
-    onLogin(callback) {
-        this._login_callback = callback;
-    }
 
-    login(password) {
+    login(password, callback) {
         if (!this._loggedIn) {
             this.socket.emit("login", { password: password });
             this.socket.off("login_result");
@@ -53,7 +49,7 @@ class AdminClient {
                     console.log("logged in successfully.");
                     client._loggedIn = true;
                     client.update();
-                    if (client._login_callback) client._login_callback();
+                    if (callback) callback();
                 }
                 else {
                     console.log(response.reason)
@@ -79,7 +75,7 @@ class AdminClient {
         } else console.log("log in first!");
     }
 
-    addItem(item) {
+    addItem(item, callback) {
         if (this._loggedIn) {
             //itemName, price, category, isVegetarian = false, isVegan = false, glutenFree = false, containsNuts = false
             this.socket.emit("add_item", { item: item });
@@ -89,13 +85,16 @@ class AdminClient {
                 if (response.success) {
                     console.log("successfully added item.");
                     client.update();
+                    if (callback) callback(true);
+                    return;
                 }
                 else console.log(response.reason);
+                if (callback) callback(false)
             })
         } else console.log("log in first!");
     }
 
-    removeItem(itemNum) {
+    removeItem(itemNum, callback) {
         if (this._loggedIn) {
             this.socket.emit("remove_item", { item: itemNum });
             this.socket.off("remove_item_result");
@@ -104,8 +103,11 @@ class AdminClient {
                 if (response.success) {
                     console.log("successfully removed item " + itemNum);
                     client.update();
+                    if (callback) callback(true);
+                    return;
                 }
                 else console.log(response.reason);
+                if (callback) callback(false);
             });
         } else console.log("log in first!");
     }

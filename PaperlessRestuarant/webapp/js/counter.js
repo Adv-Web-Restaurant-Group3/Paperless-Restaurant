@@ -155,6 +155,7 @@ function billPopup(currentTable,html,addEvents){
 }
 function addReceiptBtn(){
     $("#pReceipt").show();
+    $("#pReceipt").off("click");
     $("#pReceipt").click(e=>printBill());
 }
 

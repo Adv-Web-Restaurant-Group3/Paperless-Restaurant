@@ -292,19 +292,6 @@ client.onUpdate(function () {
     }
 
 
-    document.getElementById("tableClear").addEventListener('click', function () {
-        document.getElementById("section-a").innerHTML = "<div class='container-a' id='addOrder'>+ Add Order</div>";
-        if($(".wrapperOrders").is(":visible")){
-            document.getElementById("addOrder").addEventListener('click', function () {
-                //alert("Add order");
-                toggleView();
-            });
-        }
-
-        total = 0;
-        finalTotal();
-        document.getElementById("discount").value = 0;
-    });
 
 });
 

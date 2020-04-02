@@ -22,6 +22,7 @@ function getTable(num){
 function reset(){
     currentTable = 0;
     client.update();
+    $("#pReceipt").hide();
     $("#tableContent").hide();
     $("#tablesBox").show();
 }
@@ -88,6 +89,42 @@ function errorPopup(){
     setTimeout(()=>{destroyPopup(),2000});
 }
 
+function printpage(src){
+    let html = `
+        <html>
+        <head></head>
+        <body onload="window.print()">
+            <img src='${src}'>
+        </body>
+        </html>
+    `;
+    return html;
+}
+
+function printBill(){
+    $("#billTable").hide();
+    var width = $("#tableContainer").width();
+    var height = $("#tableContainer").height();
+    var node = document.getElementById('tableContainer');
+    domtoimage.toPng(node).then(dataUrl=>{
+        console.log("success");
+        let img = new Image();
+        img.src =  dataUrl;
+        
+        let imageWin = window.open("","Bill","width="+width+",height="+height);
+        imageWin.document.write(printpage(img.src));
+        imageWin.focus(); 
+        setTimeout(()=>imageWin.print(),700);
+        $("#billTable").show();
+
+    }).catch(err=>{
+        console.error(err);
+        alert("Unable to save bill.");
+       
+    });
+
+}
+
 function billPopup(currentTable,html,addEvents){
     $("#popUp").show();
     $("#overlay").show();
@@ -116,11 +153,16 @@ function billPopup(currentTable,html,addEvents){
         });
     }
 }
+function addReceiptBtn(){
+    $("#pReceipt").show();
+    $("#pReceipt").click(e=>printBill());
+}
 
 function displayTableContent(tNum){
     currentTable = tNum;
     $("#tablesBox").hide();
     $("#tableContent").show();
+    addReceiptBtn();
     let top = `
         <div id="titleBox">Table ${currentTable}</div>
     `;
@@ -152,11 +194,12 @@ function displayTableContent(tNum){
         `;
         $("#tableContent").append(html);
         $("#tableContent").append("<hr>");
+        $("#tableContent").wrapInner("<div id='tableContainer'></div>");
         $("#billTable").click(event=>{
             client.billTable(currentTable,result=>{
                 switch(result){
                     case true:
-                        reset();
+                            reset();
                         break;
                     case false:
                         billPopup(currentTable,billpopupHTML,true);

@@ -192,3 +192,6 @@ select * from OrderItem;
 select * from PartyOrder inner join Party on Party.partyID = PartyOrder.party;
 SELECT tableNum, partyID, orderID, orderTime, orderStatus, itemNum, quantity, itemName, price FROM Party INNER JOIN PartyOrder ON Party.partyID = PartyOrder.party INNER JOIN OrderItem USING (orderID) INNER JOIN MenuItem USING (itemNum) order by orderStatus;
 select * from Party;
+
+
+select itemNum, price, quantity, (DATE_FORMAT(FROM_UNIXTIME(`orderTime`), '%Y-%m-%d')) AS "DATE", ((DAYOFWEEK(DATE_FORMAT(FROM_UNIXTIME(`orderTime`), '%Y-%m-%d')))) AS "DAY" from PartyOrder inner join OrderItem USING (orderID) inner join MenuItem USING (itemNum) where orderTime >= (UNIX_TIMESTAMP(((DATE_FORMAT(FROM_UNIXTIME(UNIX_TIMESTAMP()-604800), '%Y-%m-%d'))))) order by orderTime desc;

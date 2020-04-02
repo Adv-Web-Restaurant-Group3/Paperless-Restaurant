@@ -11,13 +11,16 @@
     <!-- import the webpage's stylesheet -->
     <link rel="stylesheet" href="css/counterView.css">
 
+    <!--Charts API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <!-- import the socket stuff -->
     <script src="/socket.io/socket.io.js" defer></script>
-    <script src="/js/CounterClient.js" defer></script>
+    <script src="/js/CounterClient.js"></script>
     <script src="js/jquery.js" defer></script>
     <script src="js/dom-to-image/dist/dom-to-image.min.js"" defer></script>
     <script src="js/counter.js" defer></script>
     <!-- import the webpage's javascript file -->
+    <script src="js/counter.js" defer></script>
 </head>
 
 <body>
@@ -33,7 +36,22 @@
     <div id="overlay">
     </div>
     <div id="popUp">
- 
+
+    </div>
+
+    <!--weekly report-->
+    <div id="report">
+        <div id="report_chart">
+
+        </div>
+
+        <table id="report_table">
+            <tr>
+                <th>Category</th>
+                <th>Profit</th>
+            </tr>
+
+        </table>
     </div>
     <div id="pReceipt">
         Print Receipt

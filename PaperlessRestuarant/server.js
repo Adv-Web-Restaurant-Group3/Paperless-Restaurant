@@ -583,6 +583,58 @@ counters.on("connection", function (socket) {
             } else socket.emit("cancel_pending_result", { success: false, reason: "given tableNum does not have a party!" });
         }, false);//do not allow inserts
     });
+
+    //report summary of one week income, as per spec
+    socket.on("report", function (data) {
+
+        console.log("report req");
+        let conn = createConnection();
+        conn.connect(function (err) {
+            if (err) console.log(err);
+            else {
+                let sql = `select SUM(price*quantity) AS PROFIT, ((DAYOFWEEK(DATE_FORMAT(FROM_UNIXTIME(orderTime), '%Y-%m-%d')))) AS DAY from PartyOrder inner join OrderItem USING (orderID) right join MenuItem USING (itemNum) where orderTime >= (UNIX_TIMESTAMP((DATE_FORMAT(FROM_UNIXTIME(UNIX_TIMESTAMP()-604800), '%Y-%m-%d')))) and orderStatus = 4 group by DAY order by DAY desc;`;
+                conn.query(sql, function (err, results) {
+                    if (err) console.log(err);
+                    else {
+                        console.log(results);
+                        let days = {
+                            0: 0.00, //sunday
+                            1: 0.00,
+                            2: 0.00,
+                            3: 0.00,
+                            4: 0.00,
+                            5: 0.00,
+                            6: 0.00, //saturday
+                        }
+                        for (let d of results) {
+                            days[d.DAY - 1] = d.PROFIT;
+                        }
+                        console.log(days);
+                        let conn2 = createConnection()
+                        conn2.connect(function (err) {
+                            if (err) console.log(err);
+                            else {
+                                let sql = `select SUM(price*quantity) AS PROFIT, catName as CATEGORY FROM MenuCategory INNER JOIN MenuItem ON MenuItem.category = MenuCategory.catID INNER JOIN OrderItem USING (itemNum) INNER JOIN PartyOrder USING (orderID) where orderTime >= (UNIX_TIMESTAMP((DATE_FORMAT(FROM_UNIXTIME(UNIX_TIMESTAMP()-604800), '%Y-%m-%d')))) group by CATEGORY;`
+                                conn2.query(sql, function (err, results) {
+                                    let cats = {};
+                                    let total = 0.00;
+                                    for (cat of results) {
+                                        cats[cat.CATEGORY] = cat.PROFIT;
+                                        total += cat.PROFIT;
+                                    }
+                                    cats.total = Math.round(total * 100) / 100;
+
+                                    socket.emit("report_result", { days, categories: cats });
+                                    conn2.end();
+                                });
+                            }
+                        });
+                    }
+                    conn.end();
+                })
+            }
+        });
+    });
 });
 
 

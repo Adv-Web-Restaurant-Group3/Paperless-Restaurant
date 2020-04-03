@@ -4,18 +4,18 @@
 
 
 class CounterClient {
-    _current_tables = [];
-    _socket = io("/counter");
-    _update_callback = null;
-    _report_update_callback = null;
+    constructor(_current_tables, _socket, _update_callback, _report_update_callback) {
+        this._current_tables = [];
+        this._socket = io("/counter");
+        this._update_callback = null;
+        this._report_update_callback = null;
+
+        this.update();
+    }
 
     get socket() { return this._socket; }
     get tables() { return this._current_tables; }
 
-
-    constructor() {
-        this.update();
-    }
 
     sync(timeout) {
         setInterval(() => this.update(), timeout);

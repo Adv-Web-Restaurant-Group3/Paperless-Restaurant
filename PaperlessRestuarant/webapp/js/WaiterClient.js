@@ -9,14 +9,19 @@ const OrderStatus = {
     get BILLED() { return "ORDER_STATUS:4" },
 }
 class WaiterClient {
-    _current_orders = [];
-    _current_tables = [];
-    _table = -1;
-    _socket = io("/waiter");
-    _update_callback = null;
-    _menu_update_callback = null;
-    _items = [];
-    _categories = [];
+    constructor(_current_orders, _current_tables, _table, _socket, _update_callback, _menu_update_callback, _items, _categories) {
+        this._current_orders = [];
+        this._current_tables = [];
+        this._table = -1;
+        this._socket = io("/waiter");
+        this._update_callback = null;
+        this._menu_update_callback = null;
+        this._items = [];
+        this._categories = [];
+
+
+        this.updateMenu();
+    }
 
     get socket() { return this._socket; }
     get orders() { return this._current_orders; }
@@ -25,9 +30,7 @@ class WaiterClient {
     get table() { return this._table; }
     get tables() { return this._current_tables; }
 
-    constructor() {
-        this.updateMenu();
-    }
+   
 
     updateMenu() {
         this.socket.off("menu");

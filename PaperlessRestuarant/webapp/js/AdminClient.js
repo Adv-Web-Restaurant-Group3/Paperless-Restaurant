@@ -4,13 +4,14 @@
 
 
 class AdminClient {
-    _socket = io("/admin");
-    _update_callback = null;
-    _loggedIn = false;
-    _items = []; //includes sales data.
-    _categories = [];
-    _current_sales = null;
-
+    constructor(_socket, _update_callback, _loggedIn, _items, _categories, _current_sales) {
+        this._socket = io("/admin");
+        this._update_callback = null;
+        this._loggedIn = false;
+        this._items = []; //includes sales data.
+        this._categories = [];
+        this._current_sales = null;
+    }
     get socket() { return this._socket; }
     get items() {
         let items = this._items;
@@ -21,8 +22,7 @@ class AdminClient {
     }
     get categories() { return this._categories; }
 
-    constructor() {
-    }
+    
 
     catID(category) {
         for (let c of this.categories) {

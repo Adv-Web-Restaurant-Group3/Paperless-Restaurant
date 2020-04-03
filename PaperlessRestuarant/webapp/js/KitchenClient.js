@@ -9,16 +9,17 @@ const OrderStatus = {
     get SERVED() { return "ORDER_STATUS:3" },
 }
 class KitchenClient {
-    _current_orders = [];
-    _socket = io("/kitchen");
-    _update_callback = null;
+    constructor(_current_orders, _socket, _update_callback) {
+        this._current_orders = [];
+        this._socket = io("/kitchen");
+        this._update_callback = null;
+
+        this.update();
+    }
 
     get socket() { return this._socket; }
     get orders() { return this._current_orders; }
 
-    constructor() {
-        this.update();
-    }
 
     sync(timeout) {
         setInterval(() => this.update(), timeout);

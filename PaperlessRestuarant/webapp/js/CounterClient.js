@@ -73,14 +73,17 @@ class CounterClient {
         let client = this;
         this.socket.on("report_result", function (response) {
 
-            let day = new Date().getDay();
+            console.log(response);
+            let day = (new Date().getDay() + 1) % 7; //first day
             let days = response.days;
             let orderedDays = [];
             while (orderedDays.length < 7) {
                 orderedDays.push(days[day])
                 day = (day + 1) % 7;
+                console.log(orderedDays)
             }
-            if (client._report_update_callback) client._report_update_callback({ days: orderedDays.reverse(), categories: response.categories });
+
+            if (client._report_update_callback) client._report_update_callback({ days: orderedDays, categories: response.categories });
         });
     }
 

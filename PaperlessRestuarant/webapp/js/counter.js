@@ -3,7 +3,7 @@ client.update();
 
 var tables = [];
 var currentTable = 0;
-var showReport=false;
+var showReport = false;
 var billpopupHTML = `
     <div id=toppopbar></div>
     <div id="text">
@@ -90,7 +90,7 @@ function errorPopup() {
     setTimeout(() => { destroyPopup(), 2000 });
 }
 
-function printpage(src){
+function printpage(src) {
     let html = `
         <html>
         <head></head>
@@ -102,31 +102,31 @@ function printpage(src){
     return html;
 }
 
-function printBill(){
+function printBill() {
     $("#billTable").hide();
     var width = $("#tableContainer").width();
     var height = $("#tableContainer").height();
     var node = document.getElementById('tableContainer');
-    domtoimage.toPng(node).then(dataUrl=>{
+    domtoimage.toPng(node).then(dataUrl => {
         console.log("success");
         let img = new Image();
-        img.src =  dataUrl;
-        
-        let imageWin = window.open("","Bill","width="+width+",height="+height);
+        img.src = dataUrl;
+
+        let imageWin = window.open("", "Bill", "width=" + width + ",height=" + height);
         imageWin.document.write(printpage(img.src));
-        imageWin.focus(); 
-        setTimeout(()=>imageWin.print(),700);
+        imageWin.focus();
+        setTimeout(() => imageWin.print(), 700);
         $("#billTable").show();
 
-    }).catch(err=>{
+    }).catch(err => {
         console.error(err);
         alert("Unable to save bill.");
-       
+
     });
 
 }
 
-function billPopup(currentTable,html,addEvents){
+function billPopup(currentTable, html, addEvents) {
     $("#popUp").show();
     $("#overlay").show();
     $("#popUp").html(html);
@@ -154,10 +154,10 @@ function billPopup(currentTable,html,addEvents){
         });
     }
 }
-function addReceiptBtn(){
+function addReceiptBtn() {
     $("#pReceipt").show();
     $("#pReceipt").off("click");
-    $("#pReceipt").click(e=>printBill());
+    $("#pReceipt").click(e => printBill());
 }
 
 function displayTableContent(tNum) {
@@ -197,11 +197,11 @@ function displayTableContent(tNum) {
         $("#tableContent").append(html);
         $("#tableContent").append("<hr>");
         $("#tableContent").wrapInner("<div id='tableContainer'></div>");
-        $("#billTable").click(event=>{
-            client.billTable(currentTable,result=>{
-                switch(result){
+        $("#billTable").click(event => {
+            client.billTable(currentTable, result => {
+                switch (result) {
                     case true:
-                            reset();
+                        reset();
                         break;
                     case false:
                         billPopup(currentTable, billpopupHTML, true);
@@ -242,16 +242,16 @@ client.onUpdate(data => {
         }
     }
 });
-function togglereport(){
-    switch(showReport){
+function togglereport() {
+    switch (showReport) {
         case false:
-            showReport=true;
+            showReport = true;
             $("#toggleReport").text("Hide report");
             $("#report").fadeIn("fast");
-            $("#report").css("display","flex"); 
+            $("#report").css("display", "flex");
             break;
         case true:
-            showReport=false;
+            showReport = false;
             $("#toggleReport").text("Show weekly profits");
             $("#report").fadeOut("fast");
             break
@@ -319,9 +319,11 @@ function updateReport(report) {
             subtitle: 'for each day (£)',
             legend: 'none',
             pointSize: 20,
+            vAxis: { viewWindow: { min: 0 } },
         },
+
         width: 750,
-        height: 450,
+        height: 400,
     };
 
     var chart = new google.charts.Line(document.getElementById('report_chart'));

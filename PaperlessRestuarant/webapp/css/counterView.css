@@ -11,8 +11,28 @@ html, body { height: 100%; width: 100%; margin: 0; overflow: auto; }
     padding-left: 1rem;
     padding-right: 1rem;
     font-weight: 600;
+    text-align: center;
+}
+#toggleReport{
+    text-align: center;
+    user-select: none;
+    margin-right: 2rem;
+    padding: 0.5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    margin-left: 7rem;
+    text-shadow: 1px 1px lightgray;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    background-color: rgb(247, 247, 247);
+}
+#toggleReport:hover{
+    background-color: rgb(242, 246, 247);
+    border-left: 1px solid black;
+    border-right: 1px solid black;
 }
 #return{
+    text-align: center;
     user-select: none;
     margin-right: 2rem;
     padding: 0.5rem;
@@ -270,6 +290,49 @@ html, body { height: 100%; width: 100%; margin: 0; overflow: auto; }
     background-color: rgb(220, 248, 182);
     box-shadow: inset 0px 0px 4px gray;
 }
+.name{ /**stop divto image library wrapping text**/
+    width:50%;
+}
 #pReceipt:hover{
     background-color: rgb(240, 253, 220);
 }
+#report{
+    display:none;
+    border-radius: 0.15rem;
+    box-shadow: 1px 1px 4px gray;
+    z-index: 3;
+    padding:1rem;
+    background-color: white;
+   position: absolute;
+    top:2.5rem;  
+    width: 90%;
+    margin-left: 4%;
+    min-width: min-content;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+#report_chart{
+    vertical-align: middle;
+    display: inline-block;
+  
+}
+#report_table{
+    align-self: center;
+    height: max-content;
+    vertical-align: middle;
+    display: inline-block;
+    border-collapse: collapse;
+    box-shadow: 1px 1px black;
+    border: 1px solid black;
+}
+#report_table td, #report_table th{
+    padding:0.5rem;
+    border: 2px solid whitesmoke;
+}
+#report_table th{
+    background-color: rgb(128, 189, 230);
+    color:white;
+    text-align: left;
+}
+

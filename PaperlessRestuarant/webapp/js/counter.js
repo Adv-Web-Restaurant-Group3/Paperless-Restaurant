@@ -3,6 +3,7 @@ client.update();
 
 var tables = [];
 var currentTable = 0;
+var showReport=false;
 var billpopupHTML = `
     <div id=toppopbar></div>
     <div id="text">
@@ -241,10 +242,28 @@ client.onUpdate(data => {
         }
     }
 });
+function togglereport(){
+    switch(showReport){
+        case false:
+            showReport=true;
+            $("#toggleReport").text("Hide report");
+            $("#report").fadeIn("fast");
+            $("#report").css("display","flex"); 
+            break;
+        case true:
+            showReport=false;
+            $("#toggleReport").text("Show weekly profits");
+            $("#report").fadeOut("fast");
+            break
+    }
+}
 
 $(document).ready(() => {
     $("#return").click(event => {
         reset();
+    });
+    $("#toggleReport").click(event => {
+        togglereport();
     });
 });
 
@@ -301,8 +320,8 @@ function updateReport(report) {
             legend: 'none',
             pointSize: 20,
         },
-        width: 900,
-        height: 500,
+        width: 750,
+        height: 450,
     };
 
     var chart = new google.charts.Line(document.getElementById('report_chart'));

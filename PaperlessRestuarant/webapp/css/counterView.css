@@ -16,11 +16,11 @@ html, body { height: 100%; width: 100%; margin: 0; overflow: auto; }
 #toggleReport{
     text-align: center;
     user-select: none;
-    margin-right: 2rem;
+    margin-right: 10px;
     padding: 0.5rem;
     padding-left: 2rem;
     padding-right: 2rem;
-    margin-left: 7rem;
+    /* margin-left: 7rem; */
     text-shadow: 1px 1px lightgray;
     border-left: 1px solid gray;
     border-right: 1px solid gray;
@@ -34,7 +34,7 @@ html, body { height: 100%; width: 100%; margin: 0; overflow: auto; }
 #return{
     text-align: center;
     user-select: none;
-    margin-right: 2rem;
+    /* margin-right: 2rem; */
     padding: 0.5rem;
     padding-left: 2rem;
     padding-right: 2rem;
@@ -301,12 +301,10 @@ html, body { height: 100%; width: 100%; margin: 0; overflow: auto; }
     border-radius: 0.15rem;
     box-shadow: 1px 1px 4px gray;
     z-index: 3;
-    padding:1rem;
     background-color: white;
    position: absolute;
-    top:2.5rem;  
-    width: 90%;
-    margin-left: 4%;
+    top:10%;  
+    width: 100%;
     min-width: min-content;
     flex-direction: row;
     justify-content: space-around;

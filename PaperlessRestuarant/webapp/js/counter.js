@@ -3,6 +3,7 @@ client.update();
 
 var tables = [];
 var currentTable = 0;
+var showReport=false;
 var billpopupHTML = `
     <div id=toppopbar></div>
     <div id="text">
@@ -22,6 +23,7 @@ function getTable(num) {
 function reset() {
     currentTable = 0;
     client.update();
+    $("#pReceipt").hide();
     $("#tableContent").hide();
     $("#tablesBox").show();
 }
@@ -88,7 +90,43 @@ function errorPopup() {
     setTimeout(() => { destroyPopup(), 2000 });
 }
 
-function billPopup(currentTable, html, addEvents) {
+function printpage(src){
+    let html = `
+        <html>
+        <head></head>
+        <body onload="window.print()">
+            <img src='${src}'>
+        </body>
+        </html>
+    `;
+    return html;
+}
+
+function printBill(){
+    $("#billTable").hide();
+    var width = $("#tableContainer").width();
+    var height = $("#tableContainer").height();
+    var node = document.getElementById('tableContainer');
+    domtoimage.toPng(node).then(dataUrl=>{
+        console.log("success");
+        let img = new Image();
+        img.src =  dataUrl;
+        
+        let imageWin = window.open("","Bill","width="+width+",height="+height);
+        imageWin.document.write(printpage(img.src));
+        imageWin.focus(); 
+        setTimeout(()=>imageWin.print(),700);
+        $("#billTable").show();
+
+    }).catch(err=>{
+        console.error(err);
+        alert("Unable to save bill.");
+       
+    });
+
+}
+
+function billPopup(currentTable,html,addEvents){
     $("#popUp").show();
     $("#overlay").show();
     $("#popUp").html(html);
@@ -116,11 +154,17 @@ function billPopup(currentTable, html, addEvents) {
         });
     }
 }
+function addReceiptBtn(){
+    $("#pReceipt").show();
+    $("#pReceipt").off("click");
+    $("#pReceipt").click(e=>printBill());
+}
 
 function displayTableContent(tNum) {
     currentTable = tNum;
     $("#tablesBox").hide();
     $("#tableContent").show();
+    addReceiptBtn();
     let top = `
         <div id="titleBox">Table ${currentTable}</div>
     `;
@@ -152,11 +196,12 @@ function displayTableContent(tNum) {
         `;
         $("#tableContent").append(html);
         $("#tableContent").append("<hr>");
-        $("#billTable").click(event => {
-            client.billTable(currentTable, result => {
-                switch (result) {
+        $("#tableContent").wrapInner("<div id='tableContainer'></div>");
+        $("#billTable").click(event=>{
+            client.billTable(currentTable,result=>{
+                switch(result){
                     case true:
-                        reset();
+                            reset();
                         break;
                     case false:
                         billPopup(currentTable, billpopupHTML, true);
@@ -197,10 +242,28 @@ client.onUpdate(data => {
         }
     }
 });
+function togglereport(){
+    switch(showReport){
+        case false:
+            showReport=true;
+            $("#toggleReport").text("Hide report");
+            $("#report").fadeIn("fast");
+            $("#report").css("display","flex"); 
+            break;
+        case true:
+            showReport=false;
+            $("#toggleReport").text("Show weekly profits");
+            $("#report").fadeOut("fast");
+            break
+    }
+}
 
 $(document).ready(() => {
     $("#return").click(event => {
         reset();
+    });
+    $("#toggleReport").click(event => {
+        togglereport();
     });
 });
 
@@ -257,8 +320,8 @@ function updateReport(report) {
             legend: 'none',
             pointSize: 20,
         },
-        width: 900,
-        height: 500,
+        width: 750,
+        height: 450,
     };
 
     var chart = new google.charts.Line(document.getElementById('report_chart'));
